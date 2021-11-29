@@ -58,17 +58,17 @@ class PostInterfaceRequest(BaseHandler):
              json_back = response_resversion.ConfigGet_Server(DB,data)
         elif opencode == 6:
 
-            #登录前获取服务器地址
+            # 登录前获取服务器地址
             cmode = data["cmode"]
             url = globalRedisU.redis_getAdreese()
             logging.info("login - get serverAddresse = " + url)
-            #顶号
-            #interface_user.IUser_Diffusion(1,UID,username,{},cmode)
-            #记录
-            #C_ServerAddressCache.SetUser(username,cmode, url )
+            # 顶号
+            # interface_user.IUser_Diffusion(1,UID,username,{},cmode)
+            # 记录
+            # C_ServerAddressCache.SetUser(username,cmode, url )
             json_back = {
                 "code": "1",
-                "msg": url #self.LOGINCGET
+                "msg": url  # self.LOGINCGET
             }
             #登录排队
             #logging.info("getLoginConfig:[%s]" % json_back)
@@ -101,7 +101,7 @@ class PostInterfaceRequest(BaseHandler):
         self.write(json_back)
 
     def set_default_headers(self):
-        self.allowMyOrigin()    
+        self.allowMyOrigin()
 
 
 class GetNowTimeHandler(BaseHandler):

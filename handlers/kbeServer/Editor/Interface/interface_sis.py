@@ -112,7 +112,7 @@ def GetCourseDetailList(DB, pam):
     resType = pam["resType"]
     _isPhoneUI = pam["_isPhoneUI"]
     #strSql = "select * from new_coursedetails where courseTypeId = "+str(courseTypeId)+""
-    strSql = "select * from (select T1.*,t2.courseExpireTime from new_coursedetails T1 LEFT JOIN (select courseId,courseExpireTime from new_coursebuy where userId = "+str(userId)+" group by courseId) T2 ON T1.courseId = t2.courseId)t3 where t3.courseTypeId = "+str(courseTypeId)+" and t3.flag = 1;"
+    strSql = "select * from (select T1.*,t2.courseExpireTime from new_coursedetails T1 LEFT JOIN (select courseId,courseExpireTime from new_coursebuy where userId = "+str(userId)+" group by courseId) T2 ON T1.courseId = t2.courseId)t3 where t3.courseTypeId = "+str(courseTypeId)+" and t3.flag = 1 order by t3.sort;"
     IsLock = "0"
     ##print("strSql,",strSql)
     _cback = ""
