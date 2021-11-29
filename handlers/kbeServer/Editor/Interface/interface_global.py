@@ -8,7 +8,7 @@ from handlers.kbeServer.Editor.Interface import interface_sms
 #判断表在库中是否存在
 def Global_TableExist(tablename,DB):
 
-    sql = "select COUNT(1) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='" + tablename + "' and TABLE_SCHEMA = '" + Global.mysql_options["database"] + "'"
+    sql = "select COUNT(1) as count from INFORMATION_SCHEMA.TABLES where TABLE_NAME='" + tablename + "' and TABLE_SCHEMA = '" + Global.get_config.mysql_options()["database"] + "'"
     #params = [str(uid), str(cid)]
     result = DB.fetchone(sql, None)
     if result and result[0] > 0:
