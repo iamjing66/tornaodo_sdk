@@ -5,15 +5,15 @@ import logging
 import logging.handlers
 import signal
 
-import redis
-
+import socket
+import json
 import Global
 import tornado.ioloop
 import tornado.options
 import tornado.httpserver
-
+from urllib.request import urlopen
 from application import App
-
+import redis
 from tornado.options import define, options
 
 from handlers.wechatGZH.wxtoken import WxShedule
@@ -63,13 +63,25 @@ def main():
     http_server = tornado.httpserver.HTTPServer(App)
     http_server.listen(options.port)
 
+    print(json.load(urlopen('http://httpbin.org/ip'))['origin'])
     print("Development server is running at http://127.0.0.1:%s" % options.port)
     print("Quit the server with Control-C")
-
     tornado.ioloop.IOLoop.instance().start()
 
 
+def get_host_ip():
+    try:
+        s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        s.connect(('10.0.0.1',8080))
+        ip= s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
+
 init_logging()
+
+
 
 if __name__ == "__main__":
     main()

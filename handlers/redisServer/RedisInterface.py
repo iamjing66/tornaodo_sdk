@@ -3,6 +3,9 @@
 
 import redis
 import logging
+
+import time
+
 import Global
 
 class RedisBase(object):
@@ -21,10 +24,20 @@ class RedisBase(object):
 
 
 #检测写入公共配置
-class RedisConfigWrite(RedisBase):
+class RedisWorker(RedisBase):
+
+    def GetWorkMainState(self):
+
+        return self.redis_ctl.get("mainserver")
+
+
+
+    def SetWorkMain(self):
+        self.redis_ctl.set("mainserver",str(int(time.time())))
+
 
     #ServerRt - 0-本地测试 1-外网正式 2-外网测试
-    def WriteConfig(self):
+    #def WriteConfig(self):
 
         #配置
         #name = cxconfig
@@ -43,40 +56,12 @@ class RedisConfigWrite(RedisBase):
 
 class ServerAddressCache(RedisBase):
 
-    def __init__(self):
-        self.GlobalIPIndex = 0
-        self.GlobalIPs = None
 
-    def SetAddress(self):
-        print(self.redis_ctl.connection)
-        self.redis_ctl.set("lyyym",'187')
+    def SetUser(self,username,cmode,Adresse):
+        self.redis_ctl.hset(username,cmode,Adresse)
 
     def GetAddress(self,username,cmode):
-
-        index = 0
-        if cmode != "editor":
-            index = 1
-        data = {
-            "editor":"",
-            "app":""
-        }
-        if self.redis_ctl.hexists("serveraddress",username):
-
-            data = dict(self.redis_ctl.hget("serveraddress",username))
-            _ip = data[cmode]
-            if _ip != None or len(_ip) > 0:
-                return _ip
-
-        if self.GlobalIPs == None:
-            self.GlobalIPs = str(self.redis_ctl.hget("cxconfig","balancing")).split('#')
-        _ip = self.GlobalIPs[self.GlobalIPIndex]
-        if self.GlobalIPIndex >= len(self.GlobalIPs) - 1:
-            self.GlobalIPIndex = 0
-        else:
-            self.GlobalIPIndex += 1
-        data[cmode] = _ip
-        self.redis_ctl.hmset("serveraddress"+username,data)
-        return _ip
+        return self.redis_ctl.hget(username,cmode)
 
 C_ServerAddressCache = ServerAddressCache()
 
@@ -115,6 +100,9 @@ class RedisData():
         self.redis_config = Global.get_config.redis_options(self.database)
 
     def redis_pool(self):
-        rdp = redis.ConnectionPool(**self.redis_config)
+        print(self.redis_config)
+        rdp = redis.ConnectionPool(self.redis_config)
+        #rdc = redis.Redis(self.redis_config)
+        #print(rdc)
         rdc = redis.StrictRedis(connection_pool=rdp, encoding='utf8', decode_responses=True)
         return rdc

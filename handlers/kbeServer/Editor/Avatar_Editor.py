@@ -102,7 +102,7 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback = response_account.Transactions_Code_1044(self_uid, self_username, json_data)
         elif subCode == 1045:   # 获取工程配置数据
             json_dback = response_account.Transactions_Code_1045(self_uid, self_username, json_data)
-        logging.info("subcode[%i] json_dback[%s]" % (subCode ,json_dback))
+        #logging.info("subcode[%i] json_dback[%s]" % (subCode ,str(json_dback)))
         return json_dback
 
 

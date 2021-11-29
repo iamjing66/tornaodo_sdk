@@ -2,11 +2,12 @@
 # coding=utf-8
 
 import json
-import logging
+import logging,requests
 from time import time
 from handlers.base import BaseHandler
 from handlers.kbeServer.Editor.response import response_account,response_mail,response_class,response_resversion,response_other,response_update,response_sis,response_fullview,response_collect,response_global
-from handlers.kbeServer.Editor.Interface import interface_sms,interface_account,interface_work
+from handlers.kbeServer.Editor.Interface import interface_sms,interface_account,interface_work,interface_user
+from handlers.redisServer.RedisInterface import C_ServerAddressCache
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Avatar_Editor import AvatarEditorInst
 from handlers.kbeServer.App.Avatar_App import AvatarAppInst
@@ -57,9 +58,14 @@ class PostInterfaceRequest(BaseHandler):
              json_back = response_resversion.ConfigGet_Server(DB,data)
         elif opencode == 6:
 
+            #登录前获取服务器地址
             cmode = data["cmode"]
-            url = globalRedisU.redisurl_getusername(username,cmode)
-
+            url = globalRedisU.redis_getAdreese()
+            logging.info("login - get serverAddresse = " + url)
+            #顶号
+            #interface_user.IUser_Diffusion(1,UID,username,{},cmode)
+            #记录
+            #C_ServerAddressCache.SetUser(username,cmode, url )
             json_back = {
                 "code": "1",
                 "msg": url #self.LOGINCGET
@@ -86,6 +92,8 @@ class PostInterfaceRequest(BaseHandler):
             json_back = AvatarEditorInst.Transactions_Code(subcode,UID,username,data)
         elif opencode == 200:
             json_back = AvatarAppInst.Transactions_Code(subcode,UID,username,data)
+        elif opencode == 300:
+            json_back = interface_user.IUser_DiffusionDo(subcode,UID,username,data)
         json_back["opencode"] = opencode
         json_back["subcode"] = subcode
         if "pam" not in json_back.keys():

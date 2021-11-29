@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
+import random
 
-
+import Global
 from methods.DBManager import DBManager
 
 class redisu:
@@ -148,18 +149,24 @@ class redisu:
         return None
 
 
-    def redisurl_getusername(self, username,cmode):
+    def redis_getAdreese(self):
 
-        DB = DBManager()
-        sql = "select `uniqueurl` from tb_redis_user where username = '"+username+"' and `mode` = '"+cmode+"' limit 0,1"
-        DB.close()
-        data = DB.fetchone(sql, None)
-        if data:
-            return data[0]
-        else:
-            url = self.redis_serverip_get()
-            self.redis_serverip_save(username,cmode, url)
-            return url
+        #print(Global.get_config.redis_config)
+        aalist = Global.get_config.redis_config()
+        #print(aalist)
+        #index = random.randint(0, len(aalist)-1)
+        return random.choice(aalist)
+
+        # DB = DBManager()
+        # sql = "select `uniqueurl` from tb_redis_user where username = '"+username+"' and `mode` = '"+cmode+"' limit 0,1"
+        # DB.close()
+        # data = DB.fetchone(sql, None)
+        # if data:
+        #     return data[0]
+        # else:
+        #     url = self.redis_serverip_get()
+        #     self.redis_serverip_save(username,cmode, url)
+        #     return url
 
 
     def redisurl_delete(self,uid,cmode):

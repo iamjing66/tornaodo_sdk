@@ -21,7 +21,7 @@ def GetWorkSQLFromType(itype,self_uid,pam, **kwargs):
         sql = "select *,'',0 from tb_workbag where UID = " + str(self_uid)
     elif itype == 1:  # 作品市场
         # course_level: 1-精品课程  2-普通课程(不包含精品课)
-        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID;"
+        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1;"
     elif itype == 2:
         mpage = pam[0]
         now_page = pam[1]
@@ -38,10 +38,7 @@ def GetWorkSQLFromTypeNew(itype,self_uid,pam, **kwargs):
         sql = "select *,'',0 from tb_workbag where UID = " + str(self_uid)
     elif itype == 1:  # 作品市场
         # kwargs  {course_level: 1-精品课程  2-普通课程(不包含精品课)}
-        sql_else = ""
-        if kwargs["course_level"] != 0:
-            sql_else = "and t1.boutique = %s" % (kwargs["course_level"])
-        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID %s order by t1.sort;" % sql_else
+        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1 and t1.boutique = %s order by t1.sort;" % kwargs["course_level"]
     elif itype == 2:
         mpage = pam[0]
         now_page = pam[1]

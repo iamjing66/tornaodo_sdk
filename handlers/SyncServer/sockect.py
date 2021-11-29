@@ -14,6 +14,24 @@ class ProStatus:
     def user_connect(self, user, uid, client_model):
         logging.info("[websocket] logining users = %s" % self.connector)
 
+        #通过redis判断是否存在相同的账号(websocket id ,服务器地址)
+        #写分服事务，通过redis
+        #self.user_kick(uid,client_model)
+
+        #记录新用户（websocket id ,服务器地址）redis
+        #绑定新用户
+
+        uuid = self.GlobalUUID
+        self.dicusers[user] = [uuid,uid,client_model]
+        self.GlobalUUID += 1
+        self.dicusers_id[uuid] = user
+        self.connector[client_model][uid] = uuid
+
+        logging.info("[websocket] login Succ = uuid = %s - %s" % (str(uuid),self.connector))
+
+
+    def user_kick(self,uid,client_model):
+
         if uid in self.connector[client_model].keys():
             #该账号有记录
             uuid = self.connector[client_model][uid]
@@ -23,15 +41,6 @@ class ProStatus:
                 logging.info("[websocket] kick user = uuid = %s - %s - %s" % (str(uuid) , str(uid), str(client_model)))
             #清除老记录
             self.user_dispose(cuser,1)
-
-        #绑定新用户
-        uuid = self.GlobalUUID
-        self.dicusers[user] = [uuid,uid,client_model]
-        self.GlobalUUID += 1
-        self.dicusers_id[uuid] = user
-        self.connector[client_model][uid] = uuid
-
-        logging.info("[websocket] login Succ = uuid = %s - %s" % (str(uuid),self.connector))
 
 
     def user_dispose(self,user,kick):
@@ -46,8 +55,8 @@ class ProStatus:
             del self.dicusers_id[uuid]
             del self.connector[clientmodel][uid]
 
-            if kick == 0:
-                globalRedisU.redisurl_delete(uid,clientmodel)
+            # if kick == 0:
+            #     globalRedisU.redisurl_delete(uid,clientmodel)
 
 
             logging.info("[websocket] disconnect = uuid = %s - %s - %s - %s" % (str(uuid),str(uid), str(clientmodel),self.connector))

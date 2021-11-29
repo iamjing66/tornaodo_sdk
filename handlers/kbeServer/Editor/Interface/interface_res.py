@@ -134,51 +134,30 @@ def DoCode(DB,OpenCode,page,version):
         table_project = "tb_ft_audio"
         sql_str = "select FID,FNAME from " + table_project + GetLimit(page)
     elif OpenCode == "105" or OpenCode == "205":
-        minVersion = GetUpdateResMinVersion(DB,"105", version)
+        minVersion = GetUpdateResMinVersion(DB, "105", version)
         table_project = "tb_config_res"
-        if minVersion != "0":
-            if int(version) < int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            elif int(version) > int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            else:
-                _getresAll = "0"
-                ResID = GetUpdateResData(DB,"105", version)
-                sql_str = "select * from " + table_project + "  where  RID in (" + ResID + ")" + GetLimit(page)
+        if minVersion != "0" and int(version) >= int(minVersion):
+            _getresAll = "0"
+            ResID = GetUpdateResData(DB, "105", version)
+            sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
         else:
             sql_str = "select * from " + table_project + GetLimit(page)
     elif OpenCode == "106" or OpenCode == "206":
-        minVersion = GetUpdateResMinVersion(DB,"106", version)
+        minVersion = GetUpdateResMinVersion(DB, "106", version)
         table_project = "tb_config_scene"
-        if minVersion != "0":
-            if int(version) < int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            elif int(version) > int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            else:
-                _getresAll = "0"
-                ResID = GetUpdateResData(DB,"106", version)
-                sql_str = "select * from " + table_project + "  where  RID in (" + ResID + ")" + GetLimit(page)
+        if minVersion != "0" and int(version) >= int(minVersion):
+            _getresAll = "0"
+            ResID = GetUpdateResData(DB, "106", version)
+            sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
         else:
             sql_str = "select * from " + table_project + GetLimit(page)
-    elif OpenCode == "107"  or OpenCode == "207" :
-        minVersion = GetUpdateResMinVersion(DB,"107", version)
+    elif OpenCode == "107" or OpenCode == "207":
+        minVersion = GetUpdateResMinVersion(DB, "107", version)
         table_project = "tb_config_audio"
-        if minVersion != "0":
-            if int(version) < int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            if int(version) > int(minVersion):
-                _getresAll = "1"
-                sql_str = "select * from " + table_project + GetLimit(page)
-            else:
-                _getresAll = "0"
-                ResID = GetUpdateResData(DB,"107", version)
-                sql_str = "select * from " + table_project + "  where  RID in (" + ResID + ")" + GetLimit(page)
+        if minVersion != "0" and int(version) >= int(minVersion):
+            _getresAll = "0"
+            ResID = GetUpdateResData(DB, "107", version)
+            sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
         else:
             sql_str = "select * from " + table_project + GetLimit(page)
     elif OpenCode == "108":
@@ -271,26 +250,26 @@ def new_do_code(DB, OpenCode, page, version):
         table_project = "tb_ft_audio"
         sql_str = "select FID,FNAME from " + table_project
     elif OpenCode == "105" or OpenCode == "205":
-        minVersion = GetUpdateResMinVersion(DB, "105", version)
         table_project = "tb_config_res"
-        sql_str = "select * from " + table_project + GetLimit(page)
-        if minVersion != "0" and int(version) == int(minVersion):
+        if int(version) == 0:
+            sql_str = "select * from " + table_project + GetLimit(page)
+        else:
             _getresAll = "0"
             ResID = GetUpdateResData(DB, "105", version)
             sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
     elif OpenCode == "106" or OpenCode == "206":
-        minVersion = GetUpdateResMinVersion(DB, "106", version)
         table_project = "tb_config_scene"
-        sql_str = "select * from " + table_project + GetLimit(page)
-        if minVersion != "0" and int(version) == int(minVersion):
+        if int(version) == 0:
+            sql_str = "select * from " + table_project + GetLimit(page)
+        else:
             _getresAll = "0"
             ResID = GetUpdateResData(DB, "106", version)
             sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
     elif OpenCode == "107" or OpenCode == "207":
-        minVersion = GetUpdateResMinVersion(DB, "107", version)
         table_project = "tb_config_audio"
-        sql_str = "select * from " + table_project + GetLimit(page)
-        if minVersion != "0" and int(version) == int(minVersion):
+        if int(version) == 0:
+            sql_str = "select * from " + table_project + GetLimit(page)
+        else:
             _getresAll = "0"
             ResID = GetUpdateResData(DB, "107", version)
             sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # coding=utf-8
+import random
+import time
 import requests
 
 from handlers.base import BaseHandler
-from handlers.redisServer.RedisInterface import C_ServerAddressCache,RedisConfigWrite
-import socket
+from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
+from handlers.redisServer.RedisInterface import C_ServerAddressCache,RedisData
+import redis
 
 class IndexHandler(BaseHandler):    #继承base.py中的类BaseHandler
     def get(self):
@@ -84,11 +87,18 @@ class IndexHandler(BaseHandler):    #继承base.py中的类BaseHandler
         #scache = ServerAddressCache()
         #scache.SetAddress()
 
-        scache = RedisConfigWrite()
-        scache.WriteConfig()
+        # scache = RedisConfigWrite()
+        # scache.WriteConfig()
 
-        C_ServerAddressCache.GetAddress("lyy","editor")
+        # C_ServerAddressCache.SetUser("lyy","app","192.168.0.22:9001")
+        # # for i in range(0, 20):  # 循环随机数100位
+        # #     num = random.randint(0, 4)
+        # #     print("num = " + str(num))
+        # url = globalRedisU.redis_getAdreese()
+        # print("login - get serverAddresse = " + url)
 
+        rc = redis.StrictRedis(host='192.168.0.9', port='6379', db=1, password='123123')
+        rc.publish("runoobChat","hello")
         self.write("ok")
 
     def post(self):

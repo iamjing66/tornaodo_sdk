@@ -4,11 +4,11 @@ from handlers.kbeServer.Editor.Interface.interface_config import IC
 from url import Urls
 import Global
 import logging
-import hashlib
-import methods.SolrInterface as sinter
+import redis
+from handlers.redisServer.RedisInterface import RedisData
 import tornado.web
 import threading
-from methods.db_mysql import DbHander
+from handlers.redisServer.RedisInterface import RedisWorker
 from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
 from alipay.aop.api.DefaultAlipayClient import DefaultAlipayClient
 from alipay.aop.api.domain.AlipayTradeAppPayModel import AlipayTradeAppPayModel
@@ -26,7 +26,49 @@ class Application(tornado.web.Application):
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(*args, **kwargs)
 
-        #app支付 - 阿里云支付
+        self.worktimer = time.strftime("%Y-%m-%d", time.localtime())
+        redis_worker = RedisWorker()
+        self.MainServer = False
+
+        if not redis_worker.GetWorkMainState():
+            self.MainServer = True
+            redis_worker.SetWorkMain()
+            self.DoInit_Main()
+        self.DoEvent_All()
+        print("self.MainServer" , self.MainServer)
+
+
+        t = threading.Timer(60, self.Worker)
+        t.start()
+
+
+    def Worker(self):
+        # Do something
+        self.WorkZero()
+
+        self.DoEvent_All()
+        if self.MainServer:
+            self.DoEvent_Main()
+        t = threading.Timer(60,self.Worker)
+        t.start()
+
+
+    #启动事务 - 所有服务
+    def DoInit_All(self):
+
+        # 配置数据
+        IC.ReadConfig()
+
+        #加密配置
+        self.acs_client = AcsClient(Global.ACCESS_KEY_ID, Global.ACCESS_KEY_SECRET, Global.REGION)
+        region_provider.add_endpoint(Global.PRODUCT_NAME, Global.REGION, Global.DOMAIN)
+
+        #订单号
+        self.Ali_Order = 1
+
+
+        #app支付初始化
+        # app支付 - 阿里云支付
         alipay_client_config = AlipayClientConfig()
         alipay_client_config.server_url = "https://openapi.alipay.com/gateway.do"
         alipay_client_config.app_id = "2021001160668207"
@@ -36,140 +78,62 @@ class Application(tornado.web.Application):
         self.Connect = 0
         self.aliclient = DefaultAlipayClient(alipay_client_config=alipay_client_config)
         self.alimodel = AlipayTradeAppPayModel()
-        # self.ALi_SM_Orders = {}
 
-        # self.PayCodeWithLen = {}
-        # self.PayOrders = []
-
-        self.Ali_Order = 1
-        self.SolrInst = sinter.SolrInterface()
-
-        #缓存长连接池 - 模式 - 用来处理，
-        #*固定维护几个长连接，来处理一些非常频繁的业务
-        # self.db_list = [DbHander.DBREAD(),DbHander.DBREAD(),DbHander.DBREAD(),DbHander.DBREAD(),DbHander.DBREAD()]
-        # self.db_pair = 0
-        # self.db = None
-        # self.Cur = None
-        # logging.info("Application Inited")
-        #self.post_upload_data = {}
-        #self.post_data_temp_post = {}
-        # self.PhoneCodes = {}
-        #self.LoginData = {"l":[],"f":0,"t":0,"f1":0,"t1":0}
-
-
-        # self.Ali_Order = 1
-        # self.SolrInst = sinter.SolrInterface()
-        IC.ReadConfig()
-        # self.AppData = {}
-        self.acs_client = AcsClient(Global.ACCESS_KEY_ID, Global.ACCESS_KEY_SECRET, Global.REGION)
-        region_provider.add_endpoint(Global.PRODUCT_NAME, Global.REGION, Global.DOMAIN)
-
-        t = threading.Timer(1, self.CkDb)
-        t.start()
-
-
-    # def DBPing(self):
-    #
-    #     self.db = self.db_list[self.db_pair]
-    #     self.db.ping(reconnect=True)
-    #     self.Cur = self.db.cursor()
-    #     self.db_pair += 1
-    #     if self.db_pair > 4:
-    #         self.db_pair = 0
-
-
-    # def GetLoginData(self):
-    #
-    #     ck_sql = "select LOGIN_IP FROM tb_config_login;"
-    #     #logging.info("loginConfig:[%s]" % ck_sql)
-    #     self.DBPing()
-    #     self.Cur.execute(ck_sql)
-    #     self.db.commit()
-    #     lines = self.Cur.fetchall()
-    #     if lines and len(lines) > 0:
-    #         for arr_info in lines:
-    #             self.LoginData["l"].append(arr_info[0])
-    #     logging.info("loginConfig:[%s]" % self.LoginData)
-    #     #print("loginConfig:[%s]" % self.LoginData)
-
-
-    # def ComputeLoginConfig(self):
-    #     _logindata = self.LoginData
-    #     l = _logindata["l"]
-    #     if len(l) < 1:
-    #         return ""
-    #     f = _logindata["f"]
-    #     _t1 = _logindata["t1"]
-    #     _ip = l[f]
-    #     f += 1
-    #     if f >= len(l):
-    #         f = 0
-    #     _t = _logindata["t"]
-    #     _n = time.time()
-    #     f1 = _t1 - (_n-_t)
-    #     _xs = 0.5       #登录排队时间
-    #     if f1 < -_xs:
-    #         f1 =  -_xs
-    #
-    #     _to = _xs + f1
-    #
-    #     _logindata["f"] = f
-    #     _logindata["t1"] = _to
-    #     _logindata["t"] = _n
-    #     self.LoginData = _logindata
-    #
-    #    # logging.info("_logindata :" % _logindata)
-    #
-    #     # ck_sql = "update tb_config_login set LVS = LVS + 1 WHERE LOGIN_IP = '"+_ip+"';"
-    #     # #self.DBPing()
-    #     # self.Cur.execute(ck_sql)
-    #     # self.db.commit()
-    #
-    #     return str(_ip) + "-" + str(_to)
-
-
-    def CkDb(self):
-        # Do something
-
-        # ck_sql = "select ID,APPID,FLOW,PASSDATE,FLOW_USE,appCertificate from tb_cxsdk_users;"
-        # self.DBPing()
-        # self.Cur.execute(ck_sql)
-        # self.db.commit()
-        # lines = self.Cur.fetchall()
-        # if lines and len(lines) > 0:
-        #     for arr_info in lines:
-        #
-        #         APPID = arr_info[1]
-        #         appandcertificate = hashlib.md5((APPID+arr_info[5]).encode()).hexdigest()
-        #         #print(appandcertificate)
-        #         if appandcertificate not in self.AppData:
-        #             self.AppData[appandcertificate] = {
-        #                 "ID":int(arr_info[0]),
-        #                 "APPID": arr_info[1],
-        #                 "FLOW":int(arr_info[2]),
-        #                 "PASSDATE": arr_info[3],
-        #                 "FLOW_USE": int(arr_info[4]),
-        #                 "appCertificate":arr_info[5]
-        #             }
-        #         else:
-        #             self.AppData[appandcertificate]["FLOW"] = int(arr_info[2])
-        #             self.AppData[appandcertificate]["PASSDATE"] = arr_info[3]
-        #             self.AppData[appandcertificate]["FLOW_USE"] = int(arr_info[4])
-        #             self.AppData[appandcertificate]["appCertificate"] = arr_info[5]
-        #
-        # #print(self.AppData)
-        # logging.info("AppData - Geted:[%s]" % self.LoginData)
-        # if self.LoginData != None and self.LoginData != "" and len(self.LoginData["l"]) == 0:
-        #     self.GetLoginData()
-        self.DoEvent()
-        t = threading.Timer(60,self.CkDb)
-        t.start()
-
-
-    def DoEvent(self):
+    # 启动事务 - 主服务
+    def DoInit_Main(self):
         pass
 
 
+    #事务处理 - 所有服务
+    def DoEvent_All(self):
+
+        pass
+        # redis = RedisData(1)
+        # p = redis.redis_pool().pubsub()
+        # print("p", p)
+        # p.subscribe("runoobChat")
+
+        # rc = redis.StrictRedis(host='192.168.0.9', port='6379', db=1, password='123123')
+        # ps = rc.pubsub()
+        # ps.subscribe('runoobChat')  # 从liao订阅消息
+        #
+        #
+        #
+        # for item in ps.listen():  # 读取接收的数据
+        #     # print(item)
+        #     if item['type'] == 'message':  # 判断数据是否是用户发布的数据
+        #         data = item['data']  # 取出用户要发布的数据
+        #         # result = str(data, 'utf-8')
+        #         # result = json.loads(result)
+        #         # print(result)
+        #         print(data)  # 打印要发布的数据
+        #
+        #         if item['data'] == 'Q' or item['data'] == 'q':
+        #             break  # 退出程序
+
+
+    #事务处理 - 主服务
+    def DoEvent_Main(self):
+        pass
+
+
+    #0点事务
+    def WorkZero(self):
+
+        now = time.strftime("%Y-%m-%d", time.localtime())
+        if now != self.worktimer:
+            self.worktimer = now
+            self.DoZero()
+            if self.MainServer:
+                self.DoZero_Main()
+
+    # 0点事务 - 所有服务
+    def DoZero_All(self):
+        pass
+
+    # 0点事务 - 主服务
+    def DoZero_Main(self):
+        pass
 
 
 App = Application(
