@@ -17,8 +17,6 @@ def GetUpdateVersion(DB,UID,pam):
         return json_data
     versions = pam["pam"].split(',')
     table_project = "tb_res_version"
-    # TODO
-    # sql_str = "select VERSION,OPENCODE from tb_res_version where OPENCODE in %s" % (pam["pam"])
     if len(versions) == 4:
         sql_str = "select VERSION,OPENCODE  from " + table_project + " where OPENCODE in (105,106,107,125)"
     elif len(versions) == 5:
