@@ -35,6 +35,7 @@ class Application(tornado.web.Application):
             redis_worker.SetWorkMain()
             self.DoInit_Main()
         self.DoEvent_All()
+        self.DoInit_All()
         print("self.MainServer" , self.MainServer)
 
 
