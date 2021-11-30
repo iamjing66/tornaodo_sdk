@@ -75,7 +75,7 @@ class PayOrder(BaseHandler):
 
         CB = globalRedisU.redisurl_get(UID,"app")  # 支付回调
 
-        if len(CB) < 1:
+        if not CB:
             CB = Global.get_config.pay_config()
 
 
