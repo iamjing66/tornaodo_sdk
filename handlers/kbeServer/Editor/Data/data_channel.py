@@ -45,6 +45,8 @@ def PAYPAM_Changxiang(paydata ,DB):
                 CIDS = str(minfo[3])
             else:
                 CIDS = CIDS + "#" + str(minfo[3])
+            if w_type == "0":
+                w_type = str(minfo[2])
 
     if _price2 > 0:
         sql_str = "select Days,`Discount` from tb_discount where CID = " + str(month) + ";"

@@ -99,7 +99,6 @@ def Get(pdata, self_uid, itype):
             data_lesson_ini = str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0)
         else:
             data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0)
-    logging.info("data_lesson_ini = " + data_lesson_ini)
     DB.destroy()
     #print("data_course_ini:",data_course_ini)
     #print("data_lesson_ini:", data_lesson_ini)

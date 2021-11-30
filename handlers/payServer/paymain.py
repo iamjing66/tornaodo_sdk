@@ -35,7 +35,7 @@ class PayOrder(BaseHandler):
         if len(CB) < 1:
             CB = Global.get_config.pay_config()
 
-        logging.info("PayOrder -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i]" % (UID,UserName,PayType,AppType,AppCode))
+        logging.info("PayOrder -> post -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i]" % (UID,UserName,PayType,AppType,AppCode))
 
         _order = self.Ali_Order
         _order += 1
@@ -43,7 +43,7 @@ class PayOrder(BaseHandler):
         _now = int(time.time())
         _out_trade_no = str(PayType) + str(AppType) + str(AppCode) + str(_now) + str(_order)
 
-        print("支付参数：PayType[%i],AppType[%i],UID[%s],UserName[%s],AppCode[%i],PayData[%s]" % (PayType,AppType,UID,UserName,AppCode,PayData))
+        logging.info("支付参数：PayType[%i],AppType[%i],UID[%s],UserName[%s],AppCode[%i],PayData[%s]" % (PayType,AppType,UID,UserName,AppCode,PayData))
 
         if PayType == 1:
             json_back = AliClass.PayMain(AppType,UID,UserName,AppCode,PayData,_out_trade_no,DB,self.ali_client,self.ali_model,CB)
@@ -66,7 +66,7 @@ class PayOrder(BaseHandler):
 
         Pdata = self.get_argument("PayData")
         PayType = int(self.get_argument("PayType"))  # 1-支付宝          2-微信
-
+        # PayData=3@2116@2@1&PayType=1
 
 
         arr_pam = Pdata.split('@')
@@ -85,7 +85,7 @@ class PayOrder(BaseHandler):
         distributor = ""
         _power = 0
         PayData = {}
-        print("Pdata",Pdata,PayType,AppCode,UID,AppType)
+        logging.info("PayOrder -> get -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i]" % (UID,UserName,PayType,AppType,AppCode))
         DB = DBManager()
         sql = "select UserName,organization,distributor,`Power` from tb_userdata where uid = " + str(UID)
 
@@ -114,7 +114,7 @@ class PayOrder(BaseHandler):
             chanelid = arr_pam[2]
             monthid = int(arr_pam[3])
             PayData = {
-                "changel": str(chanelid) , "month": monthid, "organization": organization, "distributor": distributor, "from": "VR","ip": "127.0.0.1","power":_power
+                "changel": str(chanelid) , "month": monthid, "organization": organization, "distributor": distributor, "from": "VR","ip": "127.0.0.1","power":_power, "WType": "0"
             }
 
         _order = self.Ali_Order

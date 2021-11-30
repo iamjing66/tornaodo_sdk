@@ -156,6 +156,7 @@ def send_sms(business_id, phone_numbers, sign_name, template_code, template_para
 def SendSms(AppCode,uid,phone,pay_url):
 
     pay_data = str(AppCode)+"@" + str(uid) + "@" + pay_url
+    logging.info("pay_data --> %s" % pay_data)
     pamam = "{\"name\":'" + pay_data + "'}"
     __business_id = uuid.uuid1()
     business_id = "sms" + str(__business_id)
