@@ -65,7 +65,7 @@ class PostInterfaceRequest(BaseHandler):
             # 顶号
             # interface_user.IUser_Diffusion(1,UID,username,{},cmode)
             # 记录
-            # C_ServerAddressCache.SetUser(username,cmode, url )
+            C_ServerAddressCache.SetUser(username,cmode, url )
             json_back = {
                 "code": "1",
                 "msg": url  # self.LOGINCGET

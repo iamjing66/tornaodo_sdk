@@ -2,7 +2,7 @@
 # coding=utf-8
 
 from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_account,interface_wit,interface_global
+from handlers.kbeServer.Editor.Interface import interface_account,interface_wit,interface_global,interface_user
 
 
 #PC端登录数据
@@ -77,6 +77,9 @@ def Transactions_Code_1019(self_uid, self_username, json_data):
     json_back["code"] = interface_account.BaseLogin(DB,username,password)
     if json_back["code"] == 1:
         json_back["pam"] = interface_account.PC_lOGON(DB,self_username,json_data)
+    # TODO 用户登录后，更新用户的 redis
+    # 顶号
+    interface_user.IUser_Diffusion(1, self_uid, username, {}, "editor")
     DB.destroy()
     return json_back
 

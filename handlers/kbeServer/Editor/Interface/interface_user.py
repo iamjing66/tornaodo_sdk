@@ -29,6 +29,7 @@ def IUser_Diffusion(subcode, uid, username, data, cmode):
         }
         res = requests.post(url=url, json=json)
         logging.info("DiffusionDo opencode = %s ,subcode = %s, username = %s, res = %s" % (300, subcode, username, data))
+    pro_status.user_connect(username, uid, cmode)
 
 
 def IUser_DiffusionDo(subcode, uid, username, data):

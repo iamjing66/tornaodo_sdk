@@ -1,6 +1,6 @@
 
 from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_work,interface_sis,interface_account
+from handlers.kbeServer.Editor.Interface import interface_work,interface_sis,interface_account, interface_user
 
 
 #作品买看
@@ -95,6 +95,8 @@ def Transactions_Code_2004(self_uid, self_username, json_data):
     json_back["code"] = interface_account.BaseLogin(DB, username, password)
     if json_back["code"] == 1:
         json_back["pam"] = interface_account.VR_LOGIN(DB,self_username,json_data)
+    # TODO 登录成功后，更新该用户的 redis
+    interface_user.IUser_Diffusion(1, self_uid, username, {}, "editor")
     DB.destroy()
     return json_back
 
