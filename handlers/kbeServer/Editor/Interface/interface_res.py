@@ -150,14 +150,8 @@ def DoCode(DB,OpenCode,page,version):
         else:
             sql_str = "select * from " + table_project + GetLimit(page)
     elif OpenCode == "107" or OpenCode == "207":
-        minVersion = GetUpdateResMinVersion(DB, "107", version)
         table_project = "tb_config_audio"
-        if minVersion != "0" and int(version) >= int(minVersion):
-            _getresAll = "0"
-            ResID = GetUpdateResData(DB, "107", version)
-            sql_str = "select * from " + table_project + " where RID in (" + ResID + ")" + GetLimit(page)
-        else:
-            sql_str = "select * from " + table_project + GetLimit(page)
+        sql_str = "select * from " + table_project + GetLimit(page)
     elif OpenCode == "108":
         table_project = "tb_config_vip"
         sql_str = "select * from " + table_project + GetLimit(page)
