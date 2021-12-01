@@ -19,9 +19,9 @@ def PAYPAM_Changxiang(paydata ,DB):
         "Code": 0,
         "Data": {},
     }
-    sql_str = "select Price,`Desc`,WTYPE,CID from tb_channel where WID in (" + channel + ");"
+    sql_str = "select Price,`Desc`,WTYPE,CID from tb_channel where CID = %s;"
 
-    data = DB.fetchall(sql_str, None)
+    data = DB.fetchall(sql_str, channel)
     _name = ""
     _wtype = ""
     _price_record = ""

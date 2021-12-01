@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import logging
 import Global
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface.interface_config import IC
@@ -173,6 +174,7 @@ def MonthedChannel(DB,self_uid,channelID,monthID,AppType):
     sData = DB.fetchone(sql,None)
     if sData:
         pay_url = str(channelID) + "@" + str(monthID)  # + "$" + str(AppType) + "$" + str(self.Editor_UID)
+        logging.info("MonthedChannel:%s" % pay_url)
         smsResponse = interface_sms.SendSms(3,self_uid,sData[0], pay_url)
         #print("smsResponse", smsResponse)
         return 99
