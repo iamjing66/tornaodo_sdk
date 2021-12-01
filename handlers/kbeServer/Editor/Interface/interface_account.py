@@ -40,6 +40,7 @@ def PC_lOGON(DB,Username, json_data):
 
     #基础数据
     uid = 0
+    # TODO 获取新增字段 用户云存储状态
     sql = "select * from tb_userdata where binary UserName = '"+str(Username) + "'"
     # print("pc_login :" , sql)
     data = DB.fetchone(sql, None)
@@ -581,7 +582,7 @@ def Register(DB,uid,username,data,phone_recode):
     #默认一年
     EndDate = _arrPam[5]
     if EndDate == "":
-        EndDate = str(datetime.date.today() + relativedelta(months=+6))
+        EndDate = "1"
     #主账号
     #B端账号才有
     #默认为0
@@ -633,9 +634,7 @@ def Register(DB,uid,username,data,phone_recode):
     if len(_arrPam) > 16:
         _class = _arrPam[16]
     #账号权限(0 - 试用1 - 正式)
-    AccountPower = "0"
-    if len(_arrPam) > 17:
-        AccountPower = _arrPam[17]
+    AccountPower = "1"
     
     # D类账号注册
     d_code = ""

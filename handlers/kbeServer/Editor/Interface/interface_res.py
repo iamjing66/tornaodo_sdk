@@ -275,7 +275,7 @@ def new_do_code(DB, OpenCode, page, version):
         table_project = "tb_config_left_res"
         sql_str = "select * from " + table_project
     elif OpenCode == "111":
-        sql_str = "select t2.ct, t1.TypeName, t1.cIconPath,t2.UID, t2.CID from tb_course_type t1 inner join tb_course_sort t2 on t1.CID = t2.ct and t2.visible = 0 group by t1.CID, t1.Sort, t2.sort order by t1.Sort, t1.CID, t2.sort;"
+        sql_str = "select t2.ct, t1.TypeName, t1.cIconPath,t2.UID, t2.CID from tb_course_type t1 inner join tb_course_sort t2 on t1.CID = t2.ct and t2.visible = 0 group by t1.CID, t2.id, t1.Sort, t2.sort order by t1.Sort, t1.CID, t2.sort;"
     elif OpenCode == "112":
         table_project = "tb_work_type"
         sql_str = "select * from " + table_project + " order by Sort"
