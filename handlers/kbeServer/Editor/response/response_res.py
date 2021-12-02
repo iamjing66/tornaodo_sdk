@@ -103,6 +103,14 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
         res_id: 资源id
         res_type: 要转移到的资源类型id
     '''
+    sql_type = "selece id from tb_p_resType where uid = %s and tid = %s;"
+    data_type = DB.fetchone(sql_type, (uid, res_type))
+    if not data_type:
+        return -1, "资源分类不存在"
+    sql_res = "select id from tb_p_res where uid = %s and rid = %s;"
+    data_res = DB.fetchone(sql_res, (uid, res_id))
+    if not data_res:
+        return -2, "资源不存在"
     sql = "update tb_p_res set TID = %s where uid = %s and rid = %s;"
     data = DB.edit(sql, (res_id, uid, res_type))
     if data:
@@ -110,7 +118,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
     return 0, "转移资源失败"
 
 
-def user_upload_data(uid, page) -> Tuple[int, str, str]:
+def user_upload_data(uid, page) -> Tuple[int, int, str]:
     '''
     description:
         用户上传数据
@@ -121,17 +129,23 @@ def user_upload_data(uid, page) -> Tuple[int, str, str]:
     return:
         0: 失败
         1: 成功
+        msg:
+            1: 还有数据
+            -1: 没有数据
     '''
     user_list = []
     user_data = ""
+    msg = -1
     sql = "select * from tb_p_res where uid = %s " + sql_limit(page) + ";"
     data = DB.fetchall(sql, uid)
     if data:
+        if len(data) == 500:
+            msg = 1
         for i in data:
             user_list.append("`".join(str(j) for j in i))
         user_data = "*".join(user_list)
-        return 1, "数据获取成功", user_data
-    return 0, "数据获取失败", user_data
+        return 1, msg, user_data
+    return 0, msg, user_data
 
 
 def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
