@@ -1,9 +1,9 @@
 import json
 import requests
 
-url = "http://123.57.163.216:9001/postinterface"
+url = "http://192.168.0.9:9001/postinterface"
 
-data = {"opencode":"3","subcode":"40","UID":"0","username":"","data":'{"pam":"101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125"}'}
+data = {"opencode":"100","subcode":"1052","UID":"9","username":"lyy","data":'{"uid":"9","resTypeName":"1l","resTypeID":"2","desc":""}'}
 
 
 res = requests.post(url, json=data).json()
