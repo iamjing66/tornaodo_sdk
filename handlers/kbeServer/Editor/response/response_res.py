@@ -43,8 +43,8 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     data = DB.fetchone(sql, (res_name, uid, res_name))
     r_data = ""
     if data:
-        r_data = uuid.uuid3(uuid.NAMESPACE_X500, str(uid) + "_" + res_name)
         return 0, "模型名称重复请修改", r_data
+    r_data = uuid.uuid3(uuid.NAMESPACE_X500, str(uid) + "_" + res_name)
     return 1, "可以上传", r_data
 
 
@@ -141,7 +141,7 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
     user_list = []
     user_data = ""
     msg = -1
-    sql = "select * from tb_p_res where uid = %s " + sql_limit(page) + ";"
+    sql = "select TID, name, `desc` from tb_p_res where uid = %s " + sql_limit(page) + ";"
     data = DB.fetchall(sql, uid)
     if data:
         if len(data) == 500:
@@ -168,7 +168,7 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
         1: 成功
         -1: 资源类型数量超过五个
     '''
-    sql_user_type = "select count(id) from tb_p_resType where uid = %s and tid = %s;"
+    sql_user_type = "select count(id) from tb_p_resType where uid = %s and tid = %s and isDel = 0;"
     data_type = DB.fetchone(sql_user_type, (uid, tid))
     if data_type:
         if data_type[0] >= 5:
@@ -193,7 +193,7 @@ def del_res_type(uid, tid) -> Tuple[int, str]:
         1: 成功
         -1: 该资源类型下有资源，不能删除
     '''
-    sql_res = "select id from tb_p_res where uid = %s and TID = %s;"
+    sql_res = "select id from tb_p_res where uid = %s and TID = %s and isDel = 0;"
     data_res = DB.fetchone(sql_res, (uid, tid))
     if data_res:
         return -1, "该资源类型下有资源，不能删除"
