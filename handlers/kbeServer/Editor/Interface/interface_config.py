@@ -14,16 +14,16 @@ class IConfig:
         self.LimitCount = 500
         #self.ReadComData()
         self.Content = ""
-        self.Config_List = ["203", "204", "205", "206", "207", "208"]  # "202",
+        self.Config_List = ["203","204","207","208"]  # "202",
         self.DB = DBManager()
         # 配表数据
         # = 课程包
-        self.CBagConfig = {}
-        self.VipConfig = {}
+        #self.CBagConfig = {}
+        #self.VipConfig = {}
         self.ObjConfig = {}
         self.SceneConfig = {}
-        self.CourseConfig = {}
-        self.LeftBagConfig = {}
+        #self.CourseConfig = {}
+        #self.LeftBagConfig = {}
         self.ChannelConfig = {}
         self.ChannelZKConfig = {}
         self.DataConfig = {"bagprice": 0}

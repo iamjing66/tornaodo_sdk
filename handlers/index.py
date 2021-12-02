@@ -1,12 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-import random
-import time
-import requests
 
 from handlers.base import BaseHandler
-from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
-from handlers.redisServer.RedisInterface import C_ServerAddressCache,RedisData
 import redis
 
 class IndexHandler(BaseHandler):    #继承base.py中的类BaseHandler
@@ -97,8 +92,8 @@ class IndexHandler(BaseHandler):    #继承base.py中的类BaseHandler
         # url = globalRedisU.redis_getAdreese()
         # print("login - get serverAddresse = " + url)
 
-        rc = redis.StrictRedis(host='192.168.0.9', port='6379', db=1, password='123123')
-        rc.publish("runoobChat","hello")
+        #rc = redis.StrictRedis(host='192.168.0.9', port='6379', db=1, password='123123')
+        #rc.publish("runoobChat","hello")
         self.write("ok")
 
     def post(self):

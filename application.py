@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
+from handlers.SyncServer.sockect import pro_status
 from handlers.kbeServer.Editor.Interface.interface_config import IC
 from url import Urls
 import Global
 import logging
 import redis
-from handlers.redisServer.RedisInterface import RedisData
+from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache
 import tornado.web
 import threading
 from handlers.redisServer.RedisInterface import RedisWorker
@@ -26,20 +27,45 @@ class Application(tornado.web.Application):
     def __init__(self, *args, **kwargs):
         super(Application, self).__init__(*args, **kwargs)
 
-        self.worktimer = time.strftime("%Y-%m-%d", time.localtime())
-        redis_worker = RedisWorker()
+        self.SIp = ""
+        self.SPort = 0
+        self.SAddress = ""
+        self.RedisServerAddress = ""
         self.MainServer = False
+        self.SUID = ""
 
-        if not redis_worker.GetWorkMainState():
-            self.MainServer = True
-            redis_worker.SetWorkMain()
-            self.DoInit_Main()
-        self.DoEvent_All()
+
+    def DoInit(self,_ip,_port):
+
+        self.SIp = _ip
+        self.SPort = _port
+        self.SAddress = _ip+":"+str(_port)
+        self.RedisServerAddress = _ip+"*"+str(_port)
+        logging.info("[ServerSetup] addresse = " + self.SAddress)
+        serverlist = Global.get_config.redis_config()
+        logging.info("[ServerSetup] serverlist = " + str(serverlist))
+        self.SUID = str(serverlist.index(self.SAddress))
+        logging.info("[ServerSetup] SUID = " + str(self.SUID))
+
+        #处理所有初始化
         self.DoInit_All()
-        print("self.MainServer" , self.MainServer)
 
+        # rs = RedisData(1).redis_pool()
+        # rs.set(self.SAddress.replace(":","*"),str(int(time.time())))
 
-        t = threading.Timer(60, self.Worker)
+        sip = serverlist[0]
+        if self.SAddress == sip:
+            self.MainServer = True
+            self.DoInit_Main()
+        else:
+            self.MainServer = False
+        logging.info("[ServerSetup] MainServer = " + str(self.MainServer))
+        #工作事务
+        self.worktimer = time.strftime("%Y-%m-%d", time.localtime())
+
+        print("self.MainServer", self.MainServer)
+
+        t = threading.Timer(2, self.Worker)
         t.start()
 
 
@@ -48,9 +74,10 @@ class Application(tornado.web.Application):
         self.WorkZero()
 
         self.DoEvent_All()
+
         if self.MainServer:
             self.DoEvent_Main()
-        t = threading.Timer(60,self.Worker)
+        t = threading.Timer(2,self.Worker)
         t.start()
 
 
@@ -80,6 +107,7 @@ class Application(tornado.web.Application):
         self.aliclient = DefaultAlipayClient(alipay_client_config=alipay_client_config)
         self.alimodel = AlipayTradeAppPayModel()
 
+
     # 启动事务 - 主服务
     def DoInit_Main(self):
         pass
@@ -88,30 +116,23 @@ class Application(tornado.web.Application):
     #事务处理 - 所有服务
     def DoEvent_All(self):
 
-        pass
-        # redis = RedisData(1)
-        # p = redis.redis_pool().pubsub()
-        # print("p", p)
-        # p.subscribe("runoobChat")
+        #处理事务
+        logging.info("[Do Event All]" + self.SAddress)
 
-        # rc = redis.StrictRedis(host='192.168.0.9', port='6379', db=1, password='123123')
-        # ps = rc.pubsub()
-        # ps.subscribe('runoobChat')  # 从liao订阅消息
-        #
-        #
-        #
-        # for item in ps.listen():  # 读取接收的数据
-        #     # print(item)
-        #     if item['type'] == 'message':  # 判断数据是否是用户发布的数据
-        #         data = item['data']  # 取出用户要发布的数据
-        #         # result = str(data, 'utf-8')
-        #         # result = json.loads(result)
-        #         # print(result)
-        #         print(data)  # 打印要发布的数据
-        #
-        #         if item['data'] == 'Q' or item['data'] == 'q':
-        #             break  # 退出程序
+        #处理顶号事务
+        key = self.RedisServerAddress+"$C1"
+        data = C_ServerEventCache.GetKeys(key)
 
+        if len(data) > 0:
+            print("[DoEvent_All] data = ", data, key)
+            for uuid in data:
+                C_ServerEventCache.DeleteKeys(key,uuid)
+                self.DoEvent_Kick(uuid.decode())
+
+    def DoEvent_Kick(self,uuid):
+
+        print("DoEvent = " , uuid)
+        pro_status.user_kick(uuid)
 
     #事务处理 - 主服务
     def DoEvent_Main(self):
@@ -127,6 +148,7 @@ class Application(tornado.web.Application):
             self.DoZero()
             if self.MainServer:
                 self.DoZero_Main()
+
 
     # 0点事务 - 所有服务
     def DoZero_All(self):

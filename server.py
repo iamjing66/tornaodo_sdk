@@ -7,6 +7,9 @@ import signal
 
 import socket
 import json
+
+import os
+
 import Global
 import tornado.ioloop
 import tornado.options
@@ -63,7 +66,14 @@ def main():
     http_server = tornado.httpserver.HTTPServer(App)
     http_server.listen(options.port)
 
-    print(json.load(urlopen('http://httpbin.org/ip'))['origin'])
+    ENV = os.getenv("ENV", "test")
+    if ENV == "test":
+        thisIP = get_host_ip()
+    else:
+        thisIP = json.load(urlopen('http://httpbin.org/ip'))['origin']
+    thisPort = options.port
+    App.DoInit(thisIP,thisPort)
+
     print("Development server is running at http://127.0.0.1:%s" % options.port)
     print("Quit the server with Control-C")
     tornado.ioloop.IOLoop.instance().start()

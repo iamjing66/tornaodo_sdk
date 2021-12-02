@@ -7,7 +7,6 @@ from time import time
 from handlers.base import BaseHandler
 from handlers.kbeServer.Editor.response import response_account,response_mail,response_class,response_resversion,response_other,response_update,response_sis,response_fullview,response_collect,response_global
 from handlers.kbeServer.Editor.Interface import interface_sms,interface_account,interface_work,interface_user
-from handlers.redisServer.RedisInterface import C_ServerAddressCache
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Avatar_Editor import AvatarEditorInst
 from handlers.kbeServer.App.Avatar_App import AvatarAppInst
@@ -65,7 +64,8 @@ class PostInterfaceRequest(BaseHandler):
             # 顶号
             # interface_user.IUser_Diffusion(1,UID,username,{},cmode)
             # 记录
-            C_ServerAddressCache.SetUser(username,cmode, url )
+            #C_ServerAddressCache.SetUser(username,cmode, url )
+
             json_back = {
                 "code": "1",
                 "msg": url  # self.LOGINCGET

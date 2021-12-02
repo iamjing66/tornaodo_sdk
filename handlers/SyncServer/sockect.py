@@ -1,6 +1,9 @@
 from tornado import options, websocket
 import logging
-from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
+
+import application
+from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache
+
 
 class ProStatus:
 
@@ -11,8 +14,11 @@ class ProStatus:
         self.dicusers_id = {}
         self.dicusers = {}
 
+
+
     def user_connect(self, user, uid, client_model):
-        logging.info("[websocket] logining users = %s" % self.connector)
+
+        #logging.info("[websocket] logining users = %s" % self.connector)
 
         #通过redis判断是否存在相同的账号(websocket id ,服务器地址)
         #写分服事务，通过redis
@@ -21,24 +27,42 @@ class ProStatus:
         #记录新用户（websocket id ,服务器地址）redis
         #绑定新用户
 
-        uuid = self.GlobalUUID
-        self.dicusers[user] = [uuid,uid,client_model]
+        uuid = application.App.SUID + str(self.GlobalUUID)
+        self.dicusers[user] = [uuid, uid, client_model]
         self.GlobalUUID += 1
         self.dicusers_id[uuid] = user
         self.connector[client_model][uid] = uuid
 
-        logging.info("[websocket] login Succ = uuid = %s - %s" % (str(uuid),self.connector))
+        rd = RedisData(2)
+        rds = rd.redis_pool()
+        key = str(uid) + "$" + client_model
+        #处理踢掉线
+        value = rds.hget("websocket",key)
+        print("value = " , value)
+        if value != None:
+            value = value.decode()
+            #老账号要被顶替
+            arr = value.split('$')
+            key1 = arr[1] + "C1"
+
+            C_ServerEventCache.SetEvent(key1,arr[0],'0')
 
 
-    def user_kick(self,uid,client_model):
+        #缓存新记录
+        value = uuid + "$" + application.App.RedisServerAddress
+        rds.hset("websocket",key,value)
 
-        if uid in self.connector[client_model].keys():
+        logging.info("[websocket] login Succ = uuid = %s - %s" % (str(uuid),application.App.RedisServerAddress))
+
+
+    def user_kick(self,uuid):
+
+        if uuid in self.dicusers_id.keys():
             #该账号有记录
-            uuid = self.connector[client_model][uid]
             cuser = self.dicusers_id[uuid]
             if cuser.ws_connection:
                 cuser.write_message("-88@")
-                logging.info("[websocket] kick user = uuid = %s - %s - %s" % (str(uuid) , str(uid), str(client_model)))
+                logging.info("[websocket] kick user = uuid = %s" % (str(uuid) ))
             #清除老记录
             self.user_dispose(cuser,1)
 
@@ -51,15 +75,30 @@ class ProStatus:
             uid = self.dicusers[user][1]
             clientmodel = self.dicusers[user][2]
 
+
             del self.dicusers[user]
             del self.dicusers_id[uuid]
             del self.connector[clientmodel][uid]
 
+
+            if kick == 0:
+                key = str(uid) + "$" + clientmodel
+                rd = RedisData(2)
+                rds = rd.redis_pool()
+                rds.hdel("websocket", key)
+
+            #del self.connector[clientmodel][uid]
+
+            # key = str(uid) + "$" + clientmodel
+            # rd = RedisData(2)
+            # rds = rd.redis_pool()
+
+            #rds.hdel("websocket",key)
+
             # if kick == 0:
             #     globalRedisU.redisurl_delete(uid,clientmodel)
 
-
-            logging.info("[websocket] disconnect = uuid = %s - %s - %s - %s" % (str(uuid),str(uid), str(clientmodel),self.connector))
+            logging.info("[websocket] disconnect = uuid = %s " % (str(uuid)))
 
 
     # def user_remove(self, uid, client_model):
@@ -71,11 +110,16 @@ class ProStatus:
     #     #logging.info(self.connector)
     #     #logging.info("用户退出: %s" % str(uid))
 
+    #同步消息推送(当前服)
     def trigger(self, pam_apptype, uid, code, pam):
         ''' 客户端推送内容 '''
         logging.info(f"uid: {uid} ,client: {pam_apptype}, code: {code}")
-        if str(uid) in self.connector[pam_apptype]:
-            uuid = self.connector[pam_apptype][str(uid)]
+        key = str(uid)+"$"+pam_apptype
+        rd = RedisData(2)
+        rds = rd.redis_pool()
+        value = rds.hget("websocket", key)
+        if value:
+            uuid = value.split('$')[0]
             cuser = self.dicusers_id[uuid]
             cuser.write_message(str(code) + "@" + pam)
 
@@ -88,7 +132,8 @@ class EchoWebSocket(websocket.WebSocketHandler):
 
         # ip = self.request.host_name
         # port = options.options.port
-        self.write_message("-99@none")  # + globalRedisU.redis_serverip_get()
+        #self.write_message("-99@none")  # + globalRedisU.redis_serverip_get()
+        logging.info("[websocket] open")
 
     def on_message(self, message: str):
         # message = -99@uid$(editor/clinet)
@@ -110,7 +155,7 @@ class EchoWebSocket(websocket.WebSocketHandler):
 
     def on_close(self):
 
-        logging.info("[websocket] close users = %s" % pro_status.connector)
+        logging.info("[websocket] close users = %s" % pro_status.dicusers_id.keys())
         pro_status.user_dispose(self,0)
 
     def check_origin(self, origin):

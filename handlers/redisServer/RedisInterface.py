@@ -7,6 +7,7 @@ import logging
 import time
 
 import Global
+import application
 
 
 class RedisBase(object):
@@ -53,56 +54,45 @@ class RedisWorker(RedisBase):
     #     l = self.redis_ctl.hget("cxconfig","balancing")
     #     print("list = " , list(l))
 
-
-class ServerAddressCache(RedisBase):
-    def SetUser(self, username, cmode, Adresse):
-        self.redis_ctl.hset(username, cmode, Adresse)
-
-    def GetAddress(self, username, cmode):
-        return self.redis_ctl.hget(username, cmode)
-
-
-C_ServerAddressCache = ServerAddressCache()
-
-
-class TokenCache(RedisBase):
-    """微信token缓存"""
-    _expire_access_token = 7200  # 微信access_token过期时间, 2小时
-    _expire_js_token = 7200  # 微信jsapi_ticket, 过期时间, 7200秒
-
-    def set_access_cache(self, key, value):
-        """添加微信access_token验证相关redis"""
-        self.redis_ctl.set(key, value)
-        # 设置过期时间
-        self.redis_ctl.expire(key, self._expire_access_token)
-        logging.info('更新了 access_token')
-
-    def set_js_cache(self, key, value):
-        """添加网页授权相关redis"""
-        self.redis_ctl.set(key, value)
-        # 设置过期时间
-        self.redis_ctl.expire(key, self._expire_js_token)
-        logging.info('更新了 js_token')
-
-    def get_cache(self, key):
-        """获取redis"""
-        try:
-            v = (self.redis_ctl.get(key)).decode('utf-8')
-            return v
-        except Exception as e:
-            logging.error('wxcache' + str(e))
-            return None
-
-
 class RedisData():
+
     def __init__(self, database) -> None:
         self.database = database
         self.redis_config = Global.get_config.redis_options(self.database)
 
     def redis_pool(self):
         print(self.redis_config)
-        rdp = redis.ConnectionPool(self.redis_config)
-        rdc = redis.StrictRedis(connection_pool=rdp,
-                                encoding='utf8',
-                                decode_responses=True)
-        return rdc
+        return redis.Redis(host=self.redis_config["host"],
+                    port=self.redis_config["port"],
+                    db=self.redis_config["db"],
+                    password=self.redis_config["password"])
+        #rdp = redis.ConnectionPool(self.redis_config)
+        #rdc = redis.StrictRedis(connection_pool=rdp,encoding='utf8',decode_responses=True)
+
+        #return rdc
+
+
+class ServerEventCache():
+
+    def __init__(self):
+        rds = RedisData(3)
+        self.redis_ctl = rds.redis_pool()
+
+    def SetEvent(self, key , name , value):
+        self.redis_ctl.hset(key, name, value)
+
+    def GetKeys(self, key):
+        return self.redis_ctl.hkeys(key)
+
+    def DeleteKeys(self, key , name):
+        return self.redis_ctl.hdel(key,name)
+
+
+
+
+
+C_ServerEventCache = ServerEventCache()
+
+
+
+

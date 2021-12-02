@@ -39,7 +39,7 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
         0:失败
         1:成功
     '''
-    sql = "select ID from tb_p_res where Name = %s and uid = %s union all select ID from tb_config_res where name = %s;"
+    sql = "select ID from tb_p_res where Name = %s and uid = %s and isDel = 0 union all select ID from tb_config_res where name = %s;"
     data = DB.fetchone(sql, (res_name, uid, res_name))
     r_data = ""
     if data:
@@ -141,7 +141,7 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
     user_list = []
     user_data = ""
     msg = -1
-    sql = "select TID, name, `desc` from tb_p_res where uid = %s " + sql_limit(page) + ";"
+    sql = "select s.*, m.msgDesc from tb_p_res as s left join tb_rebut_msg as m on s.rebutId = m.id and uid = %s " + sql_limit(page) + ";"
     data = DB.fetchall(sql, uid)
     if data:
         if len(data) == 500:
@@ -217,7 +217,7 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
     '''
     user_list = []
     user_data = ""
-    sql = "select * from tb_p_resType where createUserId = %s;"
+    sql = "select TID, name, `desc` from tb_p_resType where createUserId = %s;"
     data = DB.fetchall(sql, uid)
     if data:
         for i in data:
