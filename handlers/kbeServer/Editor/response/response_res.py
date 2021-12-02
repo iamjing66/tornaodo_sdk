@@ -145,7 +145,7 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
     data = DB.fetchall(sql, uid)
     if data:
         if len(data) == 500:
-            msg = 1
+            msg = int(page) + 1
         for i in data:
             user_list.append("`".join(str(j) for j in i))
         user_data = "*".join(user_list)
