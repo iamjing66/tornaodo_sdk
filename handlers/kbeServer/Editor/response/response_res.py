@@ -108,7 +108,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
         -1: 资源类型不存在
         -2: 资源不存在
     '''
-    sql_type = "selece id from tb_p_resType where uid = %s and tid = %s;"
+    sql_type = "selece id from tb_p_resType where createUserId = %s and tid = %s;"
     data_type = DB.fetchone(sql_type, (uid, res_type))
     if not data_type:
         return -1, "资源分类不存在"
@@ -173,8 +173,8 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
     if data_type:
         if data_type[0] >= 5:
             return -1, "资源类型数量超过5个"
-    sql = "insert into tb_p_resType(Tid, name, createUserId, Desc, isDel) values (%s, %s, %s, %s, %s);"
-    data = DB.edit(sql, (uid, type_name, tid, desc,0))
+    sql = "insert into tb_p_resType(Tid, name, createUserId, `Desc`) values (%s, %s, %s, %s);"
+    data = DB.edit(sql, (tid, type_name, uid, desc))
     if data:
         return 1, "新建资源类型成功"
     return 0, "新建资源类型失败"
@@ -197,7 +197,7 @@ def del_res_type(uid, tid) -> Tuple[int, str]:
     data_res = DB.fetchone(sql_res, (uid, tid))
     if data_res:
         return -1, "该资源类型下有资源，不能删除"
-    sql = "update tb_p_resType set isdel = 1 where uid = %s and tid = %s;"
+    sql = "update tb_p_resType set isdel = 1 where createUserId = %s and tid = %s;"
     data = DB.edit(sql, (uid, tid))
     if data:
         return 1, "删除资源类型成功"
