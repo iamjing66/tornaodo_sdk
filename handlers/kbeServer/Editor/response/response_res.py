@@ -168,7 +168,7 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
         1: 成功
         -1: 资源类型数量超过五个
     '''
-    sql_user_type = "select count(id) from tb_p_resType where uid = %s and tid = %s and isDel = 0;"
+    sql_user_type = "select count(id) from tb_p_resType where createUserId = %s and tid = %s and isDel = 0;"
     data_type = DB.fetchone(sql_user_type, (uid, tid))
     if data_type:
         if data_type[0] >= 5:
