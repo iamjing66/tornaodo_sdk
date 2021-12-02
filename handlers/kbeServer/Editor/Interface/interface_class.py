@@ -13,7 +13,7 @@ def ClassSchedule(DB, pam):
         return json_data
     classid = pam["Pam"]
     # &Schedule.WID, &Schedule.Chapter, &Schedule.CourseName, &Schedule.WSDate, &Schedule.WEDate, &Schedule.CourseID, &Schedule.LessonID, &Schedule.UID, &Schedule.PID, &susername, &Schedule.ID, &Schedule.SSDate, &Schedule.SEDate
-    sql_str = "select * from (SELECT T3.*,T4.ID as tid,T4.`start` as tstart,t4.`end` as tend from(select t1.*,t2.UserName from (select id,chapter,courses,`start`,`end`,courseId,MlessonID,UID,PID FROM `events` WHERE scheduleId = (select scheduleId from tb_class where CID = " + str(classid) + ") and istask = 0 ORDER BY `end`) as t1 LEFT join tb_userdata as t2 on t1.UID = T2.UID) as T3 inner join `events` AS T4 ON t3.CourseID = t4.CourseID and t3.MLessonID = t4.MLessonID and t3.UID = t4.UID AND T3.PID = t4.PID AND T4.istask = 1 and T4.scheduleId = (select scheduleId from tb_class where CID = " + str(classid) + ")) t5 order by `end`"
+    sql_str = "select * from (SELECT T3.*,T4.ID as tid,T4.`start` as tstart,t4.`end` as tend from(select t1.*,t2.UserName from (select id,chapter,courses,`start`,`end`,courseId,MlessonID,UID,PID FROM `events` WHERE scheduleId = (select scheduleId from tb_class where CID = " + str(classid) + ") and istask = 0 and mlessonId != 0 ORDER BY `end`) as t1 LEFT join tb_userdata as t2 on t1.UID = T2.UID) as T3 inner join `events` AS T4 ON t3.CourseID = t4.CourseID and t3.MLessonID = t4.MLessonID and t3.UID = t4.UID AND T3.PID = t4.PID AND T4.istask = 1 and T4.mlessonId != 0 and T4.scheduleId = (select scheduleId from tb_class where CID = " + str(classid) + ")) t5 order by `end`"
 
     data = DB.fetchall(sql_str,None)
     _cback = ""

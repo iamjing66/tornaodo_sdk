@@ -66,7 +66,7 @@ def main():
     http_server = tornado.httpserver.HTTPServer(App)
     http_server.listen(options.port)
 
-    ENV = os.getenv("ENV", "test")
+    ENV = Global.ENV
     if ENV == "test":
         thisIP = get_host_ip()
     else:

@@ -74,7 +74,7 @@ def PC_lOGON(DB,Username, json_data):
         VipDate = int(data[38])
         Wit_RMB = int(data[39])
         gmstate = int(data[47])
-        save_status = data[48]
+        save_status = data[58]
 
     # 班级信息
     class_str = ""
