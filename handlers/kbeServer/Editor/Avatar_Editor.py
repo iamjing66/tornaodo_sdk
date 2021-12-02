@@ -1,7 +1,7 @@
 
 import logging
 from handlers.kbeServer.Editor.response import response_course
-from handlers.kbeServer.Editor.response import response_lesson,response_project,response_account,response_zy,response_coursebag,response_work,response_gm
+from handlers.kbeServer.Editor.response import response_lesson,response_project,response_account,response_zy,response_coursebag,response_work,response_gm, response_res
 
 class Avatar_Editor:    #继承base.py中的类BaseHandler
 
@@ -102,7 +102,27 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback = response_account.Transactions_Code_1044(self_uid, self_username, json_data)
         elif subCode == 1045:   # 获取工程配置数据
             json_dback = response_account.Transactions_Code_1045(self_uid, self_username, json_data)
-        #logging.info("subcode[%i] json_dback[%s]" % (subCode ,str(json_dback)))
+        elif subCode == 1046:
+            json_dback["code"], json_dback["msg"] = response_res.update_user_save(json_data["uid"])
+        elif subCode == 1047:
+            json_dback["code"], json_dback["msg"], json_dback["pam"] = response_res.resource_upload_judge(json_data["uid"],json_data["resName"])
+        elif subCode == 1048:
+            json_dback["code"], json_dback["msg"] = response_res.resource_upload(
+                json_data["uid"], json_data["resID"],
+                json_data["resName"], json_data["iconPath"],
+                json_data["filePath"], json_data["resTypeID"])
+        elif subCode == 1049:
+            json_dback["code"], json_dback["msg"] = response_res.del_resource(json_data["uid"], json_data["resID"])
+        elif subCode == 1050:
+            json_dback["code"], json_dback["msg"] = response_res.transfer_resource(json_data["uid"], json_data["resID"], json_data["resTypeID"])
+        elif subCode == 1051:
+            json_dback["code"], json_dback["msg"], json_dback["pam"] = response_res.user_upload_data(json_data["uid"], json_data["page"])
+        elif subCode == 1052:
+            json_dback["code"], json_dback["msg"] = response_res.create_new_type(json_data["uid"], json_data["resTypeName"], json_data["resTypeID"], json_data["desc"])
+        elif subCode == 1053:
+            json_dback["code"], json_dback["msg"] = response_res.del_res_type(json_data["uid"], json_data["resTypeID"])
+        elif subCode == 1054:
+            json_dback["code"], json_dback["msg"], json_dback["pam"] = response_res.get_user_res_type(json_data["uid"])
         return json_dback
 
 

@@ -30,6 +30,7 @@ from tornado.web import StaticFileHandler
 from handlers.SyncServer.sockect import EchoWebSocket
 import Global
 from handlers.wechatGZH.wxhandler import getSignHandler,pageHandler,wechatShareHandler
+from handlers.kbeServer.Editor.resupload.res_upload import ResUploadHandler
 
 #统一用户体系
 #http://192.168.0.9:9001/pget/pdata?appid=fd17cb08-1824-11eb-a7df-408d5cf8276a&username=lyy&gpid=5&guid=24&gtype=0
@@ -151,6 +152,5 @@ Urls = [
 
     # apk 相关
     ("/apkinfo", ApkInfoHandler),
-
 
 ]

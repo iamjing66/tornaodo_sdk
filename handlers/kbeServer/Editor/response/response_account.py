@@ -79,7 +79,7 @@ def Transactions_Code_1019(self_uid, self_username, json_data):
         json_back["pam"] = interface_account.PC_lOGON(DB,self_username,json_data)
     # TODO 用户登录后，更新用户的 redis
     # 顶号
-    interface_user.IUser_Diffusion(1, self_uid, username, {}, "editor")
+    # interface_user.IUser_Diffusion(1, self_uid, username, {}, "editor")
     DB.destroy()
     return json_back
 

@@ -49,10 +49,10 @@ def DoOperate_GetClientName_new(DB, pam):
         clientName = "XRCreateX"
         sql = "Select clientName from eservices where id = %s"
     elif _arrPam[1] == "2":
-        clientName = "XR云课堂"
+        clientName = "飞蝶XR"
         sql = "Select appName, logoImg from eservices where id = %s"
     elif _arrPam[1] == "3":
-        clientName = "XR云课堂"
+        clientName = "飞蝶XR"
         sql = "Select vrName, logoImg from eservices where id = %s"
 
     if _arrPam[0] != "0":
