@@ -119,7 +119,8 @@ class ProStatus:
         rds = rd.redis_pool()
         value = rds.hget("websocket", key)
         if value:
-            uuid = value.split('$')[0]
+            value = str(value, encoding="utf-8")
+            uuid = str(value.split('$')[0])
             cuser = self.dicusers_id[uuid]
             cuser.write_message(str(code) + "@" + pam)
 
