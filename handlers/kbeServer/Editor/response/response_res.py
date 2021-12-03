@@ -42,6 +42,7 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     sql = "select ID from tb_p_res where Name = %s and uid = %s and isDel = 0 union all select ID from tb_config_res where name = %s;"
     data = DB.fetchone(sql, (res_name, uid, res_name))
     r_data = ""
+    res_name = "@".join([str(uid), res_name])
     if data:
         return 0, "模型名称重复请修改", r_data
     r_data = hashlib.md5(res_name.encode(encoding='UTF-8')).hexdigest()
