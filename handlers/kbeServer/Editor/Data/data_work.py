@@ -147,8 +147,6 @@ def Data_Works_Base_New(sql, DB, p_server, call_type):
                             json_back = json_back + "!" + Get_Data_Work_Base_Ini(minfo_list) + "`" + str(minfo_list[28])
                     elif call_type == 2:
                         json_back.append(Get_Data_Work_Base_List(minfo_list))
-    logging.info("========")
-    logging.info(json_back)
     return [objlist,json_back]
 
 

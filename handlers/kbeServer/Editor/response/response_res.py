@@ -66,9 +66,9 @@ def resource_upload(uid, res_id, res_name, pic_path, res_path,
         1:成功
     '''
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    sql = "insert into tb_p_res(rid, uid, Name, picPath, resPath, uploadtime, TID) values(%s, %s, %s, %s, %s, %s, %s);"
+    sql = "insert into tb_p_res(rid, uid, Name, picPath, resPath, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s, %s, %s);"
     data = DB.edit(sql,
-                   (res_id, uid, res_name, pic_path, res_path, now, res_type))
+                   (res_id, uid, res_name, pic_path, res_path, now, now, res_type))
     if data:
         return 1, "上传成功"
     return 0, "上传失败"

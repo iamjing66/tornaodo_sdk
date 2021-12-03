@@ -23,7 +23,6 @@ def clientVersionDataToJson(pdata):
             if uid not in p_server.keys():
                 p_server[uid] = {}
             p_server[uid][pid] = version
-    logging.info(p_server)
     return p_server
 
 #同步数据
@@ -58,7 +57,6 @@ def GetNew(pdata, self_uid, type, **kwargs):
     p_server = {}
     now_page = 1
     max_page = 1
-    logging.info("... %s" % pdata)
 
     if type == 0 or type == 1:
         # 版本验证

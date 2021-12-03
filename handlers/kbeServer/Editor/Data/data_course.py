@@ -37,7 +37,7 @@ def Data_Courses_Base(sql, DB,cversions, call_type):
                 cid = int(minfo_list[1])
                 version = int(minfo_list[12])
                 uid = int(minfo_list[10])
-                logging.info("cid: %s, version: %s, uid: %s, cversions: %s" % (cid, version, uid, cversions))
+                # logging.info("cid: %s, version: %s, uid: %s, cversions: %s" % (cid, version, uid, cversions))
 
                 # #记录下来服务器上得课程列表-用来判断客户端是否有删除得
                 # scourse_list = copy.deepcopy(cversions)
