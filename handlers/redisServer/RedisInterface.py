@@ -84,6 +84,10 @@ class ServerEventCache():
     def GetKeys(self, key):
         return self.redis_ctl.hkeys(key)
 
+
+    def GetValue(self, key,name):
+        return self.redis_ctl.hget(key,name)
+
     def DeleteKeys(self, key , name):
         return self.redis_ctl.hdel(key,name)
 

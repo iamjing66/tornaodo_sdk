@@ -88,7 +88,7 @@ class Application(tornado.web.Application):
 
         # t = threading.Timer(5,self.Worker)
         # t.start()
-        tornado.ioloop.IOLoop.instance().call_later(5, self.Worker)
+        tornado.ioloop.IOLoop.instance().call_later(2, self.Worker)
 
 
     #启动事务 - 所有服务
@@ -126,11 +126,18 @@ class Application(tornado.web.Application):
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key, uuid)
 
+        #邮件业务
+        key = self.RedisServerAddress + "$106"
+        data = C_ServerEventCache.GetKeys(key)
+        if len(data) > 0:
+            for uuid in data:
+                C_ServerEventCache.DeleteKeys(key, uuid)
+
 
     # 启动事务 - 主服务
     def DoInit_Main(self):
         # 清理业务缓存
-        # 顶号业务
+        # 用户列表
         key = "websocket"
         rd = RedisData(2)
         rds = rd.redis_pool()
@@ -151,15 +158,30 @@ class Application(tornado.web.Application):
         data = C_ServerEventCache.GetKeys(key)
 
         if len(data) > 0:
-            logging.info("[DoEvent_All] data = %s - key = %s" % ( data, key))
+            logging.info("[DoEvent_All] Kick data = %s - key = %s" % ( data, key))
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key,uuid)
                 self.DoEvent_Kick(uuid.decode())
+
+        key = self.RedisServerAddress + "$106"
+        data = C_ServerEventCache.GetKeys(key)
+        if len(data) > 0:
+            logging.info("[DoEvent_All] Mail data = %s - key = %s" % (data, key))
+            for uuid in data:
+                self.DoEvent_Mail(uuid.decode(),C_ServerEventCache.GetValue(key,uuid).decode())
+                C_ServerEventCache.DeleteKeys(key, uuid)
+
+
 
     def DoEvent_Kick(self,uuid):
 
         print("DoEvent = " , uuid)
         pro_status.user_kick(uuid)
+
+    def DoEvent_Mail(self, uuid,value):
+
+        print("DoEvent = ", uuid,value)
+        pro_status.DoMessage_Mail(uuid,value)
 
     #事务处理 - 主服务
     def DoEvent_Main(self):

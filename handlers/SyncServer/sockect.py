@@ -33,22 +33,15 @@ class ProStatus:
         self.dicusers_id[uuid] = user
         self.connector[client_model][uid] = uuid
 
+
+
+        #踢下线
+        self.syncTrigger(client_model,uid,"C1",'0')
+
+        #缓存新记录
         rd = RedisData(2)
         rds = rd.redis_pool()
         key = str(uid) + "$" + client_model
-        #处理踢掉线
-        value = rds.hget("websocket",key)
-        logging.info("value = %s key = %s " % (value,key))
-        if value != None:
-            value = value.decode()
-            #老账号要被顶替
-            arr = value.split('$')
-            key1 = arr[1] + "$C1"
-
-            C_ServerEventCache.SetEvent(key1,arr[0],'0')
-
-
-        #缓存新记录
         value = uuid + "$" + application.App.RedisServerAddress
         rds.hset("websocket",key,value)
 
@@ -112,8 +105,21 @@ class ProStatus:
     #     #logging.info("用户退出: %s" % str(uid))
 
 
-    def syncTrigger(self,code,pam):
-        pass
+    def syncTrigger(self,pam_apptype,uid,code,pam):
+
+        rd = RedisData(2)
+        rds = rd.redis_pool()
+        key = str(uid) + "$" + pam_apptype
+        # 处理踢掉线
+        value = rds.hget("websocket", key)
+        logging.info("value = %s key = %s " % (value, key))
+        if value != None:
+            value = value.decode()
+            # 老账号要被顶替
+            arr = value.split('$')
+            key1 = arr[1] + "$"+code
+
+            C_ServerEventCache.SetEvent(key1, arr[0], pam)
 
 
 
@@ -122,15 +128,24 @@ class ProStatus:
     def trigger(self, pam_apptype, uid, code, pam):
         ''' 客户端推送内容 '''
         logging.info(f"uid: {uid} ,client: {pam_apptype}, code: {code}")
-        key = str(uid)+"$"+pam_apptype
-        rd = RedisData(2)
-        rds = rd.redis_pool()
-        value = rds.hget("websocket", key)
-        if value:
-            value = str(value, encoding="utf-8")
-            uuid = str(value.split('$')[0])
+        if code == "106":   #分服通知
+            self.syncTrigger(pam_apptype,uid,code,pam)
+        else:
+            if str(uid) in self.connector[pam_apptype]:
+                uuid = self.connector[pam_apptype][str(uid)]
+                cuser = self.dicusers_id[uuid]
+                cuser.write_message(str(code) + "@" + pam)
+
+
+
+    def DoMessage_Mail(self,uuid,pam):
+
+        if uuid in self.dicusers_id.keys():
             cuser = self.dicusers_id[uuid]
-            cuser.write_message(str(code) + "@" + pam)
+            cuser.write_message("106@" + pam)
+
+
+
 
 
 pro_status = ProStatus()
