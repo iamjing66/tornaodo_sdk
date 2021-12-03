@@ -2,7 +2,7 @@
 '''
 上传资源相关方法
 '''
-import re
+import hashlib
 import time
 from typing import Tuple
 import uuid
@@ -44,7 +44,7 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     r_data = ""
     if data:
         return 0, "模型名称重复请修改", r_data
-    r_data = uuid.uuid3(uuid.NAMESPACE_X500, str(uid) + "_" + res_name)
+    r_data = hashlib.md5(res_name.encode(encoding='UTF-8')).hexdigest()
     return 1, "可以上传", r_data
 
 

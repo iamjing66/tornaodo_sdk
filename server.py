@@ -64,15 +64,17 @@ def main():
     tornado.options.parse_command_line()
     print("options.port = ", options.port)
     http_server = tornado.httpserver.HTTPServer(App)
-    http_server.listen(options.port)
-
     ENV = Global.ENV
     if ENV == "test":
         thisIP = get_host_ip()
     else:
         thisIP = json.load(urlopen('http://httpbin.org/ip'))['origin']
     thisPort = options.port
-    App.DoInit(thisIP,thisPort)
+    App.DoInit(thisIP, thisPort)
+
+    http_server.listen(options.port)
+
+
 
     print("Development server is running at http://127.0.0.1:%s" % options.port)
     print("Quit the server with Control-C")

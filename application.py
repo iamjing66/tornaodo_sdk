@@ -65,7 +65,7 @@ class Application(tornado.web.Application):
 
         print("self.MainServer", self.MainServer)
 
-        t = threading.Timer(2, self.Worker)
+        t = threading.Timer(5, self.Worker)
         t.start()
 
 
@@ -77,7 +77,7 @@ class Application(tornado.web.Application):
 
         if self.MainServer:
             self.DoEvent_Main()
-        t = threading.Timer(2,self.Worker)
+        t = threading.Timer(5,self.Worker)
         t.start()
 
 
@@ -108,23 +108,40 @@ class Application(tornado.web.Application):
         self.alimodel = AlipayTradeAppPayModel()
 
 
+        #清理业务缓存
+        #顶号业务
+        key = self.RedisServerAddress + "$C1"
+        data = C_ServerEventCache.GetKeys(key)
+        if len(data) > 0:
+            for uuid in data:
+                C_ServerEventCache.DeleteKeys(key, uuid)
+
+
     # 启动事务 - 主服务
     def DoInit_Main(self):
-        pass
+        # 清理业务缓存
+        # 顶号业务
+        key = "websocket"
+        rd = RedisData(2)
+        rds = rd.redis_pool()
+        data = rds.hkeys(key)
+        if len(data) > 0:
+            for uuid in data:
+                rds.hdel(key, uuid)
 
 
     #事务处理 - 所有服务
     def DoEvent_All(self):
 
         #处理事务
-        logging.info("[Do Event All]" + self.SAddress)
+        #logging.info("[Do Event All]" + self.SAddress)
 
         #处理顶号事务
         key = self.RedisServerAddress+"$C1"
         data = C_ServerEventCache.GetKeys(key)
 
         if len(data) > 0:
-            print("[DoEvent_All] data = ", data, key)
+            logging.info("[DoEvent_All] data = %s - key = %s" % ( data, key))
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key,uuid)
                 self.DoEvent_Kick(uuid.decode())

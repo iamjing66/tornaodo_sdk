@@ -38,12 +38,12 @@ class ProStatus:
         key = str(uid) + "$" + client_model
         #处理踢掉线
         value = rds.hget("websocket",key)
-        print("value = " , value)
+        logging.info("value = %s key = %s " % (value,key))
         if value != None:
             value = value.decode()
             #老账号要被顶替
             arr = value.split('$')
-            key1 = arr[1] + "C1"
+            key1 = arr[1] + "$C1"
 
             C_ServerEventCache.SetEvent(key1,arr[0],'0')
 
@@ -75,6 +75,7 @@ class ProStatus:
             uid = self.dicusers[user][1]
             clientmodel = self.dicusers[user][2]
 
+            logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s" % (uuid,str(uid),str(clientmodel)))
 
             del self.dicusers[user]
             del self.dicusers_id[uuid]
@@ -109,6 +110,13 @@ class ProStatus:
     #         logging.info("[websocket] quit Succ = %s - %s - %s" % (str(uid), str(client_model), self.connector))
     #     #logging.info(self.connector)
     #     #logging.info("用户退出: %s" % str(uid))
+
+
+    def syncTrigger(self,code,pam):
+        pass
+
+
+
 
     #同步消息推送(当前服)
     def trigger(self, pam_apptype, uid, code, pam):
