@@ -44,7 +44,14 @@ class Application(tornado.web.Application):
         logging.info("[ServerSetup] addresse = " + self.SAddress)
         serverlist = Global.get_config.redis_config()
         logging.info("[ServerSetup] serverlist = " + str(serverlist))
-        self.SUID = str(serverlist.index(self.SAddress))
+        rd = RedisData(1)
+        rds = rd.redis_pool()
+        akpos = rds.get("ak")
+        ak = 1
+        if akpos:
+            ak = int(akpos)
+        rds.set("ak",str(ak+1))
+        self.SUID = str(serverlist.index(self.SAddress)) + str(ak)
         logging.info("[ServerSetup] SUID = " + str(self.SUID))
 
         #处理所有初始化
