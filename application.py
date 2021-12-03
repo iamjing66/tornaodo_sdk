@@ -72,8 +72,9 @@ class Application(tornado.web.Application):
 
         print("self.MainServer", self.MainServer)
 
-        t = threading.Timer(5, self.Worker)
-        t.start()
+        # t = threading.Timer(5, self.Worker)
+        # t.start()
+        tornado.ioloop.IOLoop.instance().call_later(5, self.Worker)
 
 
     def Worker(self):
@@ -84,8 +85,10 @@ class Application(tornado.web.Application):
 
         if self.MainServer:
             self.DoEvent_Main()
-        t = threading.Timer(5,self.Worker)
-        t.start()
+
+        # t = threading.Timer(5,self.Worker)
+        # t.start()
+        tornado.ioloop.IOLoop.instance().call_later(5, self.Worker)
 
 
     #启动事务 - 所有服务

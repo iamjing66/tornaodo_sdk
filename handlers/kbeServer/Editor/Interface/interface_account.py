@@ -74,7 +74,8 @@ def PC_lOGON(DB,Username, json_data):
         VipDate = int(data[38])
         Wit_RMB = int(data[39])
         gmstate = int(data[47])
-        save_status = data[58]
+        # TODO 版本更新后再使用
+        # save_status = data[58]
 
     # 班级信息
     class_str = ""
@@ -142,7 +143,7 @@ def PC_lOGON(DB,Username, json_data):
                 Scene_Msg = Package_Msg + "@" + str(minfo_list[0]) + "|" + str(minfo_list[1])
 
 
-    _SEND = Phone + "$" + str(Power) + "$" + str(UPower) + "$" + str(MainAccount) + "$" + TheName + "$" + TheSchool + "$" + TheClass + "$" + identity + "$" + str(COMID) + "$" + str(PassDate) + "$" + AccountDesc + "$" + BCBag + "$" + str(organization) + "$" + str(distributor) + "$" + str(AccountType) + "$" + str(uversion) + "$" + str(makec) + "$" + str(AccountSource) + "$" + class_str + "$" + str(sclass) + "$" + str(fabricator) + "$" + str(adminType) + "$" + str(AccountPower) + "$" + str(VipPower) + "$" + str(VipDate) + "$" + Package_Msg + "$" + str(uid) + "$" + Res_Msg+ "$" + Scene_Msg + "$" + str(gmstate) + "$" + str(save_status)
+    _SEND = Phone + "$" + str(Power) + "$" + str(UPower) + "$" + str(MainAccount) + "$" + TheName + "$" + TheSchool + "$" + TheClass + "$" + identity + "$" + str(COMID) + "$" + str(PassDate) + "$" + AccountDesc + "$" + BCBag + "$" + str(organization) + "$" + str(distributor) + "$" + str(AccountType) + "$" + str(uversion) + "$" + str(makec) + "$" + str(AccountSource) + "$" + class_str + "$" + str(sclass) + "$" + str(fabricator) + "$" + str(adminType) + "$" + str(AccountPower) + "$" + str(VipPower) + "$" + str(VipDate) + "$" + Package_Msg + "$" + str(uid) + "$" + Res_Msg+ "$" + Scene_Msg + "$" + str(gmstate)  # + "$" + str(save_status) 版本更新后使用
     #print("_SEND",_SEND)
 
     #login
