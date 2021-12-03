@@ -21,7 +21,7 @@ def GetWorkSQLFromType(itype,self_uid,pam, **kwargs):
         sql = "select *,'',0 from tb_workbag where UID = " + str(self_uid)
     elif itype == 1:  # 作品市场
         # course_level: 1-精品课程  2-普通课程(不包含精品课)
-        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1;"
+        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1 order by t1.sort;"
     elif itype == 2:
         mpage = pam[0]
         now_page = pam[1]
@@ -142,9 +142,9 @@ def Data_Works_Base_New(sql, DB, p_server, call_type):
                     objlist.append([wid, uid])
                     if call_type == 0:
                         if json_back == "":
-                            json_back = Get_Data_Work_Base_Ini(minfo_list)
+                            json_back = Get_Data_Work_Base_Ini(minfo_list) + "`" + str(minfo_list[28])
                         else:
-                            json_back = json_back + "!" + Get_Data_Work_Base_Ini(minfo_list)
+                            json_back = json_back + "!" + Get_Data_Work_Base_Ini(minfo_list) + "`" + str(minfo_list[28])
                     elif call_type == 2:
                         json_back.append(Get_Data_Work_Base_List(minfo_list))
     logging.info("========")
