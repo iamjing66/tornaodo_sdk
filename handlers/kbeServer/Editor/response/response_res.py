@@ -221,7 +221,7 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
     '''
     user_list = []
     user_data = ""
-    sql = "select TID, name, `desc` from tb_p_resType where createUserId = %s;"
+    sql = "select TID, name, `desc`, isDel from tb_p_resType where createUserId = %s;"
     data = DB.fetchall(sql, uid)
     if data:
         for i in data:
