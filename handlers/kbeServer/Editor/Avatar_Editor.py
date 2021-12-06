@@ -122,6 +122,8 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback["code"], json_dback["msg"] = response_res.del_res_type(json_data["uid"], json_data["resTypeID"])
         elif subCode == 1054:
             json_dback["code"], json_dback["msg"], json_dback["pam"] = response_res.get_user_res_type(json_data["uid"])
+        elif subCode == 1055:
+            json_dback["code"], json_dback["msg"] = response_res.update_type_name(json_data["uid"], json_data["resTypeID"], json_data["resTypeName"], json_data["desc"])
         return json_dback
 
 

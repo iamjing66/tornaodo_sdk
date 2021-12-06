@@ -68,16 +68,16 @@ def resource_upload(uid, res_name, pic_path, res_path,
         1:成功
     '''
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    rid_sql = "select max(rid) from tb_config_res;"
+    rid_sql = "select rid from tb_config_res where ID = (select max(id) from tb_config_res);"
     data_rid = DB.fetchone(rid_sql)
     insert_status = 1
-    res_id = data_rid[0] + 1
-    res_sql = "insert into tb_config_res(rid, p2, name, abpath, pic_path) values(%s, %s, %s, %s, %s);"
+    res_id = int(data_rid[0]) + 1
+    res_sql = "insert into tb_config_res(rid, p2, name, abpath, picpath) values(%s, %s, %s, %s, %s);"
     res_data = DB.edit(res_sql, (res_id, uid, res_name, res_path, pic_path))
     if not res_data:
         insert_status = 0
-    sql = "insert into tb_p_res(rid, uid, Name, picPath, resPath, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s, %s, %s);"
-    data = DB.edit(sql, (res_id, uid, res_name, pic_path, res_path, now, now, res_type))
+    sql = "insert into tb_p_res(rid, uid, Name, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s);"
+    data = DB.edit(sql, (res_id, uid, res_name, now, now, res_type))
     if not data:
         insert_status = 0
     if insert_status:
@@ -247,6 +247,27 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
         user_data = "*".join(user_list)
         return 1, "获取用户资源类型成功", user_data
     return 0, "获取用户资源类型失败", user_data
+
+
+def update_type_name(uid, tid, name, desc) -> Tuple[int, str]:
+    '''
+    description:
+        修改资源类型名称
+    args:
+        uid: 用户id
+        tid: 资源类型id 使用@分隔
+        name: 资源类型名称 使用@分隔
+        desc: 资源类型描述 使用@分隔
+    return:
+        1: 成功
+    '''
+    tid_list = tid.split("@")
+    name_list = name.split("@")
+    desc_list = desc.split("@")
+    for i, j in enumerate(tid_list):
+        sql = "update tb_p_resType set name = %s, `desc` = %s where createUserId = %s and tid = %s and isDel = 0;"
+        DB.edit(sql, (name_list[i], desc_list[i], uid, j))
+    return 1, "修改资源类型名称成功"
 
 
 def sql_limit(page):
