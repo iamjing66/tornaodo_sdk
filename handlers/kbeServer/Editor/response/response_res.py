@@ -51,7 +51,7 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     return 1, "可以上传", r_data
 
 
-def resource_upload(uid, res_id, res_name, pic_path, res_path,
+def resource_upload(uid, res_name, pic_path, res_path,
                     res_type) -> Tuple[int, str]:
     '''
     description:
@@ -59,7 +59,6 @@ def resource_upload(uid, res_id, res_name, pic_path, res_path,
     args:
         DB:数据库连接
         uid:用户id
-        res_id:资源id
         res_name:资源名称
         pic_path:资源图片路径
         res_path:资源路径
@@ -69,9 +68,19 @@ def resource_upload(uid, res_id, res_name, pic_path, res_path,
         1:成功
     '''
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    rid_sql = "select max(rid) from tb_config_res;"
+    data_rid = DB.fetchone(rid_sql)
+    insert_status = 1
+    res_id = data_rid[0] + 1
+    res_sql = "insert into tb_config_res(rid, p2, name, abpath, pic_path) values(%s, %s, %s, %s, %s);"
+    res_data = DB.edit(res_sql, (res_id, uid, res_name, res_path, pic_path))
+    if not res_data:
+        insert_status = 0
     sql = "insert into tb_p_res(rid, uid, Name, picPath, resPath, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s, %s, %s);"
     data = DB.edit(sql, (res_id, uid, res_name, pic_path, res_path, now, now, res_type))
-    if data:
+    if not data:
+        insert_status = 0
+    if insert_status:
         logging.info("用户: %s 上传资源 %s 成功" % (uid, res_name))
         return 1, "上传成功"
     logging.info("用户: %s 上传资源 %s 失败" % (uid, res_name))

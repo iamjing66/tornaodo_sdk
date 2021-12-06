@@ -108,8 +108,7 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback["code"], json_dback["msg"], json_dback["pam"] = response_res.resource_upload_judge(json_data["uid"],json_data["resName"])
         elif subCode == 1048:
             json_dback["code"], json_dback["msg"] = response_res.resource_upload(
-                json_data["uid"], json_data["resID"],
-                json_data["resName"], json_data["iconPath"],
+                json_data["uid"], json_data["resName"], json_data["iconPath"],
                 json_data["filePath"], json_data["resTypeID"])
         elif subCode == 1049:
             json_dback["code"], json_dback["msg"] = response_res.del_resource(json_data["uid"], json_data["resID"])
