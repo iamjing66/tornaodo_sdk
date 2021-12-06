@@ -4,16 +4,16 @@
 '''
 import hashlib
 import time
+import logging
 from typing import Tuple
-import uuid
 from methods.DBManager import DB
 
 
-def update_user_save(uid) -> int:
+def update_user_save(uid) -> Tuple[int, str]:
     '''
     description:
         用户开通云存储功能
-    Args:
+    args:
         DB:数据库连接
         uid:用户id
     return:
@@ -23,7 +23,9 @@ def update_user_save(uid) -> int:
     sql = "update tb_userdata set save_status = 1 where UID = %s"
     data = DB.edit(sql, uid)
     if data:
+        logging.info("用户: %s 开通云存储功能成功" % uid)
         return 1, "开通成功"
+    logging.info("用户: %s 开通云存储功能失败" % uid)
     return 0, "开通失败"
 
 
@@ -68,10 +70,11 @@ def resource_upload(uid, res_id, res_name, pic_path, res_path,
     '''
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     sql = "insert into tb_p_res(rid, uid, Name, picPath, resPath, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s, %s, %s);"
-    data = DB.edit(sql,
-                   (res_id, uid, res_name, pic_path, res_path, now, now, res_type))
+    data = DB.edit(sql, (res_id, uid, res_name, pic_path, res_path, now, now, res_type))
     if data:
+        logging.info("用户: %s 上传资源 %s 成功" % (uid, res_name))
         return 1, "上传成功"
+    logging.info("用户: %s 上传资源 %s 失败" % (uid, res_name))
     return 0, "上传失败"
 
 
@@ -112,15 +115,19 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
     sql_type = "selece id from tb_p_resType where createUserId = %s and tid = %s;"
     data_type = DB.fetchone(sql_type, (uid, res_type))
     if not data_type:
+        logging.info("资源类型不存在")
         return -1, "资源分类不存在"
     sql_res = "select id from tb_p_res where uid = %s and rid = %s;"
     data_res = DB.fetchone(sql_res, (uid, res_id))
     if not data_res:
+        logging.info("资源不存在")
         return -2, "资源不存在"
     sql = "update tb_p_res set TID = %s where uid = %s and rid = %s;"
     data = DB.edit(sql, (res_id, uid, res_type))
     if data:
+        logging.info("用户: %s 转移资源 %s 成功" % (uid, res_id))
         return 1, "转移资源成功"
+    logging.info("用户: %s 转移资源 %s 失败" % (uid, res_id))
     return 0, "转移资源失败"
 
 
@@ -168,6 +175,7 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
         0: 失败
         1: 成功
         -1: 资源类型数量超过五个
+        -2: 资源类型已存在
     '''
     sql_user_type = "select count(id) from tb_p_resType where createUserId = %s and isDel = 0;"
     data_type = DB.fetchone(sql_user_type, uid)
@@ -233,6 +241,9 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
 
 
 def sql_limit(page):
+    '''
+    sql 语句分页
+    '''
     ipage = int(page)
     _limit = "limit " + str((ipage - 1) * 500) + ",500"
     return _limit
