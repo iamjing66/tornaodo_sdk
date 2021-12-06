@@ -9,7 +9,7 @@ import Global
 class DBManager:
 
 
-    def connectDB(self,host, database, user=None, password=None):
+    def connectDB(self, host, database, user=None, password=None):
         return pymysql.connect(host, user, password, database)
 
 
@@ -46,7 +46,7 @@ class DBManager:
 
 
     # 执行数据库的sq语句,主要用来做插入操作
-    def execute(self, sql, params=None, commit=False, ):
+    def execute(self, sql, params=None, commit=False):
         # 连接数据库
         res = self.connectDatabase()
 
@@ -69,7 +69,7 @@ class DBManager:
         return rowcount
 
     # 执行数据库的sq语句,主要用来做插入操作
-    def callprocDo(self, sql, params=None, commit=False, ):
+    def callprocDo(self, sql, params=None, commit=False):
         # 连接数据库
         res = self.connectDatabase()
 
@@ -96,11 +96,11 @@ class DBManager:
     def fetchall(self, sql, params=None):
         res = self.execute(sql, params)
         if not res:
-            logging.info("查询失败:"+sql)
+            logging.info("查询失败:" + sql)
             return False
         self.close()
         results = self.cur.fetchall()
-        logging.info("查询成功" )
+        logging.info("查询成功")
         return results
 
     # 查询一条数据
@@ -120,8 +120,7 @@ class DBManager:
 
     # 执行存储过程
     def callprocAll(self, sql, params=None):
-        print("params",params)
-        res = self.callprocDo(sql, params,True)
+        res = self.callprocDo(sql, params, True)
         if not res:
             logging.info("查询失败:" + sql)
             return False
@@ -140,7 +139,7 @@ class DBManager:
         #     return True
         print(res)
         if not res:
-            logging.info("DoSql - edit:Error:"+sql)
+            logging.info("DoSql - edit:Error:" + sql)
             return False
         self.conn.commit()
         self.close()
@@ -155,7 +154,7 @@ class DBManager:
         pos = 1
 
         if result and len(result) > 0:
-            for value in  result:
+            for value in result:
                 json_data["value"+str(pos)] = value
                 pos+=1
 
