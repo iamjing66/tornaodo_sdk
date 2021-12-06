@@ -112,8 +112,6 @@ def Data_Works_Base(sql, DB, p_server, call_type):
 
     #print("Data_Courses_Base:", json_back)
     #print("objlist:", objlist)
-    logging.info("========")
-    logging.info(json_back)
     return [objlist,json_back]
 
 

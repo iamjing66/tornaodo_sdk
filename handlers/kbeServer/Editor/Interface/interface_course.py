@@ -281,8 +281,6 @@ def BuyNew(DB,self_uid,uid,cid,lid,tlong):
     lessondata_market = data_lesson.Data_Lesson_Base(uid, cid, 1, DB, 1)  # self.ComputeBuyLesson(_uid, _cid)
     #获取自己身上的课时
     myself_lesson = data_lesson.Data_Lesson_Base(self_uid, _cid, 0, DB, 1)
-    logging.info("++++  %s " % lessondata_market)
-    logging.info("----  %s " % myself_lesson)
     #要赠送的这个课时数据
     if myself_lesson and lid in myself_lesson:
         selfLesson = myself_lesson[lid]
