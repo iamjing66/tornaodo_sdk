@@ -78,13 +78,21 @@ class Application(tornado.web.Application):
 
 
     def Worker(self):
-        # Do something
-        self.WorkZero()
 
-        self.DoEvent_All()
+        try:
 
-        if self.MainServer:
-            self.DoEvent_Main()
+            # Do something
+            self.WorkZero()
+
+            self.DoEvent_All()
+
+            if self.MainServer:
+                self.DoEvent_Main()
+
+        except:
+            pass
+        else:
+            pass
 
         # t = threading.Timer(5,self.Worker)
         # t.start()
@@ -194,7 +202,7 @@ class Application(tornado.web.Application):
         now = time.strftime("%Y-%m-%d", time.localtime())
         if now != self.worktimer:
             self.worktimer = now
-            # self.DoZero()
+            self.DoZero_All()
             if self.MainServer:
                 self.DoZero_Main()
 

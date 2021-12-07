@@ -70,13 +70,9 @@ class ProStatus:
 
             logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s" % (uuid,str(uid),str(clientmodel)))
 
-            # del self.dicusers[user]
-            # del self.dicusers_id[uuid]
-            # del self.connector[clientmodel][uid]
-            
-            self.dicusers.pop(user)
-            self.dicusers_id.pop(uuid)
-            self.connector[clientmodel].pop(uid)
+            del self.dicusers[user]
+            del self.dicusers_id[uuid]
+            del self.connector[clientmodel][uid]
 
 
             if kick == 0:

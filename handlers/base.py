@@ -34,11 +34,12 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
             # 新header
-            self.set_header("Access-Control-Allow-Credentials", "true")
-            self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.set_header("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time, Content-Type")
-            self.set_header("Access-Control-Expose-Headers", "Content-Type")
-            self.set_header("Access-Control-Allow-Origin", "*")
+            # web 浏览使用
+            # self.set_header("Access-Control-Allow-Credentials", "true")
+            # self.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            # self.set_header("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time, Content-Type")
+            # self.set_header("Access-Control-Expose-Headers", "Content-Type")
+            # self.set_header("Access-Control-Allow-Origin", "*")
 
 
             # re_ret = re.match(r".{1,}\.(xixi.com|haha.com)", Origin)
@@ -49,9 +50,10 @@ class BaseHandler(tornado.web.RequestHandler):
             #     self.set_header("Access-Control-Allow-Headers", "x-requested-with")
             #     self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
-    def options(self):
-        self.set_status(204)
-        self.finish()
+    # web 浏览使用
+    # def options(self):
+    #     self.set_status(204)
+    #     self.finish()
 
     def __init__(self, application, request, **kwargs):
 
