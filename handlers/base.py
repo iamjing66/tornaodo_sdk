@@ -15,16 +15,17 @@ class BaseHandler(tornado.web.RequestHandler):
 
     #  允许跨域访问的地址
     def allowMyOrigin(self):
-        allow_list = [
-            #'http://127.0.0.1:7100',
-            'http://localhost',
-        ]
+        pass
+        # allow_list = [
+        #     #'http://127.0.0.1:7100',
+        #     'http://localhost',
+        # ]
 
-        print("self.request.headers = " , self.request.headers)
+        #print("self.request.headers = " , self.request.headers)
 
-        if 'Origin' in self.request.headers:
-            Origin = self.request.headers['Origin']
-            print("Origin = ", Origin)
+        # if 'Origin' in self.request.headers:
+        #     Origin = self.request.headers['Origin']
+        #     print("Origin = ", Origin)
             # 域名
             #if Origin in allow_list:
              #   print("Origin1 = ", Origin)

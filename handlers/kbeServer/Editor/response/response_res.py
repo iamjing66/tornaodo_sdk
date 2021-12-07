@@ -72,8 +72,8 @@ def resource_upload(uid, res_name, pic_path, res_path,
     data_rid = DB.fetchone(rid_sql)
     insert_status = 1
     res_id = int(data_rid[0]) + 1
-    res_sql = "insert into tb_config_res(rid, p2, name, abpath, picpath) values(%s, %s, %s, %s, %s);"
-    res_data = DB.edit(res_sql, (res_id, uid, res_name, res_path, pic_path))
+    res_sql = "insert into tb_config_res(rid, p2, name, abpath, picpath, MPos, MRot, MSca) values(%s, %s, %s, %s, %s, %s, %s, %s);"
+    res_data = DB.edit(res_sql, (res_id, uid, res_name, res_path, pic_path, '0,0,0', '0,0,0', '1,1,1'))
     if not res_data:
         insert_status = 0
     sql = "insert into tb_p_res(rid, uid, Name, uploadtime, auditTime, TID) values(%s, %s, %s, %s, %s, %s);"
