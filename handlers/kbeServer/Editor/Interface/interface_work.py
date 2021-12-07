@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import logging
-import time
+import time,Global
 from handlers.kbeServer.Editor.Data import data_work
 from handlers.kbeServer.Editor.Data import data_obj
 from handlers.kbeServer.Editor.Data import data_project,data_Look
@@ -238,7 +238,7 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
     if data_o:
         #print("data_o:", data_o)
         #20`场景编程区`1606181993`0.0`0.0`0.0`0.0`0.0`0.0`1.0`1.0`1.0`0``&0,0&```0`0`3```0.0`0.0``0`1`0!5`3D相机`1606181993`-22.99`15.01`79.61`23.777`17.0805`0.0`1.0`1.0`1.0`0``&0,0&```0`0`4```0.0`0.0``0`1`0!5128`鹿`1606182198`-19.6688`10.0`90.606`0.0`197.09`0.0`1.0`1.0`1.0`0``&0,0&```0`0`5```0.0`0.0``0`1`0!5128`鹿1`1606182208`-27.731`10.1608`88.8461`0.0`154.11`0.0`1.0`1.0`1.0`0``1@4@-177.7321,232.9124,0@D:2@@~2@95@@@1$1|1$0|1$52<2e>75|1$0|2$0@&0,0&```0`0`6```0.0`0.0``0`1`0!20426`松树二`1606182930`-32.9981`10.8735`87.6677`0.0`141.34`0.0`1.0`1.0`1.0`0``&0,0&```0`0`7```0.0`0.0``0`1`0!21157`冷杉二`1606182933`-26.4915`10.1025`90.7153`0.0`164.02`0.0`1.0`1.0`1.0`0``&0,0&```0`0`8```0.0`0.0``0`1`0
-        interface_obj.UpdateToDB(0, DB, self_uid, _pid, data_o)
+        interface_obj.CopyToDB(0, DB, self_uid, _pid, Global.GetMObjTableName(UID,wid))
     # self.Project_Buy(pid, UID, self.databaseID, _pid, _ptruedate)
     # self.Object_Buy(pid, UID, self.databaseID, _pid)
     # self.Extra_Buy(pid, UID, _pid, self.databaseID)

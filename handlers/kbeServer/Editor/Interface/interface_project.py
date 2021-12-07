@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import logging
-import time
+import time,Global
 from handlers.kbeServer.Editor.Data import data_work
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_obj,interface_global,interface_project
@@ -204,7 +204,10 @@ def CopyMyProjectToAccount(DB,self_uid,pid,pname,username,cmode):
     data_o = data_obj.Data_Objs_Base(0, DB, pid, self_uid, {}, 0)
     if data_o:
         #print("data_o:", data_o)
-        interface_obj.UpdateToDB(0, DB, P_UID, NPID, data_o)
+        #interface_obj.UpdateToDB(0, DB, P_UID, NPID, data_o)
+
+        interface_obj.CopyToDB(0, DB, P_UID, NPID, Global.GetObjTableName(self_uid, pid))
+
         # NPID 转移的工程PID
         # target_bag 目标账号的一个空余包裹位
         if not b_type:
