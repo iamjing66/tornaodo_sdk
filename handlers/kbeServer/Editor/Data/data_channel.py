@@ -2,28 +2,21 @@
 # coding=utf-8
 
 
-def PAYPAM_Changxiang(paydata ,DB):
-
-    _id = 0
+def PAYPAM_Changxiang(paydata, DB):
     _price2 = 0
-    _name = ""
     json_data = paydata
     channel = json_data["changel"]
     w_type = json_data["WType"]
     month = int(json_data["month"])
     organization = json_data["organization"]
     distributor = json_data["distributor"]
-    CIDS = ""
-
     json_pay = {
         "Code": 0,
         "Data": {},
     }
-    sql_str = "select Price,`Desc`,WTYPE,CID from tb_channel where CID = %s;"
+    sql_str = "select Price,`Desc`,WTYPE,CID from tb_channel where CID in (" + channel + ");"
 
-    data = DB.fetchall(sql_str, channel)
-    _name = ""
-    _wtype = ""
+    data = DB.fetchall(sql_str, None)
     _price_record = ""
     if data:
         list_data = list(data)
@@ -33,20 +26,7 @@ def PAYPAM_Changxiang(paydata ,DB):
             else:
                 _price_record = _price_record + "#" + str(minfo[0])
             _price2 += int(minfo[0])
-            if _name == "":
-                _name = minfo[1]
-            else:
-                _name = _name + "#" + minfo[1]
-            if _wtype == "":
-                _wtype = str(minfo[2])
-            else:
-                _wtype = _wtype + "#" + str(minfo[2])
-            if CIDS == "":
-                CIDS = str(minfo[3])
-            else:
-                CIDS = CIDS + "#" + str(minfo[3])
-            if w_type == "0":
-                w_type = str(minfo[2])
+            w_type = str(minfo[2])
 
     if _price2 > 0:
         sql_str = "select Days,`Discount` from tb_discount where CID = " + str(month) + ";"
