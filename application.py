@@ -194,7 +194,7 @@ class Application(tornado.web.Application):
         now = time.strftime("%Y-%m-%d", time.localtime())
         if now != self.worktimer:
             self.worktimer = now
-            self.DoZero()
+            # self.DoZero()
             if self.MainServer:
                 self.DoZero_Main()
 
