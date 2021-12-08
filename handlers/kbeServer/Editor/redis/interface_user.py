@@ -179,28 +179,30 @@ class redis_data():
         data_user = DB.fetchall(sql)
         d1 = {}
         l1 = []
+        # 获取所有的字段名
         for x in DB.cur.description:
             l1.append(x[0])
         for i in data_user:
             d1[i[15]] = {}
             for j, z in enumerate(i):
                 d1[i[15]][l1[j]] = str(z) if str(z) != 'None' else ''
+            # 用户名为键，用户信息为值
             redis_db.redis_pool.hmset(i[15], d1[i[15]])
+            # 设置过期时间
             redis_db.redis_pool.expire(i[15], 60 * 5)
         DB.destroy()
 
 
     def redis_user_set(self, username, data):
-        if data["platform"] != 10:  #VR平台
-            redis_db.redis_pool.hset(username,"app_ip", data["local_ip"])
+        if data["platform"] != 10:
+            redis_db.redis_pool.hset(username, "app_ip", data["local_ip"])
         else:
-            redis_db.redis_pool.hset(username,"editor_ip", data["local_ip"])
-        redis_db.redis_pool.hset(username,"platfrom", data["platform"])
+            redis_db.redis_pool.hset(username, "editor_ip", data["local_ip"])
+        redis_db.redis_pool.hset(username, "platfrom", data["platform"])
 
 
     def redis_user_get(self, username):
-        data_list = redis_db.redis_pool.hmget(username, ['organization','distributor', 'editor_ip', 'app_ip', 'platform', 'UID', 'Power', 'UserName', 'AccountPower'])
+        data_list = redis_db.redis_pool.hmget(username, ['organization', 'distributor', 'editor_ip', 'app_ip', 'platform', 'UID', 'Power', 'UserName', 'AccountPower'])
         # [b'0', b'0', b'', b'', None, b'12', b'0', b'wk2', b'0']
-        # TODO 格式转换
         data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
         return data_list
