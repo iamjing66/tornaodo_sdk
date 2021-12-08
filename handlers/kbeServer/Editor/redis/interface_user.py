@@ -173,6 +173,7 @@ globalRedisU = redisu()
 redis_db = RedisData(4)
 DB = DBManager()
 class redis_data():
+    # 可用于用户信息全量入 redis
     def redis_user_set_all(self, data):
         sql = "select * from tb_userdata"
         data_user = DB.fetchall(sql)
@@ -191,10 +192,10 @@ class redis_data():
 
     def redis_user_set(self, username, data):
         if data["platform"] != 10:  #VR平台
-            redis_db.redis_pool.hset(username,"platfrom", data["platform"])
             redis_db.redis_pool.hset(username,"app_ip", data["local_ip"])
         else:
             redis_db.redis_pool.hset(username,"editor_ip", data["local_ip"])
+        redis_db.redis_pool.hset(username,"platfrom", data["platform"])
 
 
     def redis_user_get(self, username):
