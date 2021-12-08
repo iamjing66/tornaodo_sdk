@@ -195,7 +195,6 @@ class redis_data():
             redis_db.redis_pool.hset(username,"app_ip", data["local_ip"])
         else:
             redis_db.redis_pool.hset(username,"editor_ip", data["local_ip"])
-        redis_db.redis_pool.hmset()
 
 
     def redis_user_get(self, username):
