@@ -5,7 +5,6 @@ url = "http://192.168.0.9:9001/postinterface"
 
 data = {"opencode":"100","subcode":"1052","UID":"9","username":"lyy","data":'{"uid":"9","resTypeName":"1l","resTypeID":"2","desc":""}'}
 
-
 res = requests.post(url, json=data).json()
 print(res)
 

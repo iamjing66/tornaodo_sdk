@@ -4,6 +4,7 @@ import random
 
 import Global
 from methods.DBManager import DBManager
+from redisServer.RedisInterface import RedisData
 
 class redisu:
 
@@ -166,3 +167,40 @@ class redisu:
 
 
 globalRedisU = redisu()
+
+
+# 暂不上传
+redis_db = RedisData(4)
+DB = DBManager()
+class redis_data():
+    def redis_user_set_all(self, data):
+        sql = "select * from tb_userdata"
+        data_user = DB.fetchall(sql)
+        d1 = {}
+        l1 = []
+        for x in DB.cur.description:
+            l1.append(x[0])
+        for i in data_user:
+            d1[i[15]] = {}
+            for j, z in enumerate(i):
+                d1[i[15]][l1[j]] = str(z) if str(z) != 'None' else ''
+            redis_db.redis_pool.hmset(i[15], d1[i[15]])
+            redis_db.redis_pool.expire(i[15], 60 * 5)
+        DB.destroy()
+
+
+    def redis_user_set(self, username, data):
+        if data["platform"] != 10:  #VR平台
+            redis_db.redis_pool.hset(username,"platfrom", data["platform"])
+            redis_db.redis_pool.hset(username,"app_ip", data["local_ip"])
+        else:
+            redis_db.redis_pool.hset(username,"editor_ip", data["local_ip"])
+        redis_db.redis_pool.hmset()
+
+
+    def redis_user_get(self, username):
+        data_list = redis_db.redis_pool.hmget(username, ['organization','distributor', 'editor_ip', 'app_ip', 'platform', 'UID', 'Power', 'UserName', 'AccountPower'])
+        # [b'0', b'0', b'', b'', None, b'12', b'0', b'wk2', b'0']
+        # TODO 格式转换
+        data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
+        return data_list
