@@ -727,7 +727,7 @@ def FindPD(DB,uid,username,data):
     else:
         json_data["code"] = 1
         json_data["msg"] = "修改成功"
-    print("json_data", json_data)
+    # print("json_data", json_data)
     return json_data
 
 

@@ -2,6 +2,7 @@
 # coding=utf-8
 
 
+import logging
 from handlers.base import BaseHandler
 from handlers.kbeServer.Editor.Interface import interface_sms
 from methods.DBManager import DBManager
@@ -46,8 +47,6 @@ class SmsPayRequest(BaseHandler):
             else:
                 sql = "select t1.`Desc`,t1.Price,t2.`cIconPath` from tb_channel t1 inner join tb_work_type t2 on t1.WID = t2.WID AND t1.CID  = " + str(chanelid)
             sql1 = "select Days,`Discount` from tb_discount where CID = " + str(monthid) + ";"
-        print("sql :" , sql)
-        print("sql1 :", sql1)
         data = DB.fetchone(sql,None)
         if data:
             Name = data[0]
@@ -66,7 +65,6 @@ class SmsPayRequest(BaseHandler):
                 days = int(data[0])
                 _price3 = float(data[1])
                 price = int(int((days / 30)) * price * _price3)
-                print("price",price,days,_price3)
         #print(PICPATH)
         sdata = {
             "name":Name,
@@ -102,7 +100,7 @@ class SmsRequest(BaseHandler):
         #paydata = self.SolrData
         self.SOLR_VERIFY
         solrdata = self.SolrData
-        print("SmsPost" , solrdata)
+        logging.info("SmsPost -> %s" % solrdata)
         # PayType = int(paydata["PayType"])           #1-支付宝          2-微信
         # AppType = int(paydata["AppType"])           #1-APP支付         2-扫码支付
         UID = solrdata["UID"]                   #UID
@@ -114,10 +112,9 @@ class SmsRequest(BaseHandler):
         PayData = solrdata["data"]    #支付数据
 
         pay_data = str(AppCode) + "@" + str(UID) + "@" + PayData
-        print("pay_data",pay_data , "phone" ,phone)
+        logging.info("pay_data -> %s, phone -> %s" %(pay_data ,phone))
         pamam = "{\"name\":'"+pay_data+"'}"
-        smsResponse = interface_sms.SendSms(UID,phone, pamam)
-        print(smsResponse.decode())
+        interface_sms.SendSms(UID,phone, pamam)
 
         self.write("ok")
 
@@ -133,8 +130,7 @@ class SendSmsRequest(BaseHandler):
 
         no = self.get_argument("smsNo")
         phone = self.get_argument("phone")
-        print("no = ", no)
-        print("phone = ", phone)
+        logging.info("SendSmsRequest -> %s, %s" % (no, phone))
         # pdata = self.request.body.decode('utf-8')
         # print("pdata = " , pdata)
         # post_data = json.loads(pdata)

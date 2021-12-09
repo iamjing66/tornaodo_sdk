@@ -135,7 +135,7 @@ class PayOrder(BaseHandler):
 
         DB.destroy()
 
-        print("订单详情：",json_back)
+        logging.info("订单详情：%s" % json_back)
 
         if AppType == 3:
             _from = json_back["ORDERSTR"]
@@ -147,7 +147,7 @@ class PayOrder(BaseHandler):
 
             #_from = "<!DOCTYPE html>"+"<html lang=\"en\">"+ "<head>"+"    <meta charset=\"UTF-8\">"+"   <title>重定向测试页面</title>"+"</head>"+"<body>"+"</body>"+"</html>"
 
-            print("这里需要重定向")
+            # print("这里需要重定向")
             self.set_header("Content-Type", "text/html")
             self.set_header("charset", "UTF-8")
             self.redirect(_from)
@@ -226,7 +226,7 @@ class WechatPayCallBack(BaseHandler):
             Wxpay_server_pub(params).xmlToArray()  # 判断是否xml数据格式
         except Exception as e:
             # 其他需求比如 和alipay 支付同一回调地址
-            print("Wechat_PayBck Resut:", str(e))
+            logging.error("Wechat_PayBck Resut: %s" % str(e))
         else:
             wxpay_params = params  # xml 字符串
             wxpay = Wxpay_server_pub(wxpay_params)  # 创建对象

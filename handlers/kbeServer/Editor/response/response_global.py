@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import logging
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_global
 
@@ -59,7 +60,7 @@ def SDK_CHANNEL( _uid):
             else:
                 _channel_string = _channel_string + "!" + str(minfo_list[1]) + "^" + str(minfo_list[2])
     DB.destroy()
-    print("SDK_CHANNEL : " ,_uid ,_channel_string)
+    logging.info("SDK_CHANNEL : %s, %s" %(_uid ,_channel_string))
     return _channel_string
 
 

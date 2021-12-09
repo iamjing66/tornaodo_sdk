@@ -68,7 +68,6 @@ class AccountApkHandler(BaseHandler):    #继承base.py中的类BaseHandler
             sql_str = "select ID from tb_account_apk where jgid = "+str(id)
         else:
             sql_str = "select ID from tb_account_apk where teacherid = '" + str(id) + "'"
-        print("sql_str:",sql_str)
 
         datas = DB.fetchone(sql_str,None)
         packnamne = ""

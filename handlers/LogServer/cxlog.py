@@ -32,7 +32,7 @@ class writeLogHandler(BaseHandler):    #继承base.py中的类BaseHandler
     def get(self):
 
         suser = self.get_argument("user")
-        print(suser)
+        # print(suser)
         DB = DBManager()
         sql = "update log_user set `user` = '"+suser+"' where ID = 1"
         DB.edit(sql,None)
@@ -73,7 +73,7 @@ class writeLogHandler(BaseHandler):    #继承base.py中的类BaseHandler
         }
 
         post_data = json.loads(self.request.body.decode('utf-8'))
-        print("post_data - :",post_data)
+        logging.info("post_data - : %s" % post_data)
 
         UID = post_data["UID"]
         USERNAME = post_data["USERNAME"]
@@ -134,5 +134,5 @@ class writeLogHandler(BaseHandler):    #继承base.py中的类BaseHandler
             if sql:
                 DB.edit(sql,None)
         DB.close()
-        print("[log]->json_back = " , json_back)
+        logging.info("[log]->json_back = %s" % json_back)
         self.write(json_back)

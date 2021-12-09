@@ -334,7 +334,7 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
 
     if uid == self_uid and btype == 1:
         return [0,""]    #不能购买自己的
-    print("buy ======= 1")
+    # print("buy ======= 1")
     #参数转换
     arr_clientbs = []
     if ctype == 4:
@@ -343,7 +343,7 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         lid = 0
     else:
         lid = int(lid)
-    print("buy ======= 2")
+    # print("buy ======= 2")
     #获取下市场课程数据
     w_data = data_course.Data_Course_Base(uid,cid,1,DB,2)
     if not w_data:
@@ -360,7 +360,7 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         return [-1, ""]  # 购买的课程不存在
     # LID:[一年的价钱 永久价钱 到期时间 是否购买过]
     #print("market_lessons",market_lessons)
-    print("buy ======= 3")
+    # print("buy ======= 3")
     # 购买的数据
     myself_lesson = {}
     _uid = self_uid
@@ -370,21 +370,21 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         ##[一年价格 永久价格 到期时间 是否购买 课时ID 版本号]
         # DEBUG_MSG("myself_lesson:", myself_lesson)
         # DEBUG_MSG("market_lessons:",market_lessons)
-    print("buy ======= 4")
+    # print("buy ======= 4")
     buy_datas = []
     buy_ini = ""
     if lid != 0:  # 按课时购买
         _version = 0
         _pdate = 0
-        print("buy ======= 5")
+        # print("buy ======= 5")
         if lid not in market_lessons.keys():
             return [-2,""]   #课时不存在
-        print("buy ======= 6")
+        # print("buy ======= 6")
         if lid in myself_lesson.keys():
             #_version = myself_lesson[lid]["value18"]
             if myself_lesson[lid]["value20"] == 1:  # 永久课时
                 return [-3,""] #永久课程不能购买
-        print("buy ======= 7")
+        # print("buy ======= 7")
             # if btype == 0:  #赠送
             #     if myself_lesson[lid][2] != 0 and type == 0:
             #         return
@@ -395,7 +395,7 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         buy_datas.append(market_lessons[lid])
         #_bstr2 = _bstr2 + " " + market_lessons[lid]["value3"] + ","
     else:
-        print("buy ======= 8")
+        # print("buy ======= 8")
         _keys = []
         if ctype == 4:  #同时购买多个课时
             if len(arr_clientbs) == 0:
@@ -405,8 +405,6 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         else:       #购买整个课程
             #print("market_lessons : " , market_lessons)
             _keys = market_lessons.keys()
-        print("market_lessons,",market_lessons)
-        print("myself_lesson,", myself_lesson)
         for _lkey in _keys:
             if ctype == 4 and len(arr_clientbs) != 0:
                 _lkey = int(_lkey)
@@ -432,7 +430,6 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
             #     buy_ini = buy_ini + "!" + data_lesson.Get_Data_Lesson_Base_JsonToIni(market_lessons[_lkey])
             #_bstr2 = _bstr2 + " " + str(market_lessons[_lkey]["value2"]) + ","
 
-    print("buy---1")
     if len(buy_datas) < 1:
         return [-4,""]   #购买异常，没有可购买的
 
@@ -484,7 +481,6 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
         desc += "(" + _bstr + ")"
 
     # 扣钱
-    print("扣钱，",lid,ctype,arr_clientbs,_ZK1,_ZK2,Price)
     if btype == 1:
         if (lid == 0 and ctype != 4) or (lid == 0 and (len(arr_clientbs) == 0 or len(arr_clientbs) == len(market_lessons)) and ctype == 4):
             # 计算折扣
@@ -573,7 +569,6 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
                         data_p = myself_lesson[info_lid]["value19"] + type
 
         #更新数据
-        print("buy_datas",buy_datas)
         buy_datas[ipos]["value19"] = data_p
         buy_datas[ipos]["value9"] = self_uid
         buy_datas[ipos]["value10"] = int(time.time())

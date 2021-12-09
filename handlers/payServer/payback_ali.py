@@ -157,7 +157,7 @@ class payback_ali:
         _from = _arr_pam[14]
         _userType = int(_arr_pam[15])
         _ip = _arr_pam[16]
-        print("DoVipBag - pam : " , _arr_pam)
+        # print("DoVipBag - pam : " , _arr_pam)
         # Do
         #Do(self,uid,price,model,extra,_pdate,_bagid,paytype,_order,Cur,Db):
         _date = PayDoVipBagClass.Do(_arr_pam,DB)

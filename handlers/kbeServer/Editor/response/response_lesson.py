@@ -17,7 +17,6 @@ def Transactions_Code_1003(self_uid,self_username,json_data):
     cid = int(json_data["cid"])
     uid = int(json_data["uid"])
     lid = int(json_data["lid"])  # 0-删除所有 其他删除对应的
-    print("Delete Lesson：[%i] - [%i] - [%i]" % (cid, uid, lid))
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()

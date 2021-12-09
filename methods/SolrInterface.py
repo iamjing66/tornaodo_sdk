@@ -62,7 +62,6 @@ class SolrInterface:
         platform = 0
 
         platform = self.GetPlatform(_from)
-        print("platform",platform,_from)
         if platform == 0:
             return
 
@@ -347,9 +346,9 @@ class SolrInterface:
             ])
             solr.commit()
         except:
-            print("Log_Cost Error")
+            logging.error("Log_Cost Error")
         else:
-            print("Log_Cost OK")
+            logging.info("Log_Cost OK")
 
 
 

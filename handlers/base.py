@@ -415,7 +415,6 @@ class BaseHandler(tornado.web.RequestHandler):
     def POST_VERIFY_MAIN(self):
 
         #print("asdasdasd")
-        print("POST_VERIFY_MAIN -> self.request.body[%s]" % self.request.body)
         pdata = self.request.body.decode('utf-8')
 
         logging.info("POST_VERIFY_MAIN -> pdata[%s],Type[%s]" % (pdata,type(pdata)))
@@ -433,7 +432,6 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             post_data = pdata
 
-        print("post_data", post_data, post_data["appid"], post_data["username"])
         if post_data == None or 'appid' not in post_data.keys():
             JSON_Bck = copy.deepcopy(Global.JSON_Bck)
             JSON_Bck["Code"] = -24
@@ -481,7 +479,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def POSTNOACCOUNT_VERIFY_MAIN(self):
 
         post_data = json.loads(self.request.body.decode('utf-8'))
-        print("post_data", post_data, post_data["appid"])
+        logging.info("post_data %s, %s" %(post_data, post_data["appid"]))
         if post_data == None or 'appid' not in post_data.keys():
             JSON_Bck = copy.deepcopy(Global.JSON_Bck)
             JSON_Bck["Code"] = -24

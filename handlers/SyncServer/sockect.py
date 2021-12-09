@@ -68,11 +68,14 @@ class ProStatus:
             uid = self.dicusers[user][1]
             clientmodel = self.dicusers[user][2]
 
-            logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s" % (uuid,str(uid),str(clientmodel)))
+            logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s kick = %d" % (uuid,str(uid),str(clientmodel),kick))
 
-            del self.dicusers[user]
-            del self.dicusers_id[uuid]
-            del self.connector[clientmodel][uid]
+            if user in self.dicusers.keys():
+                del self.dicusers[user]
+            if uuid in self.dicusers_id.keys():
+                del self.dicusers_id[uuid]
+            if uid in self.connector[clientmodel].keys():
+                del self.connector[clientmodel][uid]
 
 
             if kick == 0:

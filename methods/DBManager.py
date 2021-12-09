@@ -137,7 +137,6 @@ class DBManager:
         # if res == 0:
         #     logging.info("DoSql - edit:No rowcount : " + sql)
         #     return True
-        print(res)
         if not res:
             logging.info("DoSql - edit:Error:" + sql)
             return False

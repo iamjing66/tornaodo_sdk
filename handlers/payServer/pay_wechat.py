@@ -50,7 +50,7 @@ class pay_wechat:
             try:
                 _wbck = _payInst.re_finall()
                 if _wbck == "Err":
-                    print("Wechat订单创建失败2！:")
+                    logging.error("Wechat订单创建失败2！:")
                     json_bck["Code"] = 0
                     json_bck["ERR"] = 1
                 else:
@@ -58,7 +58,7 @@ class pay_wechat:
                     json_bck["price"] = Json_Data["price"]
                 # print("_wbck , ", _wbck)
             except Exception as e:
-                print("订单创建失败1！:" + str(e))
+                logging.error("订单创建失败1！: %s" % str(e))
                 json_bck["Code"] = 0
                 json_bck["ERR"] = 2
 
@@ -140,15 +140,15 @@ class pay_wechat:
             try:
                 _wbck = _payInst.re_finall()
                 if _wbck == "Err":
-                    print("Wechat订单创建失败2！:")
+                    logging.error("Wechat订单创建失败2！:")
                     json_bck["Code"] = 0
                     json_bck["ERR"] = 1
                 else:
                     json_bck["ORDERSTR"] = str(_wbck)
                     json_bck["price"] = Json_Data["price"]
-                print("_wbck , ", _wbck)
+                logging.info("_wbck , ", _wbck)
             except Exception as e:
-                print("订单创建失败1！:" + str(e))
+                logging.error("订单创建失败1！: %s" % str(e))
                 json_bck["Code"] = 0
                 json_bck["ERR"] = 2
 

@@ -23,7 +23,6 @@ def Transactions_Code_2001( self_uid , self_username , json_data):
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
     arr = interface_work.VR_BuyWork(DB,self_uid,wid,uid,btype,plat,phone=False)
-    print("maikan,",arr)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()

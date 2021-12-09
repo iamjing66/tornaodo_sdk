@@ -28,7 +28,6 @@ class post_plistINIHandler(BaseHandler):    #继承base.py中的类BaseHandler
             upload = int(pdata["upload"])
             #uploadover = int(pdata["uploadover"])
             post_data = ""
-            print("PostInterfaceRequest read_type[%i] upload[%i] UID[%i]  " % (read_type, upload, UID))
             logging.info("PostInterfaceRequest -> UID[%i],read_type[%i],upload[%i]" % (UID, read_type,upload))
             #logging.info("read_type:"+str(read_type))
             if upload == 1:

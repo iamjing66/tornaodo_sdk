@@ -30,7 +30,6 @@ class PostInterfaceRequest(BaseHandler):
             data = json.loads(json_data["data"])
         else:
             data = json_data["data"]
-        print("PostInterfaceRequest opencode[%i] subcode[%i] UID[%i] UserName[%s]" % (opencode,subcode,UID,username))
         logging.info("PostInterfaceRequest -> UID[%i],opencode[%i],subcode[%i],username[%s]" % (UID,opencode,subcode,username))
         DB = DBManager()
         if opencode == 0:

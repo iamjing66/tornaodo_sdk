@@ -37,5 +37,4 @@ def GetVersion(data,uid):
     elif p_type == 3:  # 课程版本号
         _back = "3*" + interface_course.GetVersion(p_data[1],uid,DB)
     DB.destroy()
-    print("上传GetVersion[%i]，数据：[%s],回调：[%s]" % (p_type, p_data,_back))
     return _back

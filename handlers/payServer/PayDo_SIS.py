@@ -158,7 +158,7 @@ class paydo_sis:
         Db = DbHander.SISDBREAD()
         Cur = Db.cursor()
         _now = int(time.time())
-        print(_arr_pam)
+        # print(_arr_pam)
         _insert = self.Get_SISDirectNum(ptype, UID,cid,lid,wid,sis_username,cx_username,Cur,Db)
 
         #ActivationCode,courseID,orderid,courseExpireTime,techerAccount, cxAccount
