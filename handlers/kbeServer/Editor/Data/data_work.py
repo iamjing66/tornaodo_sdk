@@ -314,7 +314,7 @@ def PAYPAM_WorkMK(paydata,DB):
 
 def get_utype_uid(DB, uid):
     sql = "select ID from tb_userdata where uid = %s and power = 5"
-    data = DB.fechone(sql, uid)
+    data = DB.fetchone(sql, uid)
     if data:
         return True
     return False
