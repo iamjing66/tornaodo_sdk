@@ -1,3 +1,4 @@
+import tornado
 from tornado import options, websocket
 import logging
 
@@ -14,6 +15,19 @@ class ProStatus:
         self.dicusers_id = {}
         self.dicusers = {}
 
+        #tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
+
+
+    def PrintWebsocket(self):
+
+        print("connector",self.connector)
+        print("dicusers_id", self.dicusers_id)
+        print("dicusers", self.dicusers)
+        print("=======================*")
+        for user in self.dicusers.keys():
+            print("user = " , user)
+        print("=======================#")
+        tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
 
 
     def user_connect(self, user, uid, client_model):
@@ -173,6 +187,9 @@ class EchoWebSocket(websocket.WebSocketHandler):
         client_model = user_info[1]
         if s1[0] == "-99":
             pro_status.user_connect(self, uid, client_model)
+        elif s1[0] == "-96":
+            print("KeepAlive")
+            self.write_message("-96@")
         # elif s1[0] == "-89":
         #     logging.info("用户退出")
         #     pro_status.user_remove(str(uid), client_model)

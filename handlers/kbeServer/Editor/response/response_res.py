@@ -121,7 +121,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
         -1: 资源类型不存在
         -2: 资源不存在
     '''
-    sql_type = "selece id from tb_p_resType where createUserId = %s and tid = %s;"
+    sql_type = "select id from tb_p_resType where createUserId = %s and tid = %s;"
     data_type = DB.fetchone(sql_type, (uid, res_type))
     if not data_type:
         logging.info("资源类型不存在")
@@ -132,7 +132,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
         logging.info("资源不存在")
         return -2, "资源不存在"
     sql = "update tb_p_res set TID = %s where uid = %s and rid = %s;"
-    data = DB.edit(sql, (res_id, uid, res_type))
+    data = DB.edit(sql, (res_type, uid, res_id))
     if data:
         logging.info("用户: %s 转移资源 %s 成功" % (uid, res_id))
         return 1, "转移资源成功"

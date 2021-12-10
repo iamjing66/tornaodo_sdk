@@ -83,7 +83,6 @@ def Get(pdata, self_uid, itype):
     if itype == 3:
         mpage = data_course.SHCourseAllCount(DB)
     sql = data_course.GetCourseSQLFromTypeNew(itype, DB, self_uid, pam, account_type=account_type, power=power)
-    logging.info("sql = " + sql)
     arr = data_course.Data_Courses_Base(sql,DB,cversions,0)
     lesson_datas = arr[0]
     data_course_ini = arr[1]
@@ -94,7 +93,6 @@ def Get(pdata, self_uid, itype):
         p_uid = li[2]
         p_cid = li[3]
         sql = data_lesson.GetLessonSQLFromTypeNew(itype,uid,cid,p_uid,p_cid, teacher=account_type, power=power, organization=organization)
-        logging.info("sql = " + sql)
         if data_lesson_ini == "":
             data_lesson_ini = str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0)
         else:
