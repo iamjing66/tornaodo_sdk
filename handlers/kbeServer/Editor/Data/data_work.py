@@ -38,7 +38,10 @@ def GetWorkSQLFromTypeNew(itype,self_uid,pam, **kwargs):
         sql = "select *,'',0 from tb_workbag where UID = " + str(self_uid)
     elif itype == 1:  # 作品市场
         # kwargs  {course_level: 1-精品课程  2-普通课程(不包含精品课)}
-        sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1 and t1.boutique = %s order by t1.sort;" % kwargs["course_level"]
+        if not kwargs["d_class"]:
+            sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.flag = 1 and t1.boutique = %s order by t1.sort;" % kwargs["course_level"]
+        else:
+            sql = "select w.id, w.WID, w.Name, w.Platform, w.Stars, w.Pid, w.price, w.`desc`,w.State,w.NewPid,w.CreateDate,w.UID,w.Vision,w.Sid,w.Version,w.Game,w.GameStage,w.SNUM,w.identity,w.SNAME,w.ct,e.price1, e.price2,e.FREE,e.stime, e.etime,w.freestatus,w.boutique,e.sort,e.flag,  w.Plat, t.UserName, 0 from tb_workmarket as w inner join tb_eservices_workmarket as e inner join tb_userdata as t on w.id = e.market_id and t.UID = %s and e.organization_id = t.distributor and e.flag = 1 and w.boutique = %s order by e.sort;" % (self_uid, kwargs["course_level"])
     elif itype == 2:
         mpage = pam[0]
         now_page = pam[1]
@@ -307,3 +310,11 @@ def PAYPAM_WorkMK(paydata,DB):
         json_pay["Data"] = Data
 
     return json_pay
+
+
+def get_utype_uid(DB, uid):
+    sql = "select ID from tb_userdata where uid = %s and power = 5"
+    data = DB.fechone(sql, uid)
+    if data:
+        return True
+    return False
