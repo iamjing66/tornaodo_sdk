@@ -642,7 +642,7 @@ def Register(DB,uid,username,data,phone_recode):
     d_code = ""
     if len(_arrPam) > 18:
         d_code= _arrPam[18]
-        sql_d = "select pid, id from eservices where settlementCode = %s;"
+        sql_d = "select id, pid from eservices where settlementCode = %s;"
         d_data = DB.fetchone(sql_d, d_code)
         if d_data:
             distributor = d_data[0]
