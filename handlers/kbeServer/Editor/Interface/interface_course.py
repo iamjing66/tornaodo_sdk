@@ -190,6 +190,7 @@ def SH(DB,self_uid,uid,cid,shCode):
         ini_lesson_base = data_lesson.Data_Lesson_Base(uid, cid, 0, DB, 0)
         #print("ini_lesson_base:",ini_lesson_base)
         data_course.UpdateToDBNew(DB,list_ccourse_base,cid, uid,1)
+
         #arr_lesson = ini_lesson_base.split('^')
         pids = data_lesson.UpdateToDB(DB,ini_lesson_base,"",cid,uid,1)#self.PassedLesson(cid, uid)
         #print("审核合成时的本地工程列表：[%s]" % pids)
@@ -204,6 +205,8 @@ def SH(DB,self_uid,uid,cid,shCode):
                     interface_obj.UpdateToDB(1,DB,p_arr[0],p_arr[1],data_o)
                 #self.PassedObject(p_arr[0], p_arr[1])
                 #self.PassedExtra(p_arr[0], p_arr[1])
+        # 同步到课程分类里面
+        data_course.DoCourseConfig(DB, uid, cid, wname)
         title = "课程通过审核"
         tbody = "你的" + wname + "课程通过审核"
     #发邮件通知

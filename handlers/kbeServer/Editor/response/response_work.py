@@ -71,3 +71,46 @@ def Transactions_Code_1023(self_uid, self_username, json_data):
     json_back["code"] = interface_work.CX(DB,uid,wid,target)
     DB.destroy()
     return json_back
+
+
+def Transactions_Code_1056():
+    # 回调json
+    json_back = {
+        "code": 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    DB = DBManager()
+    sql = "select UID, CID, ct from tb_course_sort order by sort, CID;"
+    data = DB.fetchall(sql)
+    data_list = []
+    DB.destroy()
+    if data:
+        json_back["code"] = 1
+        for i in data:
+            data_list.append("`".join(str(j) for j in i))
+    json_back["pam"] = "!".join(data_list)
+
+    return json_back
+
+
+def Transactions_Code_1057():
+    json_back = {
+        "code": 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    DB = DBManager()
+    sql = "select UID, WID , CT, flag from tb_work_sort order by sort, WID;"
+    data = DB.fetchall(sql)
+    data_list = []
+    DB.destroy()
+    if data:
+        json_back["code"] = 1
+        for i in data:
+            data_list.append("`".join(str(j) for j in i))
+    json_back["pam"] = "!".join(data_list)
+
+    return json_back

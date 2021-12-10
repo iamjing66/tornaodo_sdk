@@ -147,6 +147,7 @@ def UpdateToDB(DB,json_ccourse_base,cid,uid,target):
             sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + ",'1'" + ")"
         else:
             sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + "," + str(json_ccourse_base[19]) + ")"
+    logging.info("发布sql = %s" % sql)
     DB.edit(sql, None)
 
 
@@ -161,10 +162,11 @@ def UpdateToDBNew(DB,json_ccourse_base,cid,uid,target):
     result = DB.fetchone(sql, None)
     logging.info("len: %s ,json_course_base: %s" % (len(json_ccourse_base),json_ccourse_base))
     if result:
-            sql = "Update " + table_name + " set  `Name`='" + str(json_ccourse_base[1]) + "', Platform=" + str(json_ccourse_base[2]) + ", Stars=" + str(json_ccourse_base[3]) + ", pic='" + str(json_ccourse_base[4]) + "', price=" + str(json_ccourse_base[5]) + ", `desc`='" + str(json_ccourse_base[6]) + "', State=" + str(json_ccourse_base[7]) + ", CreateDate=" + str(json_ccourse_base[8]) + ", Vision=" + str(json_ccourse_base[10]) + ", Version=" + str(json_ccourse_base[11]) + ", P_UID=" + str(json_ccourse_base[12]) + ", P_CID=" + str(json_ccourse_base[13]) + ", ResNum=" + str(json_ccourse_base[14]) + ", `ZK1`=" + str(json_ccourse_base[15]) + ", ZK2=" + str(json_ccourse_base[16]) + ",ct=" + str(json_ccourse_base[17]) + ",Sort=" + str(json_ccourse_base[18]) + ",Plat=" + str(json_ccourse_base[20]) + " WHERE CID = " + str(cid) + " and UID = " + str(uid)
+        sql = "Update " + table_name + " set  `Name`='" + str(json_ccourse_base[1]) + "', Platform=" + str(json_ccourse_base[2]) + ", Stars=" + str(json_ccourse_base[3]) + ", pic='" + str(json_ccourse_base[4]) + "', price=" + str(json_ccourse_base[5]) + ", `desc`='" + str(json_ccourse_base[6]) + "', State=" + str(json_ccourse_base[7]) + ", CreateDate=" + str(json_ccourse_base[8]) + ", Vision=" + str(json_ccourse_base[10]) + ", Version=" + str(json_ccourse_base[11]) + ", P_UID=" + str(json_ccourse_base[12]) + ", P_CID=" + str(json_ccourse_base[13]) + ", ResNum=" + str(json_ccourse_base[14]) + ", `ZK1`=" + str(json_ccourse_base[15]) + ", ZK2=" + str(json_ccourse_base[16]) + ",ct=" + str(json_ccourse_base[17]) + ",Sort=" + str(json_ccourse_base[18]) + ",Plat='" + str(json_ccourse_base[20]) + "' WHERE CID = " + str(cid) + " and UID = " + str(uid)
     else:
-            sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + "," + str(json_ccourse_base[20]) + ")"
+        sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + ",'" + str(json_ccourse_base[20]) + "')"
     new_course = DB.edit(sql, None)
+    logging.info("审核 sql = %s" % sql)
     logging.info("新发布课程添加: %s" % new_course)
     if new_course:
         sql_sort = "select id from tb_course_sort WHERE CID = %s and UID = %s;"
@@ -181,7 +183,29 @@ def UpdateToDBNew(DB,json_ccourse_base,cid,uid,target):
 
 
 
+def DoCourseConfig(DB,uid,cid,Name):
 
+    sql = "select ID from tb_course_sort where UID = " + str(uid) + " and CID = " + str(cid)
+    result = DB.fetchone(sql, None)
+    if result:
+        pass
+    else:
+        sql = "Insert INTO tb_course_sort (`uid`,`cid`,`sort`,`course_desc`) values (" + str(uid) + ",'" + str(cid) + "',9999,'" + Name + "',)"
+    DB.edit(sql, None)
+
+    tablename = "tb_mlesson_" + uid + "_" + cid
+    sql = "select lid from " + tablename
+    result = DB.fetchall(sql, None)
+    if result:
+        for info in result:
+            lid = int(info[0])
+            sql = "select ID from sys_course_res where cid = " + str(cid) + " and uid = " + str(uid) + " and mlessonID = " + str(lid) + " LIMIT 0,1";
+            result = DB.fetchone(sql, None)
+            if result:
+                pass
+            else:
+                sql = "Insert INTO sys_course_res (`uid`,`cid`,`mlessonID`) values (" + str(uid) + ",'" + str(cid) + "','" + lid + "',)"
+                DB.edit(sql, None)
 
 
 #itype 0-本地制作 1-购买课程 2-课程市场 3-审核课程 4-单个课程数据
