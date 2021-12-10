@@ -82,9 +82,9 @@ def resource_upload(uid, res_name, pic_path, res_path,
         insert_status = 0
     if insert_status:
         logging.info("用户: %s 上传资源 %s 成功" % (uid, res_name))
-        return 1, "上传成功"
+        return 1, "上传成功", res_id
     logging.info("用户: %s 上传资源 %s 失败" % (uid, res_name))
-    return 0, "上传失败"
+    return 0, "上传失败", 0
 
 
 def del_resource(uid, res_id) -> Tuple[int, str]:
