@@ -193,7 +193,7 @@ def DoCourseConfig(DB,uid,cid,Name):
         sql = "Insert INTO tb_course_sort (`uid`,`cid`,`sort`,`course_desc`) values (" + str(uid) + ",'" + str(cid) + "',9999,'" + Name + "',)"
     DB.edit(sql, None)
 
-    tablename = "tb_mlesson_" + uid + "_" + cid
+    tablename = "tb_mlesson_" + str(uid) + "_" + str(cid)
     sql = "select lid from " + tablename
     result = DB.fetchall(sql, None)
     if result:
@@ -204,7 +204,7 @@ def DoCourseConfig(DB,uid,cid,Name):
             if result:
                 pass
             else:
-                sql = "Insert INTO sys_course_res (`uid`,`cid`,`mlessonID`) values (" + str(uid) + ",'" + str(cid) + "','" + lid + "',)"
+                sql = "Insert INTO sys_course_res (`uid`,`cid`,`mlessonID`) values (" + str(uid) + ",'" + str(cid) + "','" + str(lid) + "')"
                 DB.edit(sql, None)
 
 

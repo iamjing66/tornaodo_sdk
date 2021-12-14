@@ -115,14 +115,21 @@ def RemoveP(DB,self_uid,uid,pid):
     return code
 
 #删除
-def DeleteP(DB,self_uid,uid,pid):
-    code = PFlag(DB, uid, pid,1)
+def DeleteP(DB,self_uid,uid,pid,nocheck):
+    if nocheck == 1:
+        code = 1
+    else:
+        code = PFlag(DB, uid, pid,1)
     if code == 1:
         if data_project.Delete(DB,uid,pid,0):
             if data_obj.Delete(DB,uid,pid,0):
                 interface_account.DelPPackage(DB, uid, pid)
                 return 1
-    return 0
+            else:
+                return -99
+        else:
+            return -99
+    return code
 
 
 
@@ -215,7 +222,7 @@ def CopyMyProjectToAccount(DB,self_uid,pid,pname,username,cmode):
 
     if cmode == 1:
         # 工程转移时调用，清除工程并清除本账号当前的存储位
-        del_pro = DeleteP(DB, self_uid, self_uid, pid)
+        del_pro = DeleteP(DB, self_uid, self_uid, pid,1)
         logging.info("转移工程: %s" % del_pro)
         # data_project.Delete(DB,self_uid,pid,0)
 

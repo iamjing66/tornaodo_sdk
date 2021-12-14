@@ -59,7 +59,7 @@ def Transactions_Code_1007(self_uid, self_username, json_data):
     pid = int(json_data["pid"])
 
     DB = DBManager()
-    json_back["code"] = interface_project.DeleteP(DB,self_uid,uid,pid)
+    json_back["code"] = interface_project.DeleteP(DB,self_uid,uid,pid,0)
     DB.destroy()
     return json_back
 

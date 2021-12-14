@@ -215,7 +215,7 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
         #     DEBUG_MSG("不需要更新")
         #     return
     if _buy_pid != 0:
-        interface_project.DeleteP(DB,self_uid,self_uid,_buy_pid)
+        interface_project.DeleteP(DB,self_uid,self_uid,_buy_pid,1)
     # if _buy_pid != 0:
     #     self.N_DeleteProject(_buy_pid)
         #self.client.N_DeleteProject_C(_buy_pid)
