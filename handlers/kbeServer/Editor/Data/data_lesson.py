@@ -194,6 +194,45 @@ def UpdateToDB(DB, c_pdata,_del_data,cid,uid,target):
     return arr_pids
 
 
+def CopyToDB_New(DB,cid,uid,target,pcid,puid,ptarget):
+
+    arr_pids = []
+
+    if target == 0:
+        table_name = Global.GetLessonTableName(uid,cid)
+    else:
+        table_name = Global.GetMLessonTableName(uid, cid)
+
+    if ptarget == 0:
+        ptable_name = Global.GetLessonTableName(puid,pcid)
+    else:
+        ptable_name = Global.GetMLessonTableName(puid, pcid)
+
+    if interface_global.Global_TableExist(table_name,DB):
+        sql = "delete from " + table_name + ";"
+        DB.edit(sql,None)
+    else:
+        sql = "CREATE TABLE " + table_name + " like tb_lesson_bag;"
+        DB.edit(sql, None)
+
+    #复制课时表
+    sql = "insert into " + table_name + " select * from " + ptable_name + ";"
+    DB.edit(sql, None)
+
+    sql = "select uid,pid from " + table_name + " where buy = 0;"
+    data = DB.fetchall(sql, None)
+    if data:
+        list_data = list(data)
+        for minfo in list_data:
+            minfo_list = list(minfo)
+            arr_pids.append([minfo_list[0],minfo_list[1]])
+
+    return arr_pids
+
+
+
+
+
 def GetVersion(cid,uid,target,DB):
 
     _back = ""

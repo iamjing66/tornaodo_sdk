@@ -168,17 +168,17 @@ def UpdateToDBNew(DB,json_ccourse_base,cid,uid,target):
     new_course = DB.edit(sql, None)
     logging.info("审核 sql = %s" % sql)
     logging.info("新发布课程添加: %s" % new_course)
-    if new_course:
-        sql_sort = "select id from tb_course_sort WHERE CID = %s and UID = %s;"
-        res_sort = DB.fetchone(sql_sort, [str(cid), str(uid)])
-        if res_sort:
-            sql_sort = "update tb_course_sort set course_desc = %s, ct = %s where id = %"
-            sql_value = (str(json_ccourse_base[6]), str(json_ccourse_base[17]), str(res_sort[0]))
-        else:
-            sql_sort = "insert into tb_course_sort (CID,UID,course_desc,ct,sort) values (%s,%s,%s,%s,%s)"
-            sql_value = (str(cid), str(uid), str(json_ccourse_base[6]), str(json_ccourse_base[17]), 9999)
-        new_course_sort = DB.edit(sql_sort, sql_value)
-        logging.info("新发布课程排序添加: %s" % new_course_sort)
+    # if new_course:
+    #     sql_sort = "select id from tb_course_sort WHERE CID = %s and UID = %s;"
+    #     res_sort = DB.fetchone(sql_sort, [str(cid), str(uid)])
+    #     if res_sort:
+    #         sql_sort = "update tb_course_sort set course_desc = %s, ct = %s where id = %"
+    #         sql_value = (str(json_ccourse_base[6]), str(json_ccourse_base[17]), str(res_sort[0]))
+    #     else:
+    #         sql_sort = "insert into tb_course_sort (CID,UID,course_desc,ct,sort) values (%s,%s,%s,%s,%s)"
+    #         sql_value = (str(cid), str(uid), str(json_ccourse_base[6]), str(json_ccourse_base[17]), 9999)
+    #     new_course_sort = DB.edit(sql_sort, sql_value)
+    #     logging.info("新发布课程排序添加: %s" % new_course_sort)
     return 1
 
 

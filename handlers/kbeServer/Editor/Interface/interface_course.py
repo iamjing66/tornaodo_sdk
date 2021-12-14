@@ -187,12 +187,12 @@ def SH(DB,self_uid,uid,cid,shCode):
         title = "课程未通过审核"
         tbody = "你的" + wname + "课程未通过审核"
     elif shCode == 1:
-        ini_lesson_base = data_lesson.Data_Lesson_Base(uid, cid, 0, DB, 0)
+        #ini_lesson_base = data_lesson.Data_Lesson_Base(uid, cid, 0, DB, 0)
         #print("ini_lesson_base:",ini_lesson_base)
         data_course.UpdateToDBNew(DB,list_ccourse_base,cid, uid,1)
 
         #arr_lesson = ini_lesson_base.split('^')
-        pids = data_lesson.UpdateToDB(DB,ini_lesson_base,"",cid,uid,1)#self.PassedLesson(cid, uid)
+        pids = data_lesson.CopyToDB_New(DB,cid,uid,1,cid,uid,0)#self.PassedLesson(cid, uid)
         #print("审核合成时的本地工程列表：[%s]" % pids)
         if len(pids) > 0:
             for p_arr in pids:
@@ -200,9 +200,11 @@ def SH(DB,self_uid,uid,cid,shCode):
                 if data__p:
                     interface_project.ProjectToDB(DB,p_arr[1], p_arr[0],1,data__p)
                 #self.PassedProject(p_arr[0], p_arr[1], 1)
-                data_o = data_obj.Data_Objs_Base(0,DB,p_arr[1],p_arr[0],{},0)
-                if data_o:
-                    interface_obj.UpdateToDB(1,DB,p_arr[0],p_arr[1],data_o)
+                # data_o = data_obj.Data_Objs_Base(0,DB,p_arr[1],p_arr[0],{},0)
+                # if data_o:
+                #     interface_obj.UpdateToDB(1,DB,p_arr[0],p_arr[1],data_o)
+                interface_obj.CopyToDBNew(1,DB,p_arr[0],p_arr[1],Global.GetObjTableName(p_arr[0], p_arr[1]))
+
                 #self.PassedObject(p_arr[0], p_arr[1])
                 #self.PassedExtra(p_arr[0], p_arr[1])
         # 同步到课程分类里面

@@ -24,6 +24,28 @@ def CopyToDB(target,DB ,uid, pid, sourceTableName):
 
     return 1
 
+
+def CopyToDBNew(target,DB ,uid, pid, sourceTableName):
+
+    if target == 0:
+        table_name = Global.GetObjTableName(uid,pid)
+    else:
+        table_name = Global.GetMObjTableName(uid, pid)
+
+    if not interface_global.Global_TableExist(table_name,DB): #新增
+        DB.callprocAll('N_CopyObjectTable', (pid, uid, target))
+    else:
+        sql = "delete from " + table_name + ";"
+        DB.edit(sql, None)
+
+    sql = "insert into "+table_name+" select * from "+sourceTableName+";"
+    DB.edit(sql,None)
+
+    return 1
+
+
+
+
 def UpdateToDB(target,DB ,uid, pid, OBJdata):
 
     if target == 0:
