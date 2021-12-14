@@ -329,8 +329,8 @@ def new_do_code(DB, OpenCode, page, version):
 def new_get_sql_data(OpenCode, data):
     _cback = ""
     _count = 0
-    _backlist = []
     if data:
+        _backlist = []
         for minfo in data:
             if _count < 500:
                 if OpenCode == "101":

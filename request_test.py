@@ -1,12 +1,22 @@
 import json
 import requests
 
-url = "http://192.168.0.9:9001/postinterface"
+url = "http://123.57.163.216:9001/postinterface"
 
-data = {"opencode":"100","subcode":"1052","UID":"9","username":"lyy","data":'{"uid":"9","resTypeName":"1l","resTypeID":"2","desc":""}'}
+data = {
+    "opencode": "3",
+    "subcode": "41",
+    "UID": "0",
+    "username": "",
+    "data": '{"code":"107","page":"2","version":"0"}'
+}
 
 res = requests.post(url, json=data).json()
-print(res)
+with open("./out.txt", "w+", encoding='utf-8') as f:
+    f.write(json.dumps(res, ensure_ascii=False))
+
+
+# print(res)
 
 # from methods.DBManager import DB
 
