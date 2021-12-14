@@ -17,4 +17,4 @@ def ResVersionResponse(DB, subCode, uid, data):
 
 
 def ConfigGet_Server(DB,params):
-    interface_res.Server_ConfigGet(DB,params)
+    return interface_res.Server_ConfigGet(DB,params)

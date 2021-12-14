@@ -70,7 +70,6 @@ def new_get_update_version(DB, pam):
     if pam["pam"]:
         sql_else = " where OPENCODE in (" + pam["pam"] + ");"
     sql_str = "select VERSION from tb_res_version" + sql_else
-    logging.info("version sql = %s" % sql_str)
     data = DB.fetchall(sql_str, None)
     _cback = ""
     _backlist = []
@@ -80,7 +79,6 @@ def new_get_update_version(DB, pam):
         _cback = ",".join(_backlist)
     json_data["code"] = 1
     json_data["msg"] = _cback
-    logging.info("json_data = %s" % json_data)
     return json_data
 
 

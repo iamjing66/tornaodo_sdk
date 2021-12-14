@@ -47,13 +47,13 @@ class PostInterfaceRequest(BaseHandler):
             #     self.SetPhoneCode(json_back["phone"], "")
             #     del json_back["phone"]
         elif opencode == 2:
-             json_back = response_mail.mailresponse(DB,subcode, UID, data)
+            json_back = response_mail.mailresponse(DB,subcode, UID, data)
         elif opencode == 3:
-             json_back = response_resversion.ResVersionResponse(DB,subcode, UID, data)
+            json_back = response_resversion.ResVersionResponse(DB,subcode, UID, data)
         elif opencode == 4:
-             json_back = response_class.classWorkresponse(DB,subcode, UID, data)
+            json_back = response_class.classWorkresponse(DB,subcode, UID, data)
         elif opencode == 5:
-             json_back = response_resversion.ConfigGet_Server(DB,data)
+            json_back = response_resversion.ConfigGet_Server(DB,data)
         elif opencode == 6:
 
             # 登录前获取服务器地址
