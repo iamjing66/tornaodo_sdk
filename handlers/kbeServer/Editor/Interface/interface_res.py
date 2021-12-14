@@ -273,7 +273,7 @@ def new_do_code(DB, OpenCode, page, version):
         table_project = "tb_config_left_res"
         sql_str = "select * from " + table_project
     elif OpenCode == "111":
-        sql_str = "select CID, TypeName, cIconPath from tb_course_type where state = 1 order by Sort;"
+        sql_str = "select CID, TypeName, cIconPath, sort from tb_course_type where state = 1 order by Sort;"
     elif OpenCode == "112":
         table_project = "tb_work_type"
         sql_str = "select * from " + table_project + " order by Sort"
