@@ -127,7 +127,6 @@ def GetNew(pdata, self_uid, itype):
     if itype == 3:
         mpage = data_course.SHCourseAllCount(DB)
     sql = data_course.GetCourseSQLFromTypeNew(itype, DB, self_uid, pam, account_type=account_type, power=power)
-    logging.info("sql = " + sql)
     arr = data_course.Data_Courses_Base(sql,DB,cversions,0)
     lesson_datas = arr[0]
     data_course_ini = arr[1]
@@ -138,7 +137,6 @@ def GetNew(pdata, self_uid, itype):
         p_uid = li[2]
         p_cid = li[3]
         sql = data_lesson.GetLessonSQLFromTypeNew(itype,uid,cid,p_uid,p_cid, teacher=account_type, power=power, organization=organization)
-        logging.info("sql = " + sql)
         if data_lesson_ini == "":
             data_lesson_ini = str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0)
         else:
@@ -299,7 +297,6 @@ def BuyNew(DB,self_uid,uid,cid,lid,tlong):
         selfLesson["value17"] = lessondata_market[lid]["value17"]
         # 时长为现在加上 tlong
         selfLesson["value19"] = _now+tlong
-    logging.info("时长 :%s" % selfLesson["value19"])
     #修改课时数据
     #print("buy_datas", buy_datas)
 
@@ -312,7 +309,6 @@ def BuyNew(DB,self_uid,uid,cid,lid,tlong):
     data_lesson.UpdateToDB(DB, buy_ini, "", _cid, self_uid, 0)
 
     _back = c_string + "！" + str(_cid) + "^" + str(self_uid) + "^" + buy_ini
-    logging.info("back : %s" % _back)
 
     # 日志
     # if btype != 0:

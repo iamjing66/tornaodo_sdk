@@ -77,7 +77,6 @@ def GetNew(pdata, self_uid, type, **kwargs):
     d_class = data_work.get_utype_uid(DB, self_uid)
     course_level = kwargs.get("course_level", 2)
     sql = data_work.GetWorkSQLFromTypeNew(type, self_uid, arrpam, course_level=course_level, d_class=d_class)
-    logging.info("sql = %s" % sql)
 
     #print("work client version : " , p_server)
     arr = data_work.Data_Works_Base_New(sql, DB, p_server, 0)

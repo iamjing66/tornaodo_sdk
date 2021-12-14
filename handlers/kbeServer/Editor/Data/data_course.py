@@ -136,7 +136,6 @@ def UpdateToDB(DB,json_ccourse_base,cid,uid,target):
         table_name = "tb_course_market"
     sql = "select CID from "+table_name+" where UID = " + str(uid) + " and CID = " + str(cid)
     result = DB.fetchone(sql, None)
-    logging.info("len: %s ,json_course_base: %s" % (len(json_ccourse_base),json_ccourse_base))
     if result:
         if len(json_ccourse_base) == 19:
             sql = "Update " + table_name + " set  `Name`='" + str(json_ccourse_base[1]) + "', Platform=" + str(json_ccourse_base[2]) + ", Stars=" + str(json_ccourse_base[3]) + ", pic='" + str(json_ccourse_base[4]) + "', price=" + str(json_ccourse_base[5]) + ", `desc`='" + str(json_ccourse_base[6]) + "', State=" + str(json_ccourse_base[7]) + ", CreateDate=" + str(json_ccourse_base[8]) + ", Vision=" + str(json_ccourse_base[10]) + ", Version=" + str(json_ccourse_base[11]) + ", P_UID=" + str(json_ccourse_base[12]) + ", P_CID=" + str(json_ccourse_base[13]) + ", ResNum=" + str(json_ccourse_base[14]) + ", `ZK1`=" + str(json_ccourse_base[15]) + ", ZK2=" + str(json_ccourse_base[16]) + ",ct=" + str(json_ccourse_base[17]) + ",Sort=" + str(json_ccourse_base[18]) + ",Plat='1'" + " WHERE CID = " + str(cid) + " and UID = " + str(uid)
@@ -147,7 +146,6 @@ def UpdateToDB(DB,json_ccourse_base,cid,uid,target):
             sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + ",'1'" + ")"
         else:
             sql = "Insert INTO " + table_name + " (CID,`Name`,Platform,Stars,pic,price,`desc`,State,CreateDate,UID,Vision,Version,P_UID,P_CID,ResNum,ZK1,ZK2,ct,Sort,Plat) values (" + str(json_ccourse_base[0]) + ",'" + str(json_ccourse_base[1]) + "'," + str(json_ccourse_base[2]) + "," + str(json_ccourse_base[3]) + ",'" + str(json_ccourse_base[4]) + "'," + str(json_ccourse_base[5]) + ",'" + str(json_ccourse_base[6]) + "'," + str(json_ccourse_base[7]) + "," + str(json_ccourse_base[8]) + "," + str(uid) + "," + str(json_ccourse_base[10]) + "," + str(json_ccourse_base[11]) + "," + str(json_ccourse_base[12]) + "," + str(json_ccourse_base[13]) + "," + str(json_ccourse_base[14]) + "," + str(json_ccourse_base[15]) + "," + str(json_ccourse_base[16]) + "," + str(json_ccourse_base[17]) + "," + str(json_ccourse_base[18]) + "," + str(json_ccourse_base[19]) + ")"
-    logging.info("发布sql = %s" % sql)
     DB.edit(sql, None)
 
 
@@ -160,7 +158,6 @@ def UpdateToDBNew(DB,json_ccourse_base,cid,uid,target):
         table_name = "tb_course_market"
     sql = "select CID from "+table_name+" where UID = " + str(uid) + " and CID = " + str(cid)
     result = DB.fetchone(sql, None)
-    logging.info("len: %s ,json_course_base: %s" % (len(json_ccourse_base),json_ccourse_base))
     if result:
         sql = "Update " + table_name + " set  `Name`='" + str(json_ccourse_base[1]) + "', Platform=" + str(json_ccourse_base[2]) + ", Stars=" + str(json_ccourse_base[3]) + ", pic='" + str(json_ccourse_base[4]) + "', price=" + str(json_ccourse_base[5]) + ", `desc`='" + str(json_ccourse_base[6]) + "', State=" + str(json_ccourse_base[7]) + ", CreateDate=" + str(json_ccourse_base[8]) + ", Vision=" + str(json_ccourse_base[10]) + ", Version=" + str(json_ccourse_base[11]) + ", P_UID=" + str(json_ccourse_base[12]) + ", P_CID=" + str(json_ccourse_base[13]) + ", ResNum=" + str(json_ccourse_base[14]) + ", `ZK1`=" + str(json_ccourse_base[15]) + ", ZK2=" + str(json_ccourse_base[16]) + ",ct=" + str(json_ccourse_base[17]) + ",Sort=" + str(json_ccourse_base[18]) + ",Plat='" + str(json_ccourse_base[20]) + "' WHERE CID = " + str(cid) + " and UID = " + str(uid)
     else:
@@ -331,7 +328,6 @@ def ProjectInCourses(DB,uid,pid,dtype):
         sql = "select cid from tb_course_bag where UID = " + str(uid) + " and p_uid = 0"
     else:
         sql = "select cid from tb_course_bag where UID = " + str(uid) + " and state = 1 and p_uid = 0"
-    logging.info("ProjectInCourses:"+sql)
     result = DB.fetchall(sql,None)
     if result:
         for info in result:
