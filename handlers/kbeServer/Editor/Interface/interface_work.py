@@ -354,40 +354,23 @@ def VR_ShareWork(DB,self_uid,pid,data):
 def GetWorkFreetime(DB,pam):
 
     json_data = {
-        "code": 0,
-        "msg": ""
+        "code": "0",
+        "msg": "false"
     }
     if pam == "":
-        json_data["code"] = "0"
-        json_data["msg"] = ""
         return json_data
     uid = pam.split(',')[0]
     wid = pam.split(',')[1]
 
-    strSql = "select stime,etime from tb_workmarket where UID = " + str(uid) + " and  WID = " + str(wid)+""
-    _cback = ""
-    try:
-        data = DB.fetchone(strSql,None)
-        if data:
-            stime = data[0][0]
-            etime = data[0][1]
-            Nowtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            if  stime<Nowtime:
-                if Nowtime < etime:
-                    _cback = "true"
-                else:
-                    _cback = "false"
-            else:
-                _cback = "false"
-
+    strSql = "select stime,etime from tb_workmarket where UID = %s and  WID = %s limit 1;"
+    data = DB.fetchone(strSql, (uid, wid))
+    if data:
+        stime = data[0]
+        etime = data[1]
+        Nowtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        if stime < Nowtime < etime:
             json_data["code"] = "1"
-            json_data["msg"] = _cback
-        else:
-            json_data["code"] = "0"
-            json_data["msg"] = "false"
-    except:
-        json_data["code"] = "0"
-        json_data["msg"] = "false"
+            json_data["msg"] = "true"
     return json_data
 
 
