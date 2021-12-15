@@ -145,7 +145,7 @@ class ProStatus:
             self.user_kick(uuid)
         elif uuid in self.dicusers_id.keys():
             cuser = self.dicusers_id[uuid]
-            cuser.write_message(code+"@" + pam)
+            cuser.write_message(str(code)+"@" + str(pam))
 
 
     #同步消息推送(当前服)
