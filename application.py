@@ -161,35 +161,38 @@ class Application(tornado.web.Application):
         #处理事务
         #logging.info("[Do Event All]" + self.SAddress)
 
-        #处理顶号事务
-        key = self.RedisServerAddress+"$C1"
+        #处理异步事务
+        key = self.RedisServerAddress+"$CFD"
         data = C_ServerEventCache.GetKeys(key)
 
         if len(data) > 0:
             logging.info("[DoEvent_All] Kick data = %s - key = %s" % ( data, key))
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key,uuid)
-                self.DoEvent_Kick(uuid.decode())
+                value = C_ServerEventCache.GetValue(key,uuid).decode().split('$')
+                code = value[0]
+                pam = value[1]
+                pro_status.DoSyncThing(uuid.decode(),code,pam)
 
-        key = self.RedisServerAddress + "$106"
-        data = C_ServerEventCache.GetKeys(key)
-        if len(data) > 0:
-            logging.info("[DoEvent_All] Mail data = %s - key = %s" % (data, key))
-            for uuid in data:
-                self.DoEvent_Mail(uuid.decode(),C_ServerEventCache.GetValue(key,uuid).decode())
-                C_ServerEventCache.DeleteKeys(key, uuid)
+        # key = self.RedisServerAddress + "$106"
+        # data = C_ServerEventCache.GetKeys(key)
+        # if len(data) > 0:
+        #     logging.info("[DoEvent_All] Mail data = %s - key = %s" % (data, key))
+        #     for uuid in data:
+        #         self.DoEvent_Mail(uuid.decode(),C_ServerEventCache.GetValue(key,uuid).decode())
+        #         C_ServerEventCache.DeleteKeys(key, uuid)
 
 
 
-    def DoEvent_Kick(self,uuid):
-
-        print("DoEvent = " , uuid)
-        pro_status.user_kick(uuid)
-
-    def DoEvent_Mail(self, uuid,value):
-
-        print("DoEvent = ", uuid,value)
-        pro_status.DoMessage_Mail(uuid,value)
+    # def DoEvent_Kick(self,uuid):
+    #
+    #     print("DoEvent = " , uuid)
+    #     pro_status.user_kick(uuid)
+    #
+    # def DoEvent_Mail(self, uuid,value):
+    #
+    #     print("DoEvent = ", uuid,value)
+    #     pro_status.DoMessage_Mail(uuid,value)
 
     #事务处理 - 主服务
     def DoEvent_Main(self):

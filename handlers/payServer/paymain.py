@@ -30,10 +30,10 @@ class PayOrder(BaseHandler):
         UserName = paydata["UserName"]              #用户名
         AppCode = int(paydata["AppCode"])           #1-编程作品买看 2-SIS课程购买 3-频道畅享 4-VIP 5-包裹位
         PayData = json.loads(paydata["PayData"])    #支付数据
-        CB = paydata["cb"]                          #支付回调
+        #CB = paydata["cb"]                          #支付回调
 
-        if len(CB) < 1:
-            CB = Global.get_config.pay_config()
+        #if len(CB) < 1:
+        CB = Global.get_config.pay_config()
 
         logging.info("PayOrder -> post -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i]" % (UID,UserName,PayType,AppType,AppCode))
 
