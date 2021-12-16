@@ -13,7 +13,7 @@ from handlers.kbeServer.Editor.Interface import interface_global
 # call_type 0-INI结果 1-json结构
 # cversions 版本号列表(用来比对是否需要同步)
 # 回调 [服务器课程列表(用来比对需要删除得课程) ,课程数据]
-def Data_Lessons_Base(sql, DB,cid,uid, lversions, call_type):
+def Data_Lessons_Base(sql, DB,cid,uid, lversions, call_type,iupdate = 0):
 
     _lid_strs = ""
     json_back = ""
@@ -45,6 +45,8 @@ def Data_Lessons_Base(sql, DB,cid,uid, lversions, call_type):
                 #63^6^9^1`7!2`7!3`7!4`7!5`7!6`7!7`7!8`7*
                 if len(obj_dic) > 0 and Lid in obj_dic and version <= obj_dic[Lid]:
                     continue
+                if iupdate == 1:
+                    UpdateVersion(DB,cid,uid,Lid,version)
                 if call_type == 0:
                     if json_back == "":
                         json_back = Get_Data_Lesson_Base_Ini(minfo_list)
@@ -59,6 +61,14 @@ def Data_Lessons_Base(sql, DB,cid,uid, lversions, call_type):
 
     ##print("Data_Courses_Base:", json_back)
     return json_back
+
+
+def UpdateVersion(DB,cid,uid,lid,version):
+
+    sql = "update "+Global.GetLessonTableName(uid,cid)+" set version = " + str(version) + " where lid = " + str(lid)
+    DB.edit(sql,None)
+
+
 
 # 课时最小基础数据(唯一结构)
 def Get_Data_Lesson_Base_Ini(minfo_list):
@@ -152,7 +162,7 @@ def GetLessonSQLFromTypeNew(itype, uid, cid, p_uid, p_cid, teacher=0, power=None
             t2.organization = {organization}{sql_yinliu};
             """
         else:
-            sql = "select t1.`ID`,t1.`Lid`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`Pid`,t2.`pic`,t2.`aim`,t2.`desc`,t2.`UID`,t1.`CreateDate`,t1.`p1`,t1.`p2`,t1.`p3`,t1.`p4`,t2.`Price`,t1.`Vision`,t1.`Version`,t2.`PriceAll`,t1.`PDate`,t1.`buy`,t1.Sort from " + Global.GetLessonTableName(uid, cid) + " t1 inner join " + Global.GetMLessonTableName(p_uid, p_cid) + " t2 on t1.LID = t2.LID order by t2.sort;"
+            sql = "select t1.`ID`,t1.`Lid`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`Pid`,t2.`pic`,t2.`aim`,t2.`desc`,t2.`UID`,t1.`CreateDate`,t1.`p1`,t1.`p2`,t1.`p3`,t1.`p4`,t2.`Price`,t1.`Vision`,t2.`Version`,t2.`PriceAll`,t1.`PDate`,t2.`buy`,t1.Sort from " + Global.GetLessonTableName(uid, cid) + " t1 inner join " + Global.GetMLessonTableName(p_uid, p_cid) + " t2 on t1.LID = t2.LID order by t2.sort;"
     elif itype == 2:
         sql = "select * from " + Global.GetMLessonTableName(uid, cid)
     elif itype == 3:

@@ -13,7 +13,7 @@ import logging
 # call_type 0-INI结果 1-json结构
 #cversions 版本号列表(用来比对是否需要同步)
 #回调 [服务器课程列表(用来比对需要删除得课程) ,课程数据]
-def Data_Courses_Base(sql, DB,cversions, call_type):
+def Data_Courses_Base(sql, DB,cversions, call_type,iupdate = 0):
 
     lesson_datas = []
     # scourseCLientNotHas = {}
@@ -53,6 +53,9 @@ def Data_Courses_Base(sql, DB,cversions, call_type):
                     else:
                         json_back = json_back + "!" + Get_Data_Course_Base_Ini(minfo_list)
 
+                        # 更新下本地版本号
+                        if iupdate == 1:
+                            UpdateVersion(DB,cid,uid,version)
 
     #需要删除的课程(通过对比发现这些工程在本地有，但是在服务器上面没有)
 
@@ -61,6 +64,14 @@ def Data_Courses_Base(sql, DB,cversions, call_type):
     #print("Data_Courses_Base:", json_back)
     #print("lesson_datas:", lesson_datas)
     return [lesson_datas,json_back]
+
+
+def UpdateVersion(DB,cid,uid,version):
+
+    sql = "update tb_course_bag set version = " + str(version) + " where cid = " + str(cid) + " and uid = " + str(uid)
+    DB.edit(sql,None)
+
+
 
 
 
@@ -279,7 +290,7 @@ def GetCourseSQLFromTypeNew(itype, DB, self_uid, pam, account_type=None, power=N
             on m.UID = p.luid and m.CID = p.cid;
             """
         else:
-            sql = "select t3.`ID`,t3.`CID`,t3.`Name`,t3.`Platform`,t3.`Stars`,t3.`pic`,t3.`Price`,t3.`desc`,t3.`State`,t3.`CreateDate`,t3.`UID`,t3.`Vision`,t3.`Version`,t3.`P_UID`,t3.`P_CID`,t3.`ResNum`,t3.`ZK1`,t3.`ZK2`,t3.`ct`,t3.`Sort`,t4.UserName, t3.`Plat` from (select t1.`ID`,t1.`CID`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`pic`,t2.`Price`,t2.`desc`,t2.`State`,t1.`CreateDate`,t1.`UID`,t1.`Vision`,t1.`Version`,t1.`P_UID`,t1.`P_CID`,t2.`ResNum`,t2.`ZK1`,t2.`ZK2`,t2.`ct`,t2.`Sort`, t2.`Plat` from tb_course_bag t1 inner join tb_course_market t2 on t1.P_UID = t2.UID AND t1.P_CID = t2.CID AND t1.uid = " + str(self_uid) + " and t1.P_UID != 0) t3 inner join tb_userdata t4 on t3.P_UID = t4.UID"
+            sql = "select t3.`ID`,t3.`CID`,t3.`Name`,t3.`Platform`,t3.`Stars`,t3.`pic`,t3.`Price`,t3.`desc`,t3.`State`,t3.`CreateDate`,t3.`UID`,t3.`Vision`,t3.`Version`,t3.`P_UID`,t3.`P_CID`,t3.`ResNum`,t3.`ZK1`,t3.`ZK2`,t3.`ct`,t3.`Sort`,t4.UserName, t3.`Plat` from (select t1.`ID`,t1.`CID`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`pic`,t2.`Price`,t2.`desc`,t2.`State`,t1.`CreateDate`,t1.`UID`,t1.`Vision`,t2.`Version`,t1.`P_UID`,t1.`P_CID`,t2.`ResNum`,t2.`ZK1`,t2.`ZK2`,t2.`ct`,t2.`Sort`, t2.`Plat` from tb_course_bag t1 inner join tb_course_market t2 on t1.P_UID = t2.UID AND t1.P_CID = t2.CID AND t1.uid = " + str(self_uid) + " and t1.P_UID != 0) t3 inner join tb_userdata t4 on t3.P_UID = t4.UID"
     elif itype == 2:
         sql = "select t1.ID, t1.CID, t1.Name, t1.Platform, t1.Stars, t1.pic, t1.Price, t1.`desc`, t1.State, t1.CreateDate, t1.UID, t1.Vision, t1.Version, t1.P_UID, t1.P_CID, t1.ResNum, t1.ZK1, t1.ZK2,t1.ct, t1.Sort, t2.UserName, t1.Plat, t1.type, t1.secondType from tb_course_market t1 inner join tb_userdata t2 on t1.UID = t2.UID;"
     elif itype == 3:
