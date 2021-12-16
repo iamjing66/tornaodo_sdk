@@ -63,10 +63,8 @@ def GetMail(DB, uid,data):
 
 #获取邮件已读和删除邮件ID
 def GetUsernameMailData(DB,UID):
-
-    sql_str = "select from_unixtime(t2.regtime) from tb_userdata t1 inner join kbe_accountinfos t2 on t1.uid = " +str(UID)+" and t1.UserName = t2.AccountName"
-
-    data = DB.fetchone(sql_str,None)
+    sql_str = "select create_time from tb_userdata where uid = %s;"
+    data = DB.fetchone(sql_str, UID)
     _cback = ""
     if data:
         return data[0]

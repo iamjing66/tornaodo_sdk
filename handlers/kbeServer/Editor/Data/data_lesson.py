@@ -45,8 +45,8 @@ def Data_Lessons_Base(sql, DB,cid,uid, lversions, call_type,iupdate = 0):
                 #63^6^9^1`7!2`7!3`7!4`7!5`7!6`7!7`7!8`7*
                 if len(obj_dic) > 0 and Lid in obj_dic and version <= obj_dic[Lid]:
                     continue
-                if iupdate == 1:
-                    UpdateVersion(DB,cid,uid,Lid,version)
+                # if iupdate == 1:
+                #     UpdateVersion(DB,cid,uid,Lid,version)
                 if call_type == 0:
                     if json_back == "":
                         json_back = Get_Data_Lesson_Base_Ini(minfo_list)

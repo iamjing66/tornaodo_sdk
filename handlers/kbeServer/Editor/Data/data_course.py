@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-
+import Global
 from handlers.kbeServer.Editor.Data import data_lesson
 import logging
 
@@ -53,9 +53,9 @@ def Data_Courses_Base(sql, DB,cversions, call_type,iupdate = 0):
                     else:
                         json_back = json_back + "!" + Get_Data_Course_Base_Ini(minfo_list)
 
-                        # 更新下本地版本号
-                        if iupdate == 1:
-                            UpdateVersion(DB,cid,uid,version)
+                    # 更新下本地版本号
+                    if iupdate == 1:
+                        UpdateVersion(DB,cid,uid,int(minfo_list[14]),int(minfo_list[13]),version,minfo_list[2])
 
     #需要删除的课程(通过对比发现这些工程在本地有，但是在服务器上面没有)
 
@@ -66,14 +66,15 @@ def Data_Courses_Base(sql, DB,cversions, call_type,iupdate = 0):
     return [lesson_datas,json_back]
 
 
-def UpdateVersion(DB,cid,uid,version):
+def UpdateVersion(DB,cid,uid,pcid,puid,version,cname):
 
     sql = "update tb_course_bag set version = " + str(version) + " where cid = " + str(cid) + " and uid = " + str(uid)
-    DB.edit(sql,None)
+    state = DB.edit(sql,None)
+    if state:
+        sql = "update "+Global.GetLessonTableName(uid,cid)+" t1,"+Global.GetMLessonTableName(puid,pcid)+" t2 set t1.Version = t2.Version where t1.lid = t2.lid;"
+        DB.edit(sql,None)
 
-
-
-
+    logging.info("[%s]courseBuys[%s] Course Is Updated , pam = [uid = %i cid = %i puid = %i pcid = %i courseVersion = %d]" % (str(state),cname,uid,cid,puid,pcid,version))
 
 #获取课程市场基础数据(带制作者信息)
 

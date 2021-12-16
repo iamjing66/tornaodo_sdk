@@ -15,9 +15,8 @@ import datetime
 
 
 def BaseLogin(DB,username,password):
-
-    sql = "select t1.Enddate,t1.UID,t2.`password` from tb_userdata t1 inner join kbe_accountinfos t2 on t1.username = t2.accountName and binary t1.username = '"+username+"'"
-    data = DB.fetchone(sql,None)
+    sql = "select Enddate, UID, pwd_md5 from tb_userdata where binary username = %s;"
+    data = DB.fetchone(sql, username)
     if data:
 
         enddate = int(data[0])
@@ -40,7 +39,6 @@ def PC_lOGON(DB,Username, json_data):
 
     #基础数据
     uid = 0
-    # TODO 获取新增字段 用户云存储状态
     sql = "select * from tb_userdata where binary UserName = '"+str(Username) + "'"
     # print("pc_login :" , sql)
     data = DB.fetchone(sql, None)
@@ -74,7 +72,6 @@ def PC_lOGON(DB,Username, json_data):
         VipDate = int(data[38])
         Wit_RMB = int(data[39])
         gmstate = int(data[47])
-        # TODO 版本更新后再使用
         save_status = data[58]
 
     # 班级信息
@@ -143,7 +140,7 @@ def PC_lOGON(DB,Username, json_data):
                 Scene_Msg = Package_Msg + "@" + str(minfo_list[0]) + "|" + str(minfo_list[1])
 
 
-    _SEND = Phone + "$" + str(Power) + "$" + str(UPower) + "$" + str(MainAccount) + "$" + TheName + "$" + TheSchool + "$" + TheClass + "$" + identity + "$" + str(COMID) + "$" + str(PassDate) + "$" + AccountDesc + "$" + BCBag + "$" + str(organization) + "$" + str(distributor) + "$" + str(AccountType) + "$" + str(uversion) + "$" + str(makec) + "$" + str(AccountSource) + "$" + class_str + "$" + str(sclass) + "$" + str(fabricator) + "$" + str(adminType) + "$" + str(AccountPower) + "$" + str(VipPower) + "$" + str(VipDate) + "$" + Package_Msg + "$" + str(uid) + "$" + Res_Msg+ "$" + Scene_Msg + "$" + str(gmstate) + "$" + str(save_status) #版本更新后使用
+    _SEND = Phone + "$" + str(Power) + "$" + str(UPower) + "$" + str(MainAccount) + "$" + TheName + "$" + TheSchool + "$" + TheClass + "$" + identity + "$" + str(COMID) + "$" + str(PassDate) + "$" + AccountDesc + "$" + BCBag + "$" + str(organization) + "$" + str(distributor) + "$" + str(AccountType) + "$" + str(uversion) + "$" + str(makec) + "$" + str(AccountSource) + "$" + class_str + "$" + str(sclass) + "$" + str(fabricator) + "$" + str(adminType) + "$" + str(AccountPower) + "$" + str(VipPower) + "$" + str(VipDate) + "$" + Package_Msg + "$" + str(uid) + "$" + Res_Msg+ "$" + Scene_Msg + "$" + str(gmstate) + "$" + str(save_status)
     #print("_SEND",_SEND)
 
     #login
