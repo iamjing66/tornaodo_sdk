@@ -154,7 +154,7 @@ class get_config():
     def pay_config(self):
         pay = {
             "test": "http://29w1v17148.qicp.vip",
-            "dev": "http://www.mrbutfly.com",
+            "dev": "http://www.mrbutfly.com:9001",
             "pro": "http://120.46.140.42:9002"
         }
         return pay[self.env]

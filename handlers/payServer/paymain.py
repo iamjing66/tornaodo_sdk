@@ -35,7 +35,7 @@ class PayOrder(BaseHandler):
         #if len(CB) < 1:
         CB = Global.get_config.pay_config()
 
-        logging.info("PayOrder -> post -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i]" % (UID,UserName,PayType,AppType,AppCode))
+        logging.info("PayOrder -> post -> UID[%s],UserName[%s],PayType[%i],AppType[%i],AppCode[%i],CB[%s]" % (UID,UserName,PayType,AppType,AppCode, CB))
 
         _order = self.Ali_Order
         _order += 1
