@@ -55,7 +55,7 @@ class post_plistINIHandler(BaseHandler):    #继承base.py中的类BaseHandler
                 elif read_type == 3:  #本地课程数据
                     post_data = interface_course.Get(pdata["data"],UID, 0)#Data_LessonInst.GetLessonDataWithVersion(pdata["data"],UID, 0,0)
                 elif read_type == 4:  #课程购买数据
-                    post_data = interface_course.Get(pdata["data"],UID, 1)
+                    post_data = interface_course.Get(pdata["data"],UID, 1,1)
                 elif read_type == 5:  #课程市场
                     post_data = interface_course.Get(pdata["data"],UID, 2)
                 elif read_type == 6:  #作品市场数据

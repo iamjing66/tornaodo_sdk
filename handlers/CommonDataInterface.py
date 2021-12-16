@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import json
-import logging,requests
+import logging
 from time import time
 from handlers.base import BaseHandler
 from handlers.kbeServer.Editor.response import response_account,response_mail,response_class,response_resversion,response_other,response_update,response_sis,response_fullview,response_collect,response_global

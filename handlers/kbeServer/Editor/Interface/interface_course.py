@@ -57,7 +57,7 @@ def clientVersionDataToJson(pdata):
 #同步数据
 #itype 类型0-本地课程 1-购买课程 2-课程市场 3-审核课程
 #objtype 0-本地数据 1-市场数据
-def Get(pdata, self_uid, itype):
+def Get(pdata, self_uid, itype,isupdate = 0):
     cversions = {}
     lversions = {}
     pam = []
@@ -84,7 +84,7 @@ def Get(pdata, self_uid, itype):
         mpage = data_course.SHCourseAllCount(DB)
     sql = data_course.GetCourseSQLFromTypeNew(itype, DB, self_uid, pam, account_type=account_type, power=power)
     logging.info("=== ayylt =  " + sql)
-    arr = data_course.Data_Courses_Base(sql,DB,cversions,0)
+    arr = data_course.Data_Courses_Base(sql,DB,cversions,0,isupdate)
     lesson_datas = arr[0]
     data_course_ini = arr[1]
     data_lesson_ini = ""
@@ -98,9 +98,9 @@ def Get(pdata, self_uid, itype):
         p_cid = li[3]
         sql = data_lesson.GetLessonSQLFromTypeNew(itype,uid,cid,p_uid,p_cid, teacher=account_type, power=power, organization=organization)
         if data_lesson_ini == "":
-            data_lesson_ini = str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0,1)
+            data_lesson_ini = str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0,isupdate)
         else:
-            data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0,1)
+            data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(sql, DB,cid,uid, lversions, 0,isupdate)
     DB.destroy()
     #print("data_course_ini:",data_course_ini)
     #print("data_lesson_ini:", data_lesson_ini)
