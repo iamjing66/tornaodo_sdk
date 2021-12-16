@@ -96,7 +96,8 @@ def UpLoad(DB,l_pdata,self_uid,target):
     #'2937`rwqr`1`1`2937`0``1`0`1621405157`5`0`1002`2`0`0````1`0`0`0'
     if l_pdata[1] != "":
         work_data = l_pdata[1].split('`')
-        data_work.UpdateToDB(work_data, self_uid,int(work_data[0]) , DB,target)
+        data_work.UpdateToDB(work_data, self_uid, int(work_data[0]), DB, target)
+        data_work.new_work_sort(DB, work_data[0], self_uid, work_data[19])
 
 
 #审核作品

@@ -318,3 +318,13 @@ def get_utype_uid(DB, uid):
     if data:
         return True
     return False
+
+
+def new_work_sort(DB, wid, uid, ct):
+    sql_select = "select id from tb_work_sort where wid = %s and uid = %s"
+    data = DB.fetchone(sql_select, wid, uid)
+    if data:
+        sql = "update tb_work_sort set sort = 0, flag = 1, ct = %s where wid = %s and uid = %s"
+    else:
+        sql = "insert into tb_work_sort (ct, wid, uid) values (%s, %s, %s)"
+    DB.edit(sql, (ct, wid, uid))
