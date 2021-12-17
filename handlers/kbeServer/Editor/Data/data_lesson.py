@@ -162,7 +162,7 @@ def GetLessonSQLFromTypeNew(itype, uid, cid, p_uid, p_cid, teacher=0, power=None
             t2.organization = {organization}{sql_yinliu};
             """
         else:
-            sql = "select t1.`ID`,t1.`Lid`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`Pid`,t2.`pic`,t2.`aim`,t2.`desc`,t2.`UID`,t1.`CreateDate`,t1.`p1`,t1.`p2`,t1.`p3`,t1.`p4`,t2.`Price`,t1.`Vision`,t2.`Version`,t2.`PriceAll`,t1.`PDate`,t2.`buy`,t1.Sort from " + Global.GetLessonTableName(uid, cid) + " t1 inner join " + Global.GetMLessonTableName(p_uid, p_cid) + " t2 on t1.LID = t2.LID order by t2.sort;"
+            sql = "select t1.`ID`,t1.`Lid`,t2.`Name`,t2.`Platform`,t2.`Stars`,t2.`Pid`,t2.`pic`,t2.`aim`,t2.`desc`,t2.`UID`,t1.`CreateDate`,t1.`p1`,t1.`p2`,t1.`p3`,t1.`p4`,t2.`Price`,t1.`Vision`,t2.`Version`,t2.`PriceAll`,t1.`PDate`,t2.`buy`,t2.Sort from " + Global.GetLessonTableName(uid, cid) + " t1 inner join " + Global.GetMLessonTableName(p_uid, p_cid) + " t2 on t1.LID = t2.LID order by t2.sort;"
     elif itype == 2:
         sql = "select * from " + Global.GetMLessonTableName(uid, cid)
     elif itype == 3:
