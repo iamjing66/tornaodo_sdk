@@ -67,6 +67,7 @@ def UpdateToDB(target,DB ,uid, pid, OBJdata):
                 continue
             l_obj_data = info.split('`')
             # #print("l_obj_data",l_obj_data)
+            # TODO
             sql = "select ComID from " + table_name + " where ComID = " + str(l_obj_data[19]) +" limit 0,1"
             result = DB.fetchone(sql,None)
             if result:

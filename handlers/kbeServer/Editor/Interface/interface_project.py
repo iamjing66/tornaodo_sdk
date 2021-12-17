@@ -144,6 +144,7 @@ def ProjectToDB(DB,pid, uid,target,data):
 
     sql = "select id from "+table_name+" where uid = " + str(uid) + " and PID = " + str(pid)
     result = DB.fetchone(sql,None)
+    # TODO
     if result:
         sql = "Update "+table_name+" set PID=" + str(data[0]) + ", PName='" + str(data[1]) + "', CreateDate=" + str(data[2]) + ", EditDate=" + str(data[3]) + ", SID=" + str(data[4]) + ",BDelete = "+str(data[5])+", C_Posx=" + str(data[6]) + ", C_Posy=" + str(data[7]) + ", C_Posz=" + str(data[8]) + ", C_Rotx=" + str(data[9]) +", C_Roty=" + str(data[10]) + ", C_Rotz=" + str(data[11]) + ", Template=" + str(data[12]) + ", LightIntensity=" + str(data[13]) + ", LightColor='" + str(data[14]) + "', LightAngle='" + str(data[15]) + "', Power=" + str(data[16]) + ", Sort=" + str(data[17]) + ",FullViewPath='" + str(data[18]) + "', ParentPid=" + str(data[19]) + ", Publish=" + str(data[20]) + ", Skybox=" + str(data[21]) + ", HType=" + str(data[22]) + ",Version=" + str(data[23]) + ",p_uid = "+str(data[25])+",P_TYPE= "+str(data[26])+",PDate= "+str(data[27])+",`From` = "+str(data[28])+",FromPam = '"+str(data[29])+"' where PID = " + str(pid) + " and uid =" + str(uid)
     else:
