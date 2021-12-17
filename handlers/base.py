@@ -387,13 +387,12 @@ class BaseHandler(tornado.web.RequestHandler):
             username = self.UserName
         else:
             username = self.USERNAME
-        sql_str = "select T1.UID,T1.ENDDATE from tb_userdata AS T1 INNER JOIN kbe_accountinfos as T2 ON T1.USERNAME = T2.AccountName AND T1.UserName = '"+username+"';"
-
+        sql_str = "select UID, ENDDATE from tb_userdata where USERNAME = %s"
         #print("sql_str",sql_str)
         #self.db_ping
         db = DbHander.DBREAD()
         Cur = db.cursor()
-        Cur.execute(sql_str)
+        Cur.execute(sql_str, username)
         db.commit()
         _uid = 0
         _enddate = 0
