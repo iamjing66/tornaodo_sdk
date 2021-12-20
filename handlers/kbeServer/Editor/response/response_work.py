@@ -114,3 +114,24 @@ def Transactions_Code_1057():
     json_back["pam"] = "!".join(data_list)
 
     return json_back
+
+
+def Transactions_Code_1058():
+    json_back = {
+        "code": 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    DB = DBManager()
+    sql = "select UID, WID , CT, flag from tb_eservices_workmarket order by sort, WID;"
+    data = DB.fetchall(sql)
+    data_list = []
+    DB.destroy()
+    if data:
+        json_back["code"] = 1
+        for i in data:
+            data_list.append("`".join(str(j) for j in i))
+    json_back["pam"] = "!".join(data_list)
+
+    return json_back

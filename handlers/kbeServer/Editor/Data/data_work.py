@@ -41,7 +41,7 @@ def GetWorkSQLFromTypeNew(itype,self_uid,pam, **kwargs):
         if not kwargs["d_class"]:
             sql = "select T1.*,T2.username,0 from tb_workmarket t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.boutique = %s;" % kwargs["course_level"]
         else:
-            sql = "select w.id, w.WID, w.Name, w.Platform, w.Stars, w.Pid, w.price, w.`desc`,w.State,w.NewPid,w.CreateDate,w.UID,w.Vision,w.Sid,w.Version,w.Game,w.GameStage,w.SNUM,w.identity,w.SNAME,w.ct,e.price1, e.price2,e.FREE,e.stime, e.etime,w.freestatus,w.boutique,e.sort,e.flag,  w.Plat, t.UserName, 0 from tb_workmarket as w inner join tb_eservices_workmarket as e inner join tb_userdata as t on w.id = e.market_id and t.UID = %s and e.organization_id = t.distributor and e.flag = 1 and w.boutique = %s order by e.sort;" % (self_uid, kwargs["course_level"])
+            sql = "select w.id, w.WID, w.Name, w.Platform, w.Stars, w.Pid, w.price, w.`desc`, w.State, w.NewPid, w.CreateDate, w.UID,w.Vision, w.Sid, w.Version, w.Game, w.GameStage, w.SNUM, w.identity, w.SNAME, w.ct, e.price1, e.price2, e.FREE, e.stime, e.etime, w.freestatus, w.boutique, e.sort, e.flag, w.Plat, t.UserName, 0 from tb_workmarket as w inner join tb_eservices_workmarket as e inner join tb_userdata as t on w.id = e.market_id and t.UID = %s and e.organization_id = t.distributor and w.boutique = %s;" % (self_uid, kwargs["course_level"])
     elif itype == 2:
         mpage = pam[0]
         now_page = pam[1]

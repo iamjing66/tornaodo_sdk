@@ -128,6 +128,8 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback = response_work.Transactions_Code_1056()
         elif subCode == 1057:   # 发送作品排序 tb_work_sort
             json_dback = response_work.Transactions_Code_1057()
+        elif subCode == 1058:   # 发送作品排序 tb_work_sort
+            json_dback = response_work.Transactions_Code_1058()
         return json_dback
 
 
