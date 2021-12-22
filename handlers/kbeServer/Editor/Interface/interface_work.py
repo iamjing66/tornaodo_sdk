@@ -157,6 +157,7 @@ def BuyFlag(DB,self_uid,uid,pid):
 #ptype 0-一年 1-永久
 def Buy(DB,self_uid,wid,UID,type,ptype):
 
+    logging.info("buy work wid = %s uid = %s selfuid = %s type = %s ptype = %s" % (str(wid),str(UID),str(self_uid),str(type),str(ptype)))
     if UID == self_uid:
         return [0,""]   #不能购买自己的
     list_work_data = data_work.Data_Work_Base(UID,wid,1,DB,2)
@@ -178,18 +179,20 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
     _pdate = arr_back[0]
     _buy_pid = arr_back[2]
     _now = int(time.time())
-    if _pdate == 0:
-        _pdate = _now
+    logging.info("buy work WorkName = %s pid = %s price1 = %s price2 = %s _pdate = %s" % (
+    str(WorkName), str(pid), str(price1), str(price2), str(_pdate)))
     #判断是否是永久了
     if type != 2:
         if _pdate == 1:
                 return [-2,""]   #已经永久了
     if type == 2:
-        _ptruedate = _pdate
+        _ptruedate = 1 #_now + 2592000 #_pdate
     else:
         if ptype == 1:
             _ptruedate = 1
         else:
+            if _pdate == 0 or _pdate < _now:
+                _pdate = _now
             _ptruedate = _pdate + 2592000
 
     _bstr = ""
@@ -204,10 +207,10 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
                 return [-3,""] #智慧豆不足
             # 制作者加钱
             #interface_wit.AddWitScoreWithUserName(DB,UserName, price,0)
-    else:
-        if _pdate > 1:
-            if _now >= _pdate:
-                return [-5,""]   #过期了，不需要更新
+    # else:
+    #     if _pdate > 1:
+    #         if _now >= _pdate:
+    #             return [-5,""]   #过期了，不需要更新
 
         # _version = self.GetPorjectVersion(pid,UID,1) #市场的版本号
         # if _version_local >= _version:

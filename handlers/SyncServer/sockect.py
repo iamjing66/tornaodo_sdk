@@ -56,11 +56,12 @@ class ProStatus:
         value = uuid + "$" + application.App.RedisServerAddress
         rds.hset("websocket",key,value)
 
-        logging.info("[websocket] login Succ = uuid = %s - %s" % (str(uuid),application.App.RedisServerAddress))
+        logging.info("[websocket] login Succ = uuid = %s - %s dicusers_id = %s" % (str(uuid),application.App.RedisServerAddress,self.dicusers_id))
 
 
     def user_kick(self,uuid):
 
+        #logging.info("[websocket] kick user = uuid = %s dicusers_id = %s" % (str(uuid),str(self.dicusers_id)))
         if uuid in self.dicusers_id.keys():
             #该账号有记录
             cuser = self.dicusers_id[uuid]
@@ -121,6 +122,7 @@ class ProStatus:
 
     def syncTrigger(self,pam_apptype,uid,code,pam):
 
+        logging.info("[redis] pam_apptype = %s - uid = %s code = %s pam = %s connector = %s" % (str(pam_apptype), str(uid),str(code),str(pam),str(self.connector)))
         if str(uid) in self.connector[pam_apptype]:
             uuid = self.connector[pam_apptype][str(uid)]
             self.DoSyncThing(uuid,code,pam)
@@ -135,7 +137,7 @@ class ProStatus:
                 value = value.decode()
                 arr = value.split('$')
                 key1 = arr[1] + "$CFD"
-                cpam = code + "$" + pam
+                cpam = str(code) + "$" + str(pam)
                 C_ServerEventCache.SetEvent(key1, arr[0], cpam)
 
 

@@ -219,7 +219,7 @@ def UpdateToDB(data,uid ,wID,DB,target):
     result = DB.fetchone(sql, None)
     if result:
         sql_else = "'"
-        data_version = data[13] if target == 1 and data[13] > result[2] else result[2]
+        data_version = int(data[13]) if target == 1 and int(data[13]) > result[2] else result[2]
         if result[1] != 1:
             sql_else = "',ct="+str(data[19])
         if len(data) == 23:
@@ -250,7 +250,7 @@ def BuyFlag(DB,self_uid,uid,pid):
     _pdate = 0
     _version = 0
     _pid = 0
-    sql = "select PDate,version,pid from tb_project where P_uid = " + str(uid) + " and ParentPid = " + str(pid) + " and UID = " + str(self_uid)
+    sql = "select PDate,version,pid from tb_project where P_uid = " + str(uid) + " and ParentPid = " + str(pid) + " and UID = " + str(self_uid) + " limit 0,1"
     result = DB.fetchone(sql,None)
     if result and len(result) > 0:
         _pdate = int(result[0])

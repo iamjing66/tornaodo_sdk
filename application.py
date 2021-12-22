@@ -166,12 +166,19 @@ class Application(tornado.web.Application):
         data = C_ServerEventCache.GetKeys(key)
 
         if len(data) > 0:
-            logging.info("[DoEvent_All] Kick data = %s - key = %s" % ( data, key))
+            #logging.info("[redis] DoEvent_All data = %s - key = %s" % ( data, key))
             for uuid in data:
-                C_ServerEventCache.DeleteKeys(key,uuid)
+                #logging.info("[redis] DoEvent_All uuid1 = %s " % str(uuid))
+
+
                 value = C_ServerEventCache.GetValue(key,uuid).decode().split('$')
+                #logging.info("[redis] DoEvent_All uuid2 = %s " % str(uuid))
+                C_ServerEventCache.DeleteKeys(key, uuid)
+
+                #logging.info("[redis] DoEvent_All uuid3 = %s " % str(uuid))
                 code = value[0]
                 pam = value[1]
+                logging.info("[redis] data uuid = %s code = %s - pam = %s" % (str(uuid),str(code), str(pam)))
                 pro_status.DoSyncThing(uuid.decode(),code,pam)
 
         # key = self.RedisServerAddress + "$106"

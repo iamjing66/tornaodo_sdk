@@ -70,6 +70,8 @@ def main():
     else:
         thisIP = json.load(urlopen('http://httpbin.org/ip'))['origin']
     thisPort = options.port
+    logging.info("[ServerSetup] thisIP = " + thisIP)
+    logging.info("[ServerSetup] thisPort = " + str(thisPort))
     App.DoInit(thisIP, thisPort)
 
     http_server.listen(options.port)
