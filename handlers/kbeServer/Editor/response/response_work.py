@@ -124,7 +124,7 @@ def Transactions_Code_1058():
     }
 
     DB = DBManager()
-    sql = "select UID, WID , CT, flag from tb_eservices_workmarket order by sort, WID;"
+    sql = "select UID, WID , CT, flag, organization_id from tb_eservices_workmarket order by sort, WID;"
     data = DB.fetchall(sql)
     data_list = []
     DB.destroy()
