@@ -6,7 +6,7 @@ import time,Global
 from handlers.kbeServer.Editor.Data import data_work
 from handlers.kbeServer.Editor.Data import data_obj
 from handlers.kbeServer.Editor.Data import data_project,data_Look
-from handlers.kbeServer.Editor.Interface import interface_mail, interface_global, interface_project, interface_obj, interface_wit,interface_solr,interface_sms, interface_account
+from handlers.kbeServer.Editor.Interface import interface_mail, interface_global, interface_project, interface_obj, interface_wit,interface_solr,interface_sms
 from methods.DBManager import DBManager
 
 
@@ -160,7 +160,7 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
     logging.info("buy work wid = %s uid = %s selfuid = %s type = %s ptype = %s" % (str(wid),str(UID),str(self_uid),str(type),str(ptype)))
     if UID == self_uid:
         return [0,""]   #不能购买自己的
-    user_power = interface_account.get_user_power_uid(DB,self_uid)
+    user_power = get_user_power_uid(DB,self_uid)
     d_class = False
     if user_power == 5:
         d_class = True
@@ -391,3 +391,11 @@ def get_course_slide(DB, uid, pid, market):
         sql_insert = "insert into tb_vrfl (uid, pid, ISMARKET, jj) values (%s, %s, %s, %s)"
         DB.edit(sql_insert, (uid, pid, market, float(0.06)))
         return 1, 0.06
+
+
+def get_user_power_uid(DB, uid):
+    sql = "select Power from tb_userdata where UID = %s"
+    data = DB.fetchone(sql, uid)
+    if data:
+        return int(data[0])
+    return -1

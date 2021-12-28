@@ -987,11 +987,3 @@ def get_user_power(DB, username):
     if data:
         return data[0]
     return -1
-
-
-def get_user_power_uid(DB, uid):
-    sql = "select Power from tb_userdata where UID = %s"
-    data = DB.fetchone(sql, uid)
-    if data:
-        return int(data[0])
-    return -1
