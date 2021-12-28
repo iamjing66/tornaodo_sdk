@@ -174,7 +174,7 @@ redis_db = RedisData(4)
 DB = DBManager()
 class redis_data():
     # 可用于用户信息全量入 redis
-    def redis_user_set_all(self, data):
+    def redis_user_set_all(self):
         sql = "select * from tb_userdata"
         data_user = DB.fetchall(sql)
         d1 = {}
@@ -183,26 +183,25 @@ class redis_data():
         for x in DB.cur.description:
             l1.append(x[0])
         for i in data_user:
-            d1[i[15]] = {}
+            d1[i[1]] = {}
             for j, z in enumerate(i):
-                d1[i[15]][l1[j]] = str(z) if str(z) != 'None' else ''
+                d1[i[1]][l1[j]] = str(z) if str(z) != 'None' else ''
             # 用户名为键，用户信息为值
-            redis_db.redis_pool.hmset(i[15], d1[i[15]])
+            redis_db.redis_pool.hmset(i[1], d1[i[1]])
             # 设置过期时间
-            redis_db.redis_pool.expire(i[15], 60 * 5)
+            redis_db.redis_pool.expire(i[1], 60 * 60 * 24)
         DB.destroy()
 
-
-    def redis_user_set(self, username, data):
+    def redis_user_set(self, uid, data):
         if data["platform"] != 10:
-            redis_db.redis_pool.hset(username, "app_ip", data["local_ip"])
+            redis_db.redis_pool.hset(uid, "app_ip", data["local_ip"])
         else:
-            redis_db.redis_pool.hset(username, "editor_ip", data["local_ip"])
-        redis_db.redis_pool.hset(username, "platfrom", data["platform"])
+            redis_db.redis_pool.hset(uid, "editor_ip", data["local_ip"])
+        redis_db.redis_pool.hset(uid, "platfrom", data["platform"])
+        return True
 
-
-    def redis_user_get(self, username):
-        data_list = redis_db.redis_pool.hmget(username, ['organization', 'distributor', 'editor_ip', 'app_ip', 'platform', 'UID', 'Power', 'UserName', 'AccountPower'])
+    def redis_user_get(self, uid):
+        data_list = redis_db.redis_pool.hmget(uid, ['organization', 'distributor', 'editor_ip', 'app_ip', 'platform', 'UID', 'Power', 'UserName', 'AccountPower'])
         # [b'0', b'0', b'', b'', None, b'12', b'0', b'wk2', b'0']
         data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
         return data_list

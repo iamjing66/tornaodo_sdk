@@ -11,6 +11,7 @@ from handlers.kbeServer.Editor.Interface import interface_wit,interface_solr
 from handlers.kbeServer.Editor.Data import data_ppackage
 from handlers.kbeServer.Editor.Data import data_respackahe
 import datetime
+from handlers.kbeServer.Editor.redis.interface_user import redis_data
 
 
 
@@ -35,9 +36,10 @@ def BaseLogin(DB,username,password):
         return 0
 
 
-def PC_lOGON(DB,Username, json_data):
+def PC_lOGON(DB,Username, json_data, uid):
 
     #基础数据
+    # TODO 判断用户，问题 新用户不存在redis
     uid = 0
     sql = "select * from tb_userdata where binary UserName = '"+str(Username) + "'"
     # print("pc_login :" , sql)
@@ -145,16 +147,17 @@ def PC_lOGON(DB,Username, json_data):
 
     #login
     #记录redis缓存
-    solr_redis = globalRedisU.redis_user_set(Username, json_data)
+    solr_redis = redis_data.redis_user_set(uid, json_data)
+    # solr_redis = globalRedisU.redis_user_set(Username, json_data)
     if solr_redis:
         #登录的索引库在互动引擎中
-        DoLogin(DB,Username, VipDate, "pc")
+        DoLogin(DB,Username, VipDate, "pc", uid)
 
     return _SEND
 
 
 #VR登录数据
-def VR_LOGIN(DB,VR_USERNAME,json_data):
+def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
 
     _userdata_string = ""
     vipdate = 0
@@ -170,9 +173,10 @@ def VR_LOGIN(DB,VR_USERNAME,json_data):
         UPower = int(data[4])
         # login
         # 记录redis缓存
-    solr_redis = globalRedisU.redis_user_set(VR_USERNAME, json_data)
+    solr_redis = redis_data.redis_user_set(uid, json_data)
+    # solr_redis = globalRedisU.redis_user_set(VR_USERNAME, json_data)
     if solr_redis:
-        DoLogin(DB, VR_USERNAME, vipdate, "vr")
+        DoLogin(DB, VR_USERNAME, vipdate, "vr", uid)
 
     return _userdata_string
 
@@ -207,11 +211,13 @@ def VR_LOGIN(DB,VR_USERNAME,json_data):
 
 
 #登录登出处理
-def DoLogin(DB,USERNAME,vipDate,SoftType):
+def DoLogin(DB,USERNAME,vipDate,SoftType, uid):
 
     localip = ""
 
-    solrdata = globalRedisU.redis_user_get(USERNAME)
+    # TODO
+    solrdata = redis_data.redis_user_get(uid)
+    # solrdata = globalRedisU.redis_user_get(USERNAME)
     if solrdata:
         _vip = 0
         if vipDate < int(time.time()):
@@ -242,14 +248,15 @@ def DoLogin(DB,USERNAME,vipDate,SoftType):
 
 
 
-def DoLogout(DB,USERNAME,jsondata):
+def DoLogout(DB,USERNAME,jsondata, uid):
     vipDate = int(jsondata["vipDate"])
     SoftType = jsondata["SoftType"]
     _long = float(jsondata["long"])
 
     localip = ""
-
-    solrdata = globalRedisU.redis_user_get(USERNAME)
+    # TODO
+    solrdata = redis_data.redis_user_get(uid)
+    # solrdata = globalRedisU.redis_user_get(USERNAME)
     if solrdata:
         _vip = 0
         if vipDate < int(time.time()):

@@ -4,12 +4,15 @@
 import json
 from methods.SolrInterface import SolrInst
 from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
+from handlers.kbeServer.Editor.redis.interface_user import redis_data
 
 def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate, userId, SoftType, channelType):
 
     userName = ""
     userType = 0
-    data = globalRedisU.redis_user_u_get(userId)
+    # TODO
+    data = redis_data.redis_user_get(userId)
+    # data = globalRedisU.redis_user_u_get(userId)
     if data != None:
         userName = data[7]
         userType = data[6]
