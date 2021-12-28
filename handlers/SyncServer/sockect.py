@@ -30,7 +30,7 @@ class ProStatus:
         tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
 
 
-    def user_connect(self, user, uid, client_model):
+    def user_connect(self, user, uid, client_model,outuuid):
 
         #logging.info("[websocket] logining users = %s" % self.connector)
 
@@ -39,13 +39,17 @@ class ProStatus:
         #self.user_kick(uid,client_model)
 
         # 踢下线
-        self.syncTrigger(client_model, uid, "100", '0')
+        self.syncTrigger(client_model, uid, "100", outuuid)
 
         #记录新用户（websocket id ,服务器地址）redis
         #绑定新用户
-        uuid = application.App.SUID + str(self.GlobalUUID)
+        if len(outuuid) > 0:
+            uuid = outuuid
+        else:
+            uuid = application.App.SUID + str(self.GlobalUUID)
+            self.GlobalUUID += 1
+
         self.dicusers[user] = [uuid, uid, client_model]
-        self.GlobalUUID += 1
         self.dicusers_id[uuid] = user
         self.connector[client_model][uid] = uuid
 
@@ -125,7 +129,8 @@ class ProStatus:
         logging.info("[redis] pam_apptype = %s - uid = %s code = %s pam = %s connector = %s" % (str(pam_apptype), str(uid),str(code),str(pam),str(self.connector)))
         if str(uid) in self.connector[pam_apptype]:
             uuid = self.connector[pam_apptype][str(uid)]
-            self.DoSyncThing(uuid,code,pam)
+            if uuid != pam:
+                self.DoSyncThing(uuid,code,pam)
         else:
             rd = RedisData(2)
             rds = rd.redis_pool()
@@ -194,8 +199,11 @@ class EchoWebSocket(websocket.WebSocketHandler):
         user_info = s1[1].split("$")
         uid = user_info[0]
         client_model = user_info[1]
+        uuid = ""
+        if len(user_info) > 2:
+            uuid = user_info[2]
         if s1[0] == "-99":
-            pro_status.user_connect(self, uid, client_model)
+            pro_status.user_connect(self, uid, client_model,uuid)
         elif s1[0] == "-96":
             print("KeepAlive")
             self.write_message("-96@")
