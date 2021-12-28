@@ -28,7 +28,10 @@ def GetWorkSQLFromType(itype,self_uid,pam, **kwargs):
         max_page = pam[2]
         sql = "select T1.*,T2.username," + str(mpage) + " from tb_workbag t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.State = 1  order by t1.CreateDate desc limit " + str((now_page - 1) * max_page) + "," + str(max_page) + ";"
     elif itype == 3:
-        sql = "select T1.*,T2.username,0 from "+pam[0]+" t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.UID = "+str(pam[1])+" and t1.WID = "+str(pam[2])+";"
+        if not kwargs["d_class"]:
+            sql = "select T1.*,T2.username,0 from "+pam[0]+" t1 inner join tb_userdata t2 on t1.UID = t2.UID and t1.UID = "+str(pam[1])+" and t1.WID = "+str(pam[2])+";"
+        else:
+            sql = "select w.id, w.WID, w.Name, w.Platform, w.Stars, w.Pid, w.price, w.`desc`, w.State, w.NewPid, w.CreateDate, w.UID,w.Vision, w.Sid, w.Version, w.Game, w.GameStage, w.SNUM, w.identity, w.SNAME, w.ct, e.price1, e.price2, e.FREE, e.stime, e.etime, w.freestatus, w.boutique, e.sort, e.flag, w.Plat, t.UserName, 0 from tb_workmarket as w inner join tb_eservices_workmarket as e inner join tb_userdata as t on w.wid = e.wid and w.uid = e.uid and t.UID = %s and e.wid = %s and e.organization_id = t.distributor;" % (pam[1], pam[2])
     return sql
 
 
@@ -151,7 +154,7 @@ def Data_Works_Base_New(sql, DB, p_server, call_type):
     return [objlist,json_back]
 
 
-def Data_Work_Base(uid,wid,target,DB,call_type,sh=False):
+def Data_Work_Base(uid,wid,target,DB,call_type,sh=False,d_class=False):
 
     json_back = None
 
@@ -160,7 +163,7 @@ def Data_Work_Base(uid,wid,target,DB,call_type,sh=False):
     else:
         table_name = "tb_workmarket"
     arrPam = [table_name,uid,wid]
-    sql = GetWorkSQLFromType(3,uid,arrPam)
+    sql = GetWorkSQLFromType(3,uid,arrPam,d_class=d_class)
     result = DB.fetchone(sql, None)
     if result:
         # GM审核

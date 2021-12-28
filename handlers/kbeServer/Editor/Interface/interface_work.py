@@ -6,7 +6,7 @@ import time,Global
 from handlers.kbeServer.Editor.Data import data_work
 from handlers.kbeServer.Editor.Data import data_obj
 from handlers.kbeServer.Editor.Data import data_project,data_Look
-from handlers.kbeServer.Editor.Interface import interface_mail, interface_global, interface_project, interface_obj, interface_wit,interface_solr,interface_sms
+from handlers.kbeServer.Editor.Interface import interface_mail, interface_global, interface_project, interface_obj, interface_wit,interface_solr,interface_sms, interface_account
 from methods.DBManager import DBManager
 
 
@@ -160,7 +160,11 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
     logging.info("buy work wid = %s uid = %s selfuid = %s type = %s ptype = %s" % (str(wid),str(UID),str(self_uid),str(type),str(ptype)))
     if UID == self_uid:
         return [0,""]   #不能购买自己的
-    list_work_data = data_work.Data_Work_Base(UID,wid,1,DB,2)
+    user_power = interface_account.get_user_power_uid(DB,self_uid)
+    d_class = False
+    if user_power == 5:
+        d_class = True
+    list_work_data = data_work.Data_Work_Base(UID,wid,1,DB,2,d_class=d_class)
     if not list_work_data:
         return [-1,""]   #不存在该作品
     pid = list_work_data[4]
