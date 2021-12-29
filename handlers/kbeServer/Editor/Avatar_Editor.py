@@ -130,6 +130,10 @@ class Avatar_Editor:    #继承base.py中的类BaseHandler
             json_dback = response_work.Transactions_Code_1057()
         elif subCode == 1058:   # 发送D类作品排序 tb_work_sort
             json_dback = response_work.Transactions_Code_1058()
+        elif subCode == 1059:   # 发送D类作品排序 tb_work_sort
+            json_dback = response_work.Transactions_Code_1059(json_data["uid"])
+        elif subCode == 1060:   # 发送D类作品排序 tb_work_sort
+            json_dback = response_work.Transactions_Code_1058(json_data["uid"])
         return json_dback
 
 
