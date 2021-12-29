@@ -164,7 +164,7 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
     d_class = False
     if user_power == 5:
         d_class = True
-    list_work_data = data_work.Data_Work_Base(UID,wid,1,DB,2,d_class=d_class)
+    list_work_data = data_work.Data_Work_Base(UID,wid,1,DB,2,d_class=d_class,self_uid=self_uid)
     if not list_work_data:
         return [-1,""]   #不存在该作品
     pid = list_work_data[4]
