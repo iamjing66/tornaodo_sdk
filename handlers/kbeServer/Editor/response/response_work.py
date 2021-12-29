@@ -135,3 +135,38 @@ def Transactions_Code_1058():
     json_back["pam"] = "!".join(data_list)
 
     return json_back
+
+
+# 获取用户当前最大PID
+def Transactions_Code_1059(self_uid):
+    json_back = {
+        "code": 0,
+        "msg": "",
+        "pam": 0
+    }
+
+    DB = DBManager()
+    sql = "select PID+10002 FROM tb_userdata WHERE uid = %s"
+    data = DB.fetchone(sql, self_uid)
+    DB.destroy()
+    if data:
+        json_back["code"] = 1
+        json_back["pam"] = data[0]
+
+    return json_back
+
+
+def Transactions_Code_1060(self_uid):
+    json_back = {
+        "code": 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    DB = DBManager()
+    sql = "Update tb_userdata set PID = PID + 1 WHERE uid = %s"
+    data = DB.edit(sql, self_uid)
+    DB.destroy()
+    if data:
+        json_back["code"] = 1
+    return json_back
