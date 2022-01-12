@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # coding=utf-8
 from handlers.SyncServer.sockect import pro_status
+from handlers.WechatKFZ.kfz_authorize import WxAuthorKFZServer
 from handlers.kbeServer.Editor.Interface.interface_config import IC
 from url import Urls
 import Global
 import logging
-import redis
-from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache
+from methods.languageinterface import InterfaceLanguage
+from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache, ServerSMSCache, ServerWechatLoginCache, \
+    ServerMailCache,ServerWitCache,ServerUserCache
 import tornado.web
-import threading
-from handlers.redisServer.RedisInterface import RedisWorker
+
 from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
 from alipay.aop.api.DefaultAlipayClient import DefaultAlipayClient
 from alipay.aop.api.domain.AlipayTradeAppPayModel import AlipayTradeAppPayModel
@@ -34,6 +35,13 @@ class Application(tornado.web.Application):
         self.MainServer = False
         self.SUID = ""
 
+        self.WechatLogin = None
+        #redis实例
+        self.Redis_SMS = None
+        self.Redis_Wechat = None
+        self.Redis_Mail = None
+        self.Redis_Wit = None
+        self.Redis_User = None
 
     def DoInit(self,_ip,_port):
 
@@ -54,6 +62,8 @@ class Application(tornado.web.Application):
         self.SUID = str(serverlist.index(self.SAddress)) + str(ak)
         logging.info("[ServerSetup] SUID = " + str(self.SUID))
 
+        #初始化缓存实例
+        self.RedisInst()
         #处理所有初始化
         self.DoInit_All()
 
@@ -77,6 +87,12 @@ class Application(tornado.web.Application):
         tornado.ioloop.IOLoop.instance().call_later(5, self.Worker)
 
 
+    def RedisInst(self):
+        self.Redis_SMS = ServerSMSCache()
+        self.Redis_Wechat = ServerWechatLoginCache()
+        self.Redis_Mail = ServerMailCache()
+        self.Redis_Wit = ServerWitCache()
+        self.Redis_User = ServerUserCache()
     def Worker(self):
 
         try:
@@ -94,9 +110,8 @@ class Application(tornado.web.Application):
         else:
             pass
 
-        # t = threading.Timer(5,self.Worker)
-        # t.start()
-        tornado.ioloop.IOLoop.instance().call_later(2, self.Worker)
+
+        #tornado.ioloop.IOLoop.instance().call_later(2, self.Worker)
 
 
     #启动事务 - 所有服务
@@ -108,6 +123,9 @@ class Application(tornado.web.Application):
         #加密配置
         self.acs_client = AcsClient(Global.ACCESS_KEY_ID, Global.ACCESS_KEY_SECRET, Global.REGION)
         region_provider.add_endpoint(Global.PRODUCT_NAME, Global.REGION, Global.DOMAIN)
+
+        #
+        self.WechatLogin = WxAuthorKFZServer()
 
         #订单号
         self.Ali_Order = 1
@@ -219,11 +237,11 @@ class Application(tornado.web.Application):
 
     # 0点事务 - 所有服务
     def DoZero_All(self):
-        pass
+        logging.info("DoZero_All = " + time.strftime("%Y-%m-%d", time.localtime()))
 
     # 0点事务 - 主服务
     def DoZero_Main(self):
-        pass
+        logging.info("DoZero_Main = " + time.strftime("%Y-%m-%d", time.localtime()))
 
 
 App = Application(

@@ -11,7 +11,7 @@ class ProStatus:
 
     def __init__(self):
         self.GlobalUUID = 1
-        self.connector = {"editor": {}, "app": {}}  # 记录当前连接的user
+        self.connector = {"editor": {}, "app": {} , "xreditor":{ }}  # 记录当前连接的user
         self.dicusers_id = {}
         self.dicusers = {}
 
@@ -196,14 +196,19 @@ class EchoWebSocket(websocket.WebSocketHandler):
         ip = self.request.host_name
         port = options.options.port
         s1 = message.split("@")
-        user_info = s1[1].split("$")
-        uid = user_info[0]
-        client_model = user_info[1]
-        uuid = ""
-        if len(user_info) > 2:
-            uuid = user_info[2]
+        if len(s1) > 1 and "$" in s1[1]:
+            user_info = s1[1].split("$")
+            uid = user_info[0]
+            client_model = user_info[1]
+            uuid = ""
+            if len(user_info) > 2:
+                uuid = user_info[2]
+
         if s1[0] == "-99":
             pro_status.user_connect(self, uid, client_model,uuid)
+        elif s1[0] == "-92":
+            #测试回调
+            pro_status.trigger("xreditor",9,401,"callback")
         elif s1[0] == "-96":
             print("KeepAlive")
             self.write_message("-96@")

@@ -8,6 +8,7 @@ import logging
 import Global
 import copy
 import base64,hashlib,hmac
+import application
 from methods.db_mysql import DbHander
 import random,string
 
@@ -113,27 +114,30 @@ class BaseHandler(tornado.web.RequestHandler):
     #          #logging.info("_arr:"+str(len(_arr)))
     #          self.application.post_data_temp_post[uid] = _arr
 
-    def SetPhoneCode(self, DB, phone, code):
-        sql = "select phonecode, phonecodedate from tb_register_user where username = %s"
-        data = DB.fetchone(sql, phone)
-        if data:
-            sql_1 = "update tb_register_user set phonecode = %s, phonecodedate = %s where username = %s"
-        else:
-            sql_1 = "insert into tb_register_user (phonecode, phonecodedate, username) values (%s, %s, %s)"
-        DB.edit(sql_1, (code, str(int(time.time())), phone))
-        logging.info("username: %s, code: %s" % (str(phone), str(code)))
+    # def SetPhoneCode(self, phone,sub, code):
+    #
+    #
+    #
+    #     sql = "select phonecode, phonecodedate from tb_register_user where username = %s"
+    #     data = DB.fetchone(sql, phone)
+    #     if data:
+    #         sql_1 = "update tb_register_user set phonecode = %s, phonecodedate = %s where username = %s"
+    #     else:
+    #         sql_1 = "insert into tb_register_user (phonecode, phonecodedate, username) values (%s, %s, %s)"
+    #     DB.edit(sql_1, (code, str(int(time.time())), phone))
+    #     logging.info("username: %s, code: %s" % (str(phone), str(code)))
 
-    def GetPhoneCode(self, DB, username):
-        logging.info("GetPhoneCode: %s" % str(username))
-        sql = "select phonecode,phonecodedate from tb_register_user where username = %s"
-        data = DB.fetchone(sql, username)
-        if data:
-            Code = data[0]
-            date = int(data[1])
-            if int(time.time()) - date > 60:
-                return "-99"
-            return Code
-        return ""
+    # def GetPhoneCode(self, DB, username):
+    #     logging.info("GetPhoneCode: %s" % str(username))
+    #     sql = "select phonecode,phonecodedate from tb_register_user where username = %s"
+    #     data = DB.fetchone(sql, username)
+    #     if data:
+    #         Code = data[0]
+    #         date = int(data[1])
+    #         if int(time.time()) - date > 60:
+    #             return "-99"
+    #         return Code
+    #     return ""
 
 
     # def post_upload_temp_init(self,uid):

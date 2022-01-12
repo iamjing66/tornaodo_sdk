@@ -10,7 +10,7 @@ from handlers.payServer.PayDo_VipBag import PayDoVipBagClass
 from handlers.kbeServer.Editor.Interface.interface_solr import Solr_PayLog
 import logging
 from handlers.kbeServer.Editor.Interface import interface_wit
-
+from handlers.kbeServer.XREditor.Interface import interface_account
 class payback_ali:
 
 
@@ -34,6 +34,8 @@ class payback_ali:
             self.DoChongzhi(_order,CData,DB)
         elif AppCode == 6:
             self.DoSISCourseBuyNum(_order,CData)
+        elif AppCode == 401:
+            self.DoChongzhi(_order, CData, DB,"xreditor")
     #DIY买看
     def DoMaikan(self,_order,CData,DB):
 
@@ -188,7 +190,7 @@ class payback_ali:
         #SolrInst.Solr_Pay(2,proId,name,_from,saleModules,_bt,1,price,"",type,int(time.time()),_date,organization,distributor,UserName,UID,_userType,_ip)
         Solr_PayLog(proId, name, saleModules, _bt, 1, price, type, "", int(time.time()), _date, UID, "pc", 1)
 
-    def DoChongzhi(self,_order, CData,DB):
+    def DoChongzhi(self,_order, CData,DB , cmodel="editor"):
 
         _arr_pam = CData.split('@')
         _order = _arr_pam[3]
@@ -206,7 +208,10 @@ class payback_ali:
         #PayDoVipBagClass.DoChongzhi(UID,_score,Cur,Db)
         interface_wit.AddWitScoreWithType(DB,UID,_score,1)
         # 广播消息
-        SyncMainClass.InsertSyncData("editor", 104, str(_score) , 1, 1, UID,_order,DB)
+        if cmodel == "editor":
+            SyncMainClass.InsertSyncData(cmodel, 104, str(_score) , 1, 1, UID,_order,DB)
+        else:
+            SyncMainClass.InsertSyncData(cmodel, 401, str(_score), 1, 1, UID, _order, DB)
 
         # 支付记录
         proId = "0"

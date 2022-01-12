@@ -3,8 +3,7 @@
 """
 the url structure of website
 """
-
-
+from handlers.WechatKFZ.kfz_view import WechatLoginRequest, WechatLoginCallBackRequest
 from handlers.index import IndexHandler, XfHandler  # 假设已经有了
 
 from handlers.LogServer.cxlog import writeLogHandler,WriteUserHanhler
@@ -120,12 +119,17 @@ Urls = [
     ('/mail/read', post_plistINIHandler),               #邮件请求
     ('/xf', XfHandler),                                 #测试
     ('/resurl', PostResUrlRequest),                     #测试
+    ('/xreditor/post', PostInterfaceRequest),           #内容制作时序版
 
     #***===编程数据读写===***(XRCREATEX编程/XR云课堂)
 
     # ***===get请求
     ('/getpackagename', AccountApkHandler),                     #软件包名请求
     # ***===get请求
+
+    #微信登录
+    ('/wechatkfz/login', WechatLoginRequest),                       #微信登录
+    ('/wechatkfz/codeget', WechatLoginCallBackRequest),                     #软件回调
 
 
     # ========智能评价==========

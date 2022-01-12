@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import json
-from handlers.payServer.pay_pam_diy import PayPamDiyClass
+from handlers.kbeServer.XREditor.Response import xr_response_pay
 from handlers.kbeServer.Editor.Interface import interface_wit
 from handlers.kbeServer.Editor.Data import data_ppackage,data_sis,data_work,data_channel
 class pay_pam:
@@ -42,10 +42,12 @@ class pay_pam:
             # "PayData": {"rmb":  2, "organization": 1, "distributor": 1}}
         elif AppCode == 6:
             json_data = data_sis.PAYPAM_ProjectSisData(UID,PayData,DB)
+        elif AppCode == 401: #时序版-智慧豆充值
+            json_data = xr_response_pay.GetPay_401(UID, PayData, DB)
             #"PayData": {"ptype": 2, "organization": 1, "distributor": 1,"cid": 2,"lid": 2,"wid": 2，"ptype": 2,"ip": localip,"from": "SIS"}
 
         # 测试用支付价格
-        # json_data["Data"]["price"] = 1
+        json_data["Data"]["price"] = 1
         return json_data
 
 

@@ -2,6 +2,7 @@
 # coding=utf-8
 import os
 
+from methods.languageinterface import InterfaceLanguage
 
 TLMaxNum = 5        #时间收益体力最大数
 TLTimeLong = 600    #体力倒计时
@@ -110,7 +111,7 @@ class get_config():
     # redis 配置
     def redis_config(self):
         redis_dict = {
-            "test": ["192.168.0.9:9001"],
+            "test": ["192.168.0.22:9001"],
             "dev": ["192.168.0.9:9001"],
             "pro": ["120.46.140.42:9101", "120.46.140.42:9102", "114.116.232.87:9101", "114.116.232.87:9102"]
         }
@@ -159,7 +160,7 @@ class get_config():
         }
         return pay[self.env]
 
-ENV = os.getenv("ENV", "test")
+ENV = "test"
 get_config = get_config(ENV)
 
 # 数据库配置参数
@@ -242,6 +243,12 @@ def GetSisZanTableName(cid):
     return "tb_sis_zan_"+cid
 
 
+def GetXRObjTableName(uid,pid):
+    return "tb_xr_obj_"+str(uid)+"_"+str(pid)
+
+def GetMXRObjTableName(uid,pid):
+    return "tb_xr_mobj_"+str(uid)+"_"+str(pid)
+
 #redis参数 -2021-11-19
 RedisCreatex_options = dict(
     host="192.168.0.9",
@@ -254,3 +261,4 @@ RedisCreatex_options = dict(
 Global_ServerRT = 0
 
 
+LanguageInst = InterfaceLanguage()

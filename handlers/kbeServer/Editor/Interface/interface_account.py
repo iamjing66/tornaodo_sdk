@@ -793,7 +793,7 @@ def GetPhoneBind(DB,username):
 def GetPhoneRegister(DB,phone):
 
     code = 0
-    sql = "select Phone from tb_userdata where UserName = '"+str(phone)+"';"
+    sql = "select Phone from tb_userdata where UserName = '"+str(phone)+"' limit 0,1;"
     data = DB.fetchone(sql,None)
     if data:
         code = 1

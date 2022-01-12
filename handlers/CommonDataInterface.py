@@ -4,9 +4,12 @@
 import json
 import logging
 from time import time
+
+import application
 from handlers.base import BaseHandler
 from handlers.kbeServer.Editor.response import response_account,response_mail,response_class,response_resversion,response_other,response_update,response_sis,response_fullview,response_collect,response_global
 from handlers.kbeServer.Editor.Interface import interface_sms,interface_account,interface_work,interface_user
+from handlers.kbeServer.XREditor.Avatar_XREditor import AvatarXREditorInst
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Avatar_Editor import AvatarEditorInst
 from handlers.kbeServer.App.Avatar_App import AvatarAppInst
@@ -30,18 +33,25 @@ class PostInterfaceRequest(BaseHandler):
             data = json.loads(json_data["data"])
         else:
             data = json_data["data"]
+
+        languageStr = "ch"
+        if "langage" in json_data.keys():
+            languageStr = json_data["ch"]
+
+
         logging.info("PostInterfaceRequest -> UID[%i],opencode[%i],subcode[%i],username[%s]" % (UID,opencode,subcode,username))
         DB = DBManager()
         if opencode == 0:
             json_back = interface_sms.interface_sendSMS(DB,subcode,UID,username,data)
             #print("json_back1 ",json_back)
             if json_back["code"] == 1:
-                self.SetPhoneCode(DB,username,json_back["msg"])
+                application.App.Redis_SMS.SaveCode(username, subcode,json_back["msg"])
+                #self.SetPhoneCode(username,subcode,json_back["msg"])
                 #del json_back["phone"]
         elif opencode == 1:
             phoneCode = ""
             if subcode == 3 or subcode == 4 or subcode == 33:
-                phoneCode = self.GetPhoneCode(DB,username)
+                phoneCode = application.App.Redis_SMS.GetCode(username,subcode)
             json_back = response_account.Transactions_Register(DB,subcode,UID,username,data,phoneCode) #AccountInst.DoCodeVer(subcode,UID,username,data,phoneCode)
             # if json_back["code"] == 1 and (subcode == 3 or subcode == 4 or subcode == 33):
             #     self.SetPhoneCode(json_back["phone"], "")
@@ -93,6 +103,8 @@ class PostInterfaceRequest(BaseHandler):
             json_back = AvatarAppInst.Transactions_Code(subcode,UID,username,data)
         elif opencode == 300:
             json_back = interface_user.IUser_DiffusionDo(subcode,UID,username,data)
+        elif opencode == 400:
+            json_back = AvatarXREditorInst.Transactions_Code(subcode,UID,username,languageStr,data)
         json_back["opencode"] = opencode
         json_back["subcode"] = subcode
         if "pam" not in json_back.keys():

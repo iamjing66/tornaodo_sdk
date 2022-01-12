@@ -3,34 +3,45 @@
 
 
 import logging
+import application
+from handlers.SyncServer.sockect import pro_status
 
 
 def ReduceWitScore(DB,uid ,score_num):
 
-    iWit = 0
-    iWit_RMB = 0
-    #print("ReduceWitScore:", uid, score_num)
-    sql = "select Wit_Score,Wit_RMB from tb_userdata where uid = "+str(uid)
-    result = DB.fetchone(sql, None)
-    if result:
-        iWit = int(result[0])
-        iWit_RMB = int(result[1])
-        #print("ZHD:",iWit,iWit_RMB)
-        if iWit + iWit_RMB < score_num:
-            return False
-        #先扣除赠送
-        if iWit >= score_num:
-            iWit = iWit - score_num
-        else:
-            ionly = iWit - score_num
-            iWit = 0
-            if ionly < 0:
-                iWit_RMB = iWit_RMB + ionly
-        sql = "update tb_userdata set Wit_Score = "+str(iWit)+",Wit_RMB = "+str(iWit_RMB)+" where uid = "+str(uid)
-        result = DB.edit(sql, None)
-        if result:
-            return True
-    return False
+    # iWit = 0
+    # iWit_RMB = 0
+    # #print("ReduceWitScore:", uid, score_num)
+    # sql = "select Wit_Score,Wit_RMB from tb_userdata where uid = "+str(uid)
+    # result = DB.fetchone(sql, None)
+    # if result:
+    #     iWit = int(result[0])
+    #     iWit_RMB = int(result[1])
+    #     #print("ZHD:",iWit,iWit_RMB)
+
+    iWit = application.App.Redis_Wit.GetWit(uid,1)
+    iWit_RMB = application.App.Redis_Wit.GetWit(uid, 2)
+
+    if iWit + iWit_RMB < score_num:
+        return False
+    #先扣除赠送
+    if iWit >= score_num:
+        iWit = iWit - score_num
+    else:
+        ionly = iWit - score_num
+        iWit = 0
+        if ionly < 0:
+            iWit_RMB = iWit_RMB + ionly
+
+    application.App.Redis_Wit.SaveWit(uid,iWit,iWit_RMB,0)
+
+    pro_status.syncTrigger("xreditor", uid, 404, str((iWit+iWit_RMB)))
+
+    return True
+    # sql = "update tb_userdata set Wit_Score = "+str(iWit)+",Wit_RMB = "+str(iWit_RMB)+" where uid = "+str(uid)
+    # result = DB.edit(sql, None)
+    # if result:
+    #     return True
 
 #增加智慧豆
 def AddWitScoreWithType(DB,uid ,score_num ,type):
@@ -41,17 +52,27 @@ def AddWitScoreWithType(DB,uid ,score_num ,type):
     if score_num <= 0:
         return False
 
+    # if type == 0:
+    #     sql = "update tb_userdata set Wit_Score = Wit_Score + " + str(score_num)+ " where uid = " + str(uid)
+    # else:
+    #     sql = "update tb_userdata set Wit_RMB = Wit_RMB + " + str(score_num) + " where uid = " + str(uid)
+    # ##print("sql",sql)
+    # result = DB.edit(sql, None)
+    # if result:
+    #     logging.info("智慧豆充值成功")
+    #     return True
+    # logging.info("智慧豆充值失败")
+    # return False
+
     if type == 0:
-        sql = "update tb_userdata set Wit_Score = Wit_Score + " + str(score_num)+ " where uid = " + str(uid)
+        application.App.Redis_Wit.AddWit(uid, score_num, 0, 1)
     else:
-        sql = "update tb_userdata set Wit_RMB = Wit_RMB + " + str(score_num) + " where uid = " + str(uid)
-    ##print("sql",sql)
-    result = DB.edit(sql, None)
-    if result:
-        logging.info("智慧豆充值成功")
-        return True
-    logging.info("智慧豆充值失败")
-    return False
+        application.App.Redis_Wit.AddWit(uid, score_num, 0, 2)
+
+    wit = application.App.Redis_Wit.GetWit(uid,0)
+    pro_status.syncTrigger("xreditor",uid,404,str(wit))
+
+    return True
 
 #增加智慧豆
 def AddWitScoreWithUserName(DB,username ,score_num ,type):
@@ -59,24 +80,44 @@ def AddWitScoreWithUserName(DB,username ,score_num ,type):
     if score_num <= 0:
         return False
 
+    uid = application.App.Redis_User.GetData(username)
+    if not uid :
+        return False
+
+    # if type == 0:
+    #     sql = "update tb_userdata set Wit_Score = Wit_Score + " + str(score_num)+ " where UserName = '"+username+"'"
+    # else:
+    #     sql = "update tb_userdata set Wit_RMB = Wit_RMB + " + str(score_num) + " where UserName = '"+username+"'"
+    #
+    # result = DB.edit(sql, None)
+    # if result:
+    #     return True
+    #
+    # return False
+
     if type == 0:
-        sql = "update tb_userdata set Wit_Score = Wit_Score + " + str(score_num)+ " where UserName = '"+username+"'"
+        application.App.Redis_Wit.AddWit(uid, score_num, 0, 1)
     else:
-        sql = "update tb_userdata set Wit_RMB = Wit_RMB + " + str(score_num) + " where UserName = '"+username+"'"
+        application.App.Redis_Wit.AddWit(uid, score_num, 0, 2)
 
-    result = DB.edit(sql, None)
-    if result:
-        return True
-
-    return False
+    wit = application.App.Redis_Wit.GetWit(uid, 0)
+    pro_status.syncTrigger("xreditor", uid, 404, str(wit))
+    return True
 
 
 def TB_Wit(DB,username):
-    sql = "select Wit_Score,Wit_RMB from tb_userdata where UserName = '"+str(username)+"'"
-    result = DB.fetchone(sql, None)
-    if result:
-        return int(result[0]) + int(result[1])
-    return 0
+
+    # sql = "select Wit_Score,Wit_RMB from tb_userdata where UserName = '"+str(username)+"'"
+    # result = DB.fetchone(sql, None)
+    # if result:
+    #     return int(result[0]) + int(result[1])
+    # return 0
+
+    uid = application.App.Redis_User.GetData(username)
+    if not uid:
+        return 0
+
+    return application.App.Redis_Wit.GetWit(uid,0)
 
 
 def PAYPAM_WitScore(UID,paydata,DB):

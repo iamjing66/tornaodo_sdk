@@ -2,6 +2,8 @@
 # coding=utf-8
 import logging
 
+import Global
+
 
 def GetUpdateVersion(DB,UID,pam):
     json_data = {
@@ -64,7 +66,7 @@ def new_get_update_version(DB, pam):
     json_data = {"code": 0, "msg": ""}
     if pam == "":
         # 101,102,103,104,....
-        json_data["msg"] = "false"
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_1","ch")
         return json_data
     sql_else = ";"
     if pam["pam"]:
@@ -316,6 +318,9 @@ def new_do_code(DB, OpenCode, page, version):
     elif OpenCode == "125":
         table_project = "tb_config_skybox"
         sql_str = "select * from " + table_project
+    elif OpenCode == "126":
+        table_project = "tb_config_ui"
+        sql_str = "select * from " + table_project
 
     data = DB.fetchall(sql_str, None)
     _cback = new_get_sql_data(OpenCode, data)
@@ -385,6 +390,8 @@ def new_get_sql_data(OpenCode, data):
                 elif OpenCode == "124":
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "125":
+                    _backlist.append("`".join([str(i) for i in minfo]))
+                elif OpenCode == "126":
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "205":
                     _backlist.append("`".join([
@@ -681,6 +688,11 @@ def GetSqlData(OpenCode,data):
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
+                elif OpenCode == "126":
+                    if _cback != "":
+                        _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4])+ "`" + str(minfo[5])+ "`" + str(minfo[6])+ "`" + str(minfo[7])
+                    else:
+                        _cback = + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4])+ "`" + str(minfo[5])+ "`" + str(minfo[6])+ "`" + str(minfo[7])
                 elif OpenCode == "205":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[32])+ "`" + str(minfo[33])+ "`" + str(minfo[34])+ "`" + str(minfo[30])

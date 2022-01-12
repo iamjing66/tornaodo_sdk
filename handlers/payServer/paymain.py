@@ -14,6 +14,8 @@ from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_order
 from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
 
+
+
 class PayOrder(BaseHandler):
 
     def post(self):
@@ -27,10 +29,21 @@ class PayOrder(BaseHandler):
         PayType = int(paydata["PayType"])           #1-支付宝          2-微信
         AppType = int(paydata["AppType"])           #1-APP支付         2-扫码支付  3-VR支付
         UID = paydata["UID"]                        #UID
+        #print("1============",type(paydata["PayData"]) )
         UserName = paydata["UserName"]              #用户名
         AppCode = int(paydata["AppCode"])           #1-编程作品买看 2-SIS课程购买 3-频道畅享 4-VIP 5-包裹位
-        PayData = json.loads(paydata["PayData"])    #支付数据
+        pdata = paydata["PayData"]
+        if isinstance(pdata,dict):
+            PayData = pdata
+        else:
+            PayData = json.loads(pdata)  # 支付数据
         #CB = paydata["cb"]                          #支付回调
+
+
+        #这里处理xreditor的新接口
+        if "from" not in PayData.keys():
+            PayData["from"] = paydata["from"]
+            PayData["ip"] = paydata["ip"]
 
         #if len(CB) < 1:
         CB = Global.get_config.pay_config()
@@ -51,7 +64,11 @@ class PayOrder(BaseHandler):
             json_back = WechatClass.PayMain(AppType, UID,UserName, AppCode, PayData,_out_trade_no,DB,CB)
 
         if json_back["Code"] == 1:
-            interface_order.InsertPayOrder(_out_trade_no,str(UID),UserName,PayData["from"],PayType,json_back["price"],paydata["PayData"],PayData["ip"],AppType,DB)
+            spaydata = paydata["PayData"]
+            if isinstance(PayData,dict):
+                spaydata = json.dumps(PayData)
+            #print("PayData",_out_trade_no,str(UID),UserName,PayData["from"],PayType,json_back["price"],PayData,PayData["ip"],AppType)
+            interface_order.InsertPayOrder(_out_trade_no,str(UID),UserName,PayData["from"],PayType,json_back["price"],spaydata,PayData["ip"],AppType,DB)
 
 
         # self.SetPCodeLen(AppCode,json_back["plen"])
