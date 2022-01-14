@@ -66,7 +66,7 @@ def NewPID(DB,UID):
     sql = "select PID FROM tb_userdata WHERE uid = " + str(UID)
     result = DB.fetchone(sql,None)
     if result:
-        NID = 10001 + int(result[0])
+        NID = 10002 + int(result[0])
         #NID = NID + 1
         sql = "update tb_userdata set PID = PID + 1 WHERE uid = " + str(UID)
         DB.edit(sql,None)
