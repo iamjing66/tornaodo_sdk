@@ -345,7 +345,7 @@ class ServerUserCache():
     def Exist(self,username):
 
         return self.redis_ctl.hexists("uid",username)
-    
+
     def redis_ip_set(self, username, data):
         if data["platform"] != 10:
             self.redis_ctl.hset(username, "app_ip", data["local_ip"])
@@ -353,7 +353,7 @@ class ServerUserCache():
             self.redis_ctl.hset(username, "editor_ip", data["local_ip"])
         self.redis_ctl.hset(username, "platfrom", data["platform"])
         return True
-    
+
     def redis_user_get(self, username, data):
         data_list = self.redis_ctl.hmget(username, data)
         data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
