@@ -2,6 +2,7 @@
 # coding=utf-8
 
 
+import logging
 from methods.DBManager import DBManager
 
 
@@ -35,7 +36,7 @@ def Data_Project_Base(uid,pid,target,DB,call_type):
 # call_type 0-INI结果 1-json结构 2-列表
 #cversions 版本号列表(用来比对是否需要同步)
 #回调 [服务器工程列表(用来比对需要删除得课程) ,课程数据]
-def Data_Projects_Base(sql, DB,p_server, call_type):
+def Data_Projects_Base(sql, DB,p_server, call_type,self_uid):
 
     objlist = []
     _server_pid = {}
@@ -57,6 +58,9 @@ def Data_Projects_Base(sql, DB,p_server, call_type):
                 pid = int(minfo_list[1])
                 version = int(minfo_list[24])
                 uid = int(minfo_list[25])
+                if uid not in _server_pid.keys():
+                    _server_pid[uid] = []
+                _server_pid[uid].append(pid)
                 #判断版本号
                 if uid not in p_server or pid not in p_server[uid] or version > p_server[uid][pid]:
                 # #记录下来服务器上得课程列表-用来判断客户端是否有删除得
@@ -72,25 +76,23 @@ def Data_Projects_Base(sql, DB,p_server, call_type):
             #json_back = json_back + "！"
 
     #需要删除的工程(通过对比发现这些工程在本地有，但是在服务器上面没有)
-    # sdelete = ""
-    # if len:
-    #     for _c_uid in p_server.keys():
-    #         values = p_server[_c_uid]
-    #         for _c_pid in values.keys():
-    #             if _c_uid not in _server_pid or _c_pid not in _server_pid[_c_uid]:
-    #                 if _c_uid == theuid:
-    #                     continue
-    #                 # 这里需要删除的工程
-    #                 if sdelete == "":
-    #                     sdelete = str(_c_uid) + "`" + str(_c_pid)
-    #                 else:
-    #                     sdelete = sdelete + "!" + str(_c_uid) + "`" + str(_c_pid)
-            # DEBUG_MSG("需要删除工程：",sdelete)
+    sdelete = ""
+    s_list = []
+    if _server_pid:
+        for _c_uid in p_server.keys():
+            values = p_server[_c_uid]
+            for _c_pid in values.keys():
+                if _c_uid not in _server_pid or _c_pid not in _server_pid[_c_uid]:
+                    # if _c_uid != self_uid:
+                        # 这里需要删除的工程
+                    s_list.append("`".join([str(_c_uid), str(_c_pid)]))
+        sdelete = "!".join(s_list)
+    logging.info("需要删除工程：%s" % sdelete)
 
 
     #print("Data_Courses_Base:", json_back)
     #print("objlist:", objlist)
-    return [objlist,json_back]
+    return [objlist, json_back, sdelete]
 
 
 #ini结构 - 工程数据交互的最基础结果，跟客户端是同步的

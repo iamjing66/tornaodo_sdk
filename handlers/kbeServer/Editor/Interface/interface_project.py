@@ -37,9 +37,10 @@ def Get(pdata, self_uid, itype):
     # 业务执行
     DB = DBManager()
     sql = data_project.GetProjectSQLFromType(itype,self_uid)
-    result = data_project.Data_Projects_Base(sql,DB,p_server,0)
+    result = data_project.Data_Projects_Base(sql,DB,p_server,0,self_uid)
     DB.destroy()
-    return result[1] + "！"
+    logging.info("GetProjects result: %s" % result)
+    return result[1] + "！" + result[2]
 
 
 #是否需要更新
