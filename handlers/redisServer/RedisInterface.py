@@ -329,8 +329,12 @@ class ServerUserCache():
 
     def SaveUser(self, username,arr):
         key = username
-        self.redis_ctl.hset( key , "uid" ,str(arr[0]) )
+        self.redis_ctl.hset(key, "uid", str(arr[0]))
         self.redis_ctl.hset(key, "cdate", str(arr[1]))
+        self.redis_ctl.hset(key, "organization", str(arr[2]))
+        self.redis_ctl.hset(key, "distributor", str(arr[3]))
+        self.redis_ctl.hset(key, "Power", str(arr[4]))
+        self.redis_ctl.hset(key, "AccountPower", str(arr[5]))
 
     def GetData(self,  state , name):
         value = self.redis_ctl.hget(state,name)
@@ -341,6 +345,19 @@ class ServerUserCache():
     def Exist(self,username):
 
         return self.redis_ctl.hexists("uid",username)
+    
+    def redis_ip_set(self, username, data):
+        if data["platform"] != 10:
+            self.redis_ctl.hset(username, "app_ip", data["local_ip"])
+        else:
+            self.redis_ctl.hset(username, "editor_ip", data["local_ip"])
+        self.redis_ctl.hset(username, "platfrom", data["platform"])
+        return True
+    
+    def redis_user_get(self, username, data):
+        data_list = self.redis_ctl.hmget(username, data)
+        data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
+        return data_list
 
 
 

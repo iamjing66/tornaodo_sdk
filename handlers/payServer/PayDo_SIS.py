@@ -48,7 +48,7 @@ class paydo_sis:
         _userType = int(_arr_pam[13])
         _ip = _arr_pam[15]
 
-        dataarr = interface_sis.VR_MK_SIS(DB,UID,CourseID,2,20, phone=True)
+        dataarr = interface_sis.VR_MK_SIS(DB,UID,CourseID,2,20, UserName,phone=True)
         toclient = ""
         if dataarr[0] == 1:
             toclient = dataarr[1]

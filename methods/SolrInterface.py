@@ -9,7 +9,7 @@ import time
 import logging
 from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
-from handlers.kbeServer.Editor.redis.interface_user import redis_data
+from handlers.redisServer.RedisInterface import ServerUserCache
 
 class SolrInterface:
     def __init__(self) -> None:
@@ -185,8 +185,7 @@ class SolrInterface:
         useIP = 0
         platform = 10
         # TODO
-        data = redis_data.redis_user_get(userId)
-        # data = globalRedisU.redis_user_get(username)
+        data = ServerUserCache.redis_user_get(username, ["organization", "distributor", "editor_ip", "app_ip"])
         logging.info("redis data: %s" % data)
         if data:
             organization = data[0]

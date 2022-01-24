@@ -119,7 +119,7 @@ def Transactions_Code_1032(self_uid, self_username, json_data):
     # buytype 0-资源 1-场景
 
     DB = DBManager()
-    arr = interface_account.N_ResNuy(DB,self_uid,objid,type,btype)
+    arr = interface_account.N_ResNuy(DB,self_uid,objid,type,btype, self_username)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()
@@ -142,7 +142,7 @@ def Transactions_Code_1033(self_uid, self_username, json_data):
     # buytype 0-资源 1-场景
 
     DB = DBManager()
-    arr = interface_account.BuyPackage(DB,self_uid,0,bid,num)
+    arr = interface_account.BuyPackage(DB,self_uid,0,bid,num, self_username)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()
@@ -313,7 +313,7 @@ def Transactions_Code_1041( self_uid , self_username , json_data):
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    json_back["code"] = interface_account.DaochuVedio(DB,tlong,self_uid,course_type,video_type)
+    json_back["code"] = interface_account.DaochuVedio(DB,tlong,self_uid,course_type,video_type, self_username)
     #pam = "账号类型$补偿包裹"
     DB.destroy()
     return json_back

@@ -8,7 +8,7 @@ from handlers.kbeServer.Editor.Interface import interface_wit,interface_solr,int
 
 
 #SIS买看
-def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, phone=None):
+def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, self_username, phone=None):
 
     UID = self_uid
     w_data = data_sis.Data_SIS_MK_Base(DB, UID, vid, 2)
@@ -58,7 +58,7 @@ def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, phone=None):
             _from = 5
         if not phone:
             # interface_solr.Solr_Pay(DB,2, "", cname, plat, _from, 4, 0, price, 10, "", int(time.time()), _pdate,self_uid)
-            interface_solr.Solr_PayLog(vid, cname, _from, 4, transaction_type, price, 11, "", int(time.time()), _pdate, self_uid, "vr", 2)
+            interface_solr.Solr_PayLog(vid, cname, _from, 4, transaction_type, price, 11, "", int(time.time()), _pdate, self_uid, "vr", 2, self_username)
         # self.SolrInst.Log_Cost(10, "购买学习中心观看权", price, "购买["+cname+"]观看权(一个月)", _from, "", self.organization, self.distributor, self.UID)
         return [1, str(vid) + "$" + str(_date1) + "$" + str(_date2)]
     else:

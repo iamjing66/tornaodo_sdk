@@ -77,7 +77,7 @@ class paydo_changxiang:
             #saleModules = 7
 
             #SolrInst.Solr_Pay(2, proId, name, _from, saleModules,6, 1, price, "", type, int(time.time()), _pdate,organization, distributor, UserName, UID, _userType,_ip)
-            Solr_PayLog(proId, name, 12, 6, 1, price, 1, "", int(time.time()), _pdate, UID, "vr", int(_wid))
+            Solr_PayLog(proId, name, 12, 6, 1, price, 1, "", int(time.time()), _pdate, UID, "vr", int(_wid), UserName)
 
         return toclient
 

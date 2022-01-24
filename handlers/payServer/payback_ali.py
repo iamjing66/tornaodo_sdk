@@ -71,7 +71,7 @@ class payback_ali:
         #买看VR
         #SolrInst.Solr_Pay(2, proId, _name, _from, saleModules, 5,1, price, "", type, int(time.time()), 0, organization,distributor, UserName, UID, _userType,_ip)
         # interface_solr.Solr_PayLog("", objName, 1, 9, 0, _price, 7, "", int(time.time()), 0, UID, "pc")
-        Solr_PayLog(proId, _name, saleModules, 5, 1, price, 10, "", int(time.time()), 0, UID, "vr", 2)
+        Solr_PayLog(proId, _name, saleModules, 5, 1, price, 10, "", int(time.time()), 0, UID, "vr", 2, UserName)
 
     # SIS课程购买
     def DoSisCourse(self,_order, CData,DB):
@@ -115,7 +115,7 @@ class payback_ali:
             else:
                 saleModules = 4
             # SolrInst.Solr_Pay(2, proId, _name, _from, saleModules,4, 1, price, "", type, int(time.time()), 0, organization,distributor, UserName, UID, _userType,_ip)
-            Solr_PayLog(str(wid), _name, saleModules, 4, 1, price, 11, "", now, _pdate, UID, "vr", 2)
+            Solr_PayLog(str(wid), _name, saleModules, 4, 1, price, 11, "", now, _pdate, UID, "vr", 2, UserName)
 
     #sis项目购买终端数量
     def DoSISCourseBuyNum(self,_order, CData):
@@ -188,7 +188,7 @@ class payback_ali:
             _bt = 2
 
         #SolrInst.Solr_Pay(2,proId,name,_from,saleModules,_bt,1,price,"",type,int(time.time()),_date,organization,distributor,UserName,UID,_userType,_ip)
-        Solr_PayLog(proId, name, saleModules, _bt, 1, price, type, "", int(time.time()), _date, UID, "pc", 1)
+        Solr_PayLog(proId, name, saleModules, _bt, 1, price, type, "", int(time.time()), _date, UID, "pc", 1, UserName)
 
     def DoChongzhi(self,_order, CData,DB , cmodel="editor"):
 
@@ -220,7 +220,7 @@ class payback_ali:
         saleModules = 10
 
         #SolrInst.Solr_Pay(2, proId, name, _from, saleModules,0, 1, price, "", type, int(time.time()), 0,organization, distributor, UserName, UID, _userType,_ip)
-        Solr_PayLog(proId, name, saleModules, 0, 1, price, type, "", int(time.time()), 0, UID, "pc", 1)
+        Solr_PayLog(proId, name, saleModules, 0, 1, price, type, "", int(time.time()), 0, UID, "pc", 1, UserName)
 
 PayBackAliClass = payback_ali()
 

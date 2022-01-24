@@ -22,7 +22,7 @@ def Transactions_Code_2001( self_uid , self_username , json_data):
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    arr = interface_work.VR_BuyWork(DB,self_uid,wid,uid,btype,plat,phone=False)
+    arr = interface_work.VR_BuyWork(DB,self_uid,wid,uid,btype,plat,self_username,phone=False)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()
@@ -47,7 +47,7 @@ def Transactions_Code_2002( self_uid , self_username , json_data):
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    arr = interface_sis.VR_MK_SIS(DB,self_uid,vid,btype,plat,phone=False)
+    arr = interface_sis.VR_MK_SIS(DB,self_uid,vid,btype,plat,self_username,phone=False)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()

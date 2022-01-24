@@ -47,7 +47,7 @@ def Transactions_Code_1008(self_uid, self_username, json_data):
     ptype = int(json_data["ptype"])
 
     DB = DBManager()
-    arr = interface_work.Buy(DB,self_uid,wid,uid,type,ptype)
+    arr = interface_work.Buy(DB,self_uid,wid,uid,type,ptype, self_username)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()

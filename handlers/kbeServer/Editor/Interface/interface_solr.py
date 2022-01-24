@@ -4,19 +4,20 @@
 import json
 from methods.SolrInterface import SolrInst
 from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
-from handlers.kbeServer.Editor.redis.interface_user import redis_data
+from handlers.redisServer.RedisInterface import ServerUserCache
 
-def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate, userId, SoftType, channelType):
+def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate, userId, SoftType, channelType, self_username):
 
-    userName = ""
+    # userName = ""
+    # userName = self_username
     userType = 0
     # TODO
-    data = redis_data.redis_user_get(userId)
+    data = ServerUserCache.redis_user_get(self_username, ["Power"])
     # data = globalRedisU.redis_user_u_get(userId)
     if data != None:
-        userName = data[7]
-        userType = data[6]
-    SolrInst.Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate,  userName, userId, userType, SoftType, channelType)
+        # userName = data[7]
+        userType = int(data[0])
+    SolrInst.Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate,  self_username, userId, userType, SoftType, channelType)
 
 
 def RequestSolr( Code, Data):

@@ -330,7 +330,7 @@ def BuyNew(DB,self_uid,uid,cid,lid,tlong):
 # itype 购买时 0-一年 1-永久 | 赠送时 = 赠送时长
 # btype 0-赠送 1-购买
 # ctype 0-等级包/权限包(时间叠加) 1-补偿包(时间叠加) 2-机构老师包(时间叠加) 3-购买课程 4 - 客户端多个购买(lid 用#分割)
-def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
+def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype, self_username):
 
     #self_uid 1466-uid 63-cid 137 -lid 2-type 2592000-btype 0 ctype = 1
     logging.info("Buy Course Datas :"+ str(self_uid)+"-" + str(uid)+"-" + str(cid)+"-" + str(uid)+"-" + str(lid)+"-" + str(type)+"-" + str(btype)+" ctype = " + str(ctype))
@@ -590,7 +590,7 @@ def Buy(DB,self_uid,uid,cid,lid,type,btype,ctype):
     if btype != 0:
         if bBCourse:
             #interface_solr.Solr_Pay(DB,2, str(_cid), _CourseName, 10, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid)
-            interface_solr.Solr_PayLog(str(_cid), _CourseName, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid, "pc", 1)
+            interface_solr.Solr_PayLog(str(_cid), _CourseName, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid, "pc", 1, self_username)
 
 
     return [1,_back]

@@ -37,7 +37,7 @@ def Transactions_Code_1001(self_uid,self_username,json_data):
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    arr = interface_course.Buy(DB, self_uid, uid, cid,lid, itype,btype,ctype)
+    arr = interface_course.Buy(DB, self_uid, uid, cid,lid, itype,btype,ctype, self_username)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()

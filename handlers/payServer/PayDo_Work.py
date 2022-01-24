@@ -41,7 +41,7 @@ class paydo_work:
         _userType = int(_arr_pam[13])
         _ip = _arr_pam[15]
 
-        data_arr = interface_work.VR_BuyWork(DB, UID, wid, p_uid, 2,20,phone=True)
+        data_arr = interface_work.VR_BuyWork(DB, UID, wid, p_uid, 2,20,UserName,phone=True)
         code = data_arr[0]
         if code == 1:
             toclient = data_arr[1]

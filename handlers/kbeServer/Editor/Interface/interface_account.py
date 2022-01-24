@@ -11,7 +11,7 @@ from handlers.kbeServer.Editor.Interface import interface_wit,interface_solr
 from handlers.kbeServer.Editor.Data import data_ppackage
 from handlers.kbeServer.Editor.Data import data_respackahe
 import datetime
-from handlers.kbeServer.Editor.redis.interface_user import redis_data
+from handlers.redisServer.RedisInterface import ServerUserCache
 
 
 
@@ -147,8 +147,7 @@ def PC_lOGON(DB,Username, json_data, uid):
 
     #login
     #记录redis缓存
-    solr_redis = redis_data.redis_user_set(uid, json_data)
-    # solr_redis = globalRedisU.redis_user_set(Username, json_data)
+    solr_redis = ServerUserCache.redis_ip_set(uid, json_data)
     if solr_redis:
         #登录的索引库在互动引擎中
         DoLogin(DB,Username, VipDate, "pc", uid)
@@ -173,8 +172,7 @@ def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
         UPower = int(data[4])
         # login
         # 记录redis缓存
-    solr_redis = redis_data.redis_user_set(uid, json_data)
-    # solr_redis = globalRedisU.redis_user_set(VR_USERNAME, json_data)
+    solr_redis = ServerUserCache.redis_ip_set(uid, json_data)
     if solr_redis:
         DoLogin(DB, VR_USERNAME, vipdate, "vr", uid)
 
@@ -211,13 +209,11 @@ def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
 
 
 #登录登出处理
-def DoLogin(DB,USERNAME,vipDate,SoftType, uid):
+def DoLogin(DB,USERNAME,vipDate,SoftType):
 
     localip = ""
 
-    # TODO
-    solrdata = redis_data.redis_user_get(uid)
-    # solrdata = globalRedisU.redis_user_get(USERNAME)
+    solrdata = ServerUserCache.redis_user_get(USERNAME, ['uid', 'Power', 'AccountPower'])
     if solrdata:
         _vip = 0
         if vipDate < int(time.time()):
@@ -231,12 +227,12 @@ def DoLogin(DB,USERNAME,vipDate,SoftType, uid):
             #"organization": solrdata[0],
             #"distributor": solrdata[1],
             "userName": USERNAME,
-            "userId": solrdata[5],
+            "userId": solrdata[0],
             "useTime": _long,
             "SoftType": SoftType,
             "UPower": _vip,
-            "Power": solrdata[6],
-            "AccountPower": solrdata[8],
+            "Power": solrdata[1],
+            "AccountPower": solrdata[2],
         }
         interface_solr.RequestSolr(4,json_data)
 
@@ -248,15 +244,13 @@ def DoLogin(DB,USERNAME,vipDate,SoftType, uid):
 
 
 
-def DoLogout(DB,USERNAME,jsondata, uid):
+def DoLogout(DB,USERNAME,jsondata):
     vipDate = int(jsondata["vipDate"])
     SoftType = jsondata["SoftType"]
     _long = float(jsondata["long"])
 
     localip = ""
-    # TODO
-    solrdata = redis_data.redis_user_get(uid)
-    # solrdata = globalRedisU.redis_user_get(USERNAME)
+    solrdata = ServerUserCache.redis_user_get(USERNAME, ['uid', 'Power', 'AccountPower'])
     if solrdata:
         _vip = 0
         if vipDate < int(time.time()):
@@ -269,12 +263,12 @@ def DoLogout(DB,USERNAME,jsondata, uid):
             #"organization": solrdata[0],
             #"distributor": solrdata[1],
             "userName": USERNAME,
-            "userId": solrdata[5],
+            "userId": solrdata[0],
             "useTime": int(_long),
             "SoftType": SoftType,
             "UPower": _vip,
-            "Power": solrdata[6],
-            "AccountPower": solrdata[8],
+            "Power": solrdata[1],
+            "AccountPower": solrdata[2],
         }
         interface_solr.RequestSolr(4, json_data)
 
@@ -335,7 +329,7 @@ def FabricatorData(DB,self_uid,username):
 
 #type 0-永久 1-一年
 #buytype 0-资源 1-场景
-def N_ResNuy(DB,UID,ObjID,type,buytype):
+def N_ResNuy(DB,UID,ObjID,type,buytype, self_username):
 
     Info = {}
     buydatas = {}
@@ -403,17 +397,17 @@ def N_ResNuy(DB,UID,ObjID,type,buytype):
 
     if buytype == 0:
         #interface_solr.Solr_Pay(DB,2, "", objName, 10, 1, 9, 0, _price, 7, "0", int(time.time()), 0, UID)
-        interface_solr.Solr_PayLog("", objName, 1, 9, 0, _price, 7, "", int(time.time()), 0, UID, "pc", 1)
+        interface_solr.Solr_PayLog("", objName, 1, 9, 0, _price, 7, "", int(time.time()), 0, UID, "pc", 1, self_username)
             # self.SolrInst.Log_Cost(5, "购买资源", _price, "购买资源[" + objName + "]("+_bstr+")" , 0, "",self.organization, self.distributor, self.UID)
     else:
         #interface_solr.Solr_Pay(DB,2, "", objName, 10, 1, 7, 0, _price, 6, "0", int(time.time()), 0, UID)
-        interface_solr.Solr_PayLog("", objName, 1, 7, 0, _price, 6, "", int(time.time()), 0, UID, "pc", 1)
+        interface_solr.Solr_PayLog("", objName, 1, 7, 0, _price, 6, "", int(time.time()), 0, UID, "pc", 1, self_username)
 
     return [1,str(type)+"$"+str(ObjID)+"$"+str(buytype)+"$"+str(_b_date)]
 
 
 #购买包裹位
-def BuyPackage(DB,uid,code,bid,num):
+def BuyPackage(DB,uid,code,bid,num, self_username):
 
     buydatas = data_ppackage.Data_Buy_Base(DB,uid)
     if bid != 0:
@@ -463,7 +457,7 @@ def BuyPackage(DB,uid,code,bid,num):
 
     # 日志
     #interface_solr.Solr_Pay(DB,2, "", "扩展位购买", 10, 7, 2, 0, price*10, 9, "", int(time.time()),_date,uid)
-    interface_solr.Solr_PayLog("", "扩展位购买", 7, 2, 0, price , 9, "", int(time.time()), _date, uid, "pc", 1)
+    interface_solr.Solr_PayLog("", "扩展位购买", 7, 2, 0, price , 9, "", int(time.time()), _date, uid, "pc", 1, self_username)
         #self.SolrInst.Log_Cost(13, cname , price,cdesc , 0, "", self.organization,self.distributor, self.UID)
 
     return [1,cdata]
@@ -883,7 +877,7 @@ def DaochuVedio(DB, tlong, uid, course_type, video_type):
             else:
                 price = (tlong - long) / 5 * price_5s + price_5s
             if interface_wit.ReduceWitScore(DB,uid,price):
-                interface_solr.Solr_PayLog("", "导出视频", 10, 2, 0, price, 9, "", int(time.time()), 0, uid, "pc", 1)
+                interface_solr.Solr_PayLog("", "导出视频", 10, 2, 0, price, 9, "", int(time.time()), 0, uid, "pc", 1, self_username)
                 return 1
             else:
                 return -1

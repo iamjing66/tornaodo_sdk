@@ -155,7 +155,7 @@ def BuyFlag(DB,self_uid,uid,pid):
 
 # type 0-表示正常购买 1-APP内购买 2-更新作品
 #ptype 0-一年 1-永久
-def Buy(DB,self_uid,wid,UID,type,ptype):
+def Buy(DB,self_uid,wid,UID,type,ptype, self_username):
 
     logging.info("buy work wid = %s uid = %s selfuid = %s type = %s ptype = %s" % (str(wid),str(UID),str(self_uid),str(type),str(ptype)))
     if UID == self_uid:
@@ -261,7 +261,7 @@ def Buy(DB,self_uid,wid,UID,type,ptype):
 
     # 日志
     #interface_solr.Solr_Pay(DB,2,"",WorkName,10,2,5,0,price,12,"",int(time.time()),_ptruedate,self_uid)
-    interface_solr.Solr_PayLog("", WorkName, 2, 5, 0, price, 12, "", int(time.time()), _ptruedate, self_uid, "pc", 1)
+    interface_solr.Solr_PayLog("", WorkName, 2, 5, 0, price, 12, "", int(time.time()), _ptruedate, self_uid, "pc", 1, self_username)
     return [1,_back]
 
 
@@ -273,7 +273,7 @@ def CX(DB,uid,wid,target):
 
 
 #买看
-def VR_BuyWork(DB,self_uid,wid,p_uid,buy_type,plat,phone=None):
+def VR_BuyWork(DB,self_uid,wid,p_uid,buy_type,plat,self_username,phone=None):
 
 
     UID = self_uid
@@ -328,7 +328,7 @@ def VR_BuyWork(DB,self_uid,wid,p_uid,buy_type,plat,phone=None):
             _from = 6
         if not phone:
             #interface_solr.Solr_Pay(DB,2, "", cname, plat , _from , 8 , 0, price, 10, "", int(time.time()), _ptruedate,UID)
-            interface_solr.Solr_PayLog("", cname, _from, 8, 0, price, 10, "", int(time.time()), _ptruedate, self_uid, "vr", 2)
+            interface_solr.Solr_PayLog("", cname, _from, 8, 0, price, 10, "", int(time.time()), _ptruedate, self_uid, "vr", 2, self_username)
         #wid#uid#buy_type#到期时间
         return [1,str(wid)+"#"+str(p_uid)+"#"+str(buy_type)+"#"+str(_ptruedate),str(p_uid)+"$"+str(wid)+"$"+str(_ptruedate)]
 
