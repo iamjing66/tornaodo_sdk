@@ -147,7 +147,7 @@ def PC_lOGON(DB,Username, json_data, uid):
 
     #login
     #记录redis缓存
-    solr_redis = ServerUserCache.redis_ip_set(uid, json_data)
+    solr_redis = ServerUserCache.redis_ip_set(Username, json_data)
     if solr_redis:
         #登录的索引库在互动引擎中
         DoLogin(DB,Username, VipDate, "pc", uid)
@@ -172,7 +172,7 @@ def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
         UPower = int(data[4])
         # login
         # 记录redis缓存
-    solr_redis = ServerUserCache.redis_ip_set(uid, json_data)
+    solr_redis = ServerUserCache.redis_ip_set(VR_USERNAME, json_data)
     if solr_redis:
         DoLogin(DB, VR_USERNAME, vipdate, "vr", uid)
 
