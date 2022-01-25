@@ -466,8 +466,8 @@ def GiveWit(username,num,languageStr):
 def UserCache(DB,username):
 
     if not application.App.Redis_User.Exist(username):
-        sql = "select UID,create_time from tb_userdata where username = '"+username+"' limit 0,1;"
-        data = DB.fetchone(sql,None)
+        sql = "select UID, create_time, organization, distributor, Power, AccountPower from tb_userdata where username = %s limit 0,1;"
+        data = DB.fetchone(sql, username)
         if data:
             application.App.Redis_User.SaveUser(username,data)
 
