@@ -1,6 +1,6 @@
 import Global
 from methods.DBManager import DBManager
-from handlers.kbeServer.XREditor.Interface import xr_interface_mail,interface_account
+from handlers.kbeServer.XREditor.Interface import xr_interface_mail,interface_account,xr_interface_vip
 
 #验证码获取
 def Transactions_Code_7001(self_uid,self_username,languageStr,json_data):
@@ -75,5 +75,30 @@ def Transactions_Code_7003(self_uid,self_username,languageStr,json_data):
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
     json_back = interface_account.DeleteAccount(DB,username, languageStr)
+    DB.destroy()
+    return json_back
+
+
+#删除VIP
+def Transactions_Code_7004(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #json_data 结构
+    username = json_data["username"]
+
+    #type = int(json_data["type"])  #
+    if len(username) < 1:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+        return json_back
+    # 获取下db的句柄，如果需要操作数据库的话
+    DB = DBManager()
+    json_back = xr_interface_vip.DeleteVIP(DB,username, languageStr)
     DB.destroy()
     return json_back

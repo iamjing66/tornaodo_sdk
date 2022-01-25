@@ -44,6 +44,10 @@ class pay_pam:
             json_data = data_sis.PAYPAM_ProjectSisData(UID,PayData,DB)
         elif AppCode == 401: #时序版-智慧豆充值
             json_data = xr_response_pay.GetPay_401(UID, PayData, DB)
+        elif AppCode == 402:  # 时序版-购买作品
+            json_data = xr_response_pay.GetPay_402(UID, PayData, DB)
+        elif AppCode == 403:  # 时序版-购买vip
+            json_data = xr_response_pay.GetPay_403(UID, PayData, DB)
             #"PayData": {"ptype": 2, "organization": 1, "distributor": 1,"cid": 2,"lid": 2,"wid": 2，"ptype": 2,"ip": localip,"from": "SIS"}
 
         # 测试用支付价格

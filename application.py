@@ -8,7 +8,7 @@ import Global
 import logging
 from methods.languageinterface import InterfaceLanguage
 from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache, ServerSMSCache, ServerWechatLoginCache, \
-    ServerMailCache,ServerWitCache,ServerUserCache
+    ServerMailCache,ServerWitCache,ServerUserCache,ServerPayCache
 import tornado.web
 
 from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
@@ -42,6 +42,7 @@ class Application(tornado.web.Application):
         self.Redis_Mail = None
         self.Redis_Wit = None
         self.Redis_User = None
+        self.Redis_PayOrder = None
 
     def DoInit(self,_ip,_port):
 
@@ -93,6 +94,7 @@ class Application(tornado.web.Application):
         self.Redis_Mail = ServerMailCache()
         self.Redis_Wit = ServerWitCache()
         self.Redis_User = ServerUserCache()
+        self.Redis_PayOrder = ServerPayCache()
     def Worker(self):
 
         try:

@@ -2,6 +2,9 @@ import hashlib
 import json
 import time
 
+from handlers.SyncServer.SyncMain import SyncMainClass
+from handlers.SyncServer.sockect import pro_status
+from handlers.kbeServer.Editor.Interface import interface_wit
 import requests
 
 import Global
@@ -29,12 +32,11 @@ def NewWork(DB,uid,wname,sid,languageStr):
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_1",languageStr)
     else:
         json_data["code"] = 1
-        json_data["msg"] = json.dumps({
-            "PID":code,
-            "WName":wname,
-            "sid":sid,
-            "UID":uid
-        })
+        data = xr_data_work.GetDatas(DB,5,0,0,uid,code)
+        if not data:
+            json_data["msg"] = ""
+        else:
+            json_data["msg"] = json.dumps(data)
 
     return json_data
 
@@ -52,6 +54,9 @@ def Template(DB,self_uid,pid,flag,languageStr):
     if not workData:
         json_data["code"] = -1
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    elif workData["from"] == 104:
+        json_data["code"] = -4
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_23", languageStr)
     else:
         if flag == 1:
             if workData["template"] == 1:
@@ -100,6 +105,9 @@ def TemplateNewWork(DB,self_uid,pid,wname,languageStr):
     if not workData:
         json_data["code"] = -1
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    elif workData["from"] == 104:
+        json_data["code"] = -4
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_23", languageStr)
     else:
         if workData["template"] != 1:
             json_data["code"] = -2
@@ -111,11 +119,11 @@ def TemplateNewWork(DB,self_uid,pid,wname,languageStr):
                 json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_1", languageStr)
             else:
                 json_data["code"] = 1
-                json_data["msg"] = json.dumps({
-                    "PID": code,
-                    "WName": wname,
-                    "UID": self_uid
-                })
+                data = xr_data_work.GetDatas(DB, 7, 0, 0, self_uid, code)
+                if not data:
+                    json_data["msg"] = ""
+                else:
+                    json_data["msg"] = json.dumps(data)
 
 
     return json_data
@@ -134,6 +142,9 @@ def transferWork(DB,self_uid,pid,wname,username,flag,languageStr):
     if not workData:
         json_data["code"] = -1
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    elif workData["from"] == 104:
+        json_data["code"] = -4
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_23", languageStr)
     else:
         uid = interface_account.JugeUserExist(DB,username)
         if  uid == 0:
@@ -148,6 +159,10 @@ def transferWork(DB,self_uid,pid,wname,username,flag,languageStr):
             else:
                 json_data["code"] = 1
                 json_data["msg"] = ""
+
+                #异步通知转移成功
+                pro_status.syncTrigger("xreditor", uid, 407, json.dump(xr_data_work.GetDatas(DB,6,0,0,uid,code)))
+
 
     return json_data
 
@@ -184,6 +199,107 @@ def Publish(DB,self_uid,pid,wname,classiy,platform,price,tab,desc,languageStr):
 
 
     return json_data
+
+
+#取消发布
+def CancelPublish(DB,self_uid,pid,languageStr):
+    # 回执数据
+    json_data = {
+        "code": 0,
+        "pam": "",
+        "msg": ""
+    }
+
+    # 作品数据
+    workData = xr_data_work.GetData(DB, 0, 0, self_uid, pid, 0)
+    if not workData:
+        json_data["code"] = -1
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    else:
+        mworkdata = xr_data_work.GetData(DB, 0, 0, self_uid, pid, 1)
+        if mworkdata:
+            if mworkdata["publish"] == 1:
+                json_data["code"] = -4
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_32", languageStr)
+                return json_data
+        if workData["publish"] == 0:
+            json_data["code"] = -2
+            json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_29", languageStr)
+        else:
+            code = xr_data_work.CancelPublish(DB,self_uid,pid)
+            if not code:
+                json_data["code"] = -3
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_9", languageStr)
+            else:
+                json_data["code"] = 1
+                json_data["msg"] = ""
+
+
+    return json_data
+
+
+
+#下架作品
+def MarketOff(DB,self_uid,pid,languageStr):
+    # 回执数据
+    json_data = {
+        "code": 0,
+        "pam": "",
+        "msg": ""
+    }
+
+    # 作品数据
+    workData = xr_data_work.GetData(DB, 0, 0, self_uid, pid, 1)
+    if not workData:
+        json_data["code"] = -1
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    else:
+        if workData["publish"] == 0:
+            json_data["code"] = -2
+            json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_30", languageStr)
+        else:
+            code = xr_data_work.MarketOff(DB,self_uid,pid)
+            if not code:
+                json_data["code"] = -3
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_9", languageStr)
+            else:
+                json_data["code"] = 1
+                json_data["msg"] = str(self_uid)+"_"+str(pid)
+
+
+    return json_data
+
+
+#上架作品
+def MarketOn(DB,self_uid,pid,languageStr):
+    # 回执数据
+    json_data = {
+        "code": 0,
+        "pam": "",
+        "msg": ""
+    }
+
+    # 作品数据
+    workData = xr_data_work.GetData(DB, 0, 0, self_uid, pid, 1)
+    if not workData:
+        json_data["code"] = -1
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    else:
+        if workData["publish"] == 1:
+            json_data["code"] = -2
+            json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_31", languageStr)
+        else:
+            code = xr_data_work.MarketOn(DB,self_uid,pid)
+            if not code:
+                json_data["code"] = -3
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_9", languageStr)
+            else:
+                json_data["code"] = 1
+                json_data["msg"] = json.dumps(xr_data_work.GetDatas(DB,9,0,0,self_uid,pid))
+
+
+    return json_data
+
 
 
 def AlterName(DB,self_uid,pid,wname,languageStr):
@@ -366,5 +482,112 @@ def MyWorks(DB,uid,languageStr):
     else:
         json_data["code"] = 1
         json_data["msg"] = json.dumps(data)
+
+    return json_data
+
+#购买作品-购买的作品只能看不能编辑
+def Buy(DB,self_uid,ppid,puid,languageStr,rmb = 0):
+    # 回执数据
+    json_data = {
+        "code": 0,
+        "pam": "",
+        "msg": ""
+    }
+
+    # 作品数据
+    workData = xr_data_work.GetData(DB, 0, 0, puid, ppid, 1)
+    if not workData:
+        json_data["code"] = -1
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    else:
+        price =  workData["price"]
+        if price < 1:
+            json_data["code"] = -2
+            json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_26", languageStr)
+        else:
+
+            #扣钱
+            code = 1
+            if rmb == 0:
+                code = interface_wit.ReduceWitScore(DB,self_uid,price)
+            if not code:
+                json_data["code"] = -3
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_3", languageStr)
+            else:
+                workBuy = xr_data_work.GetData(DB,0,0,puid,ppid,0,1)
+                now = int(time.time())
+                timelong = Global.WORK_BUY_XR_TIMELONG
+                bend = now
+                pid = 0
+                if workBuy:
+                    bend = workBuy["end"]
+                    if bend < now:
+                        bend = now
+                    pid = workBuy["pid"]
+                bend += timelong
+                code = xr_data_work.CreateWork(DB,self_uid,workData["wname"],workData["sid"],104,puid,ppid,0,pid,bend)
+                if code < 1:
+                    json_data["code"] = -4
+                    json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_27", languageStr)
+                else:
+                    data = xr_data_work.GetDatas(DB, 4, 0, 0 , self_uid,code)
+                    if not data:
+                        json_data["code"] = 1
+                        json_data["msg"] = ""
+                    else:
+                        json_data["code"] = 1
+                        json_data["msg"] = json.dumps(data)
+
+    return json_data
+
+#人名币购买作品回调
+def RmbBuy(_order, CData, DB):
+    _arr_pam = CData.split('@')
+    self_uid = int(_arr_pam[6])
+    puid = int(_arr_pam[14])
+    ppid = int(_arr_pam[15])
+
+    json_back = Buy(DB,self_uid,ppid,puid,"ch")
+
+    if json_back["code"] == 1:
+        SyncMainClass.InsertSyncData("xeeditor", 402, json_back["msg"], 1, 1, self_uid, _order, DB)
+
+
+
+#复制作品
+def CopyWork(DB,self_uid,pid,languageStr):
+    # 回执数据
+    json_data = {
+        "code": 0,
+        "pam": "",
+        "msg": ""
+    }
+
+    # 作品数据
+    workData = xr_data_work.GetData(DB, 0, 0, self_uid, pid, 0)
+    print("info - ", workData)
+    if not workData:
+        json_data["code"] = -1
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_2", languageStr)
+    elif workData["from"] == 104:
+        json_data["code"] = -2
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_28", languageStr)
+    else:
+            copy = workData["copy"] + 1
+            wname = workData["wname"] + "("+str(copy)+")"
+            code = xr_data_work.CreateWork(DB, self_uid, wname, workData["sid"], 105, self_uid, pid, 0)
+            if code < 1:
+                json_data["code"] = -3
+                json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_2_5", languageStr)
+            else:
+                json_data["code"] = 1
+                info = xr_data_work.GetDatas(DB,8,0,0,self_uid,code)
+
+                if not info:
+                    json_data["msg"] = ""
+                else:
+                    json_data["msg"] = json.dumps(info)
+                sql = "update tb_xr_worklocal set p1 = '"+str(copy)+"' where uid = " + str(self_uid) + " and pid = " + str(pid)
+                DB.edit(sql,None)
 
     return json_data

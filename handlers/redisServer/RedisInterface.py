@@ -3,7 +3,7 @@
 
 import redis
 import logging
-
+from methods.DBManager import DBManager
 import time
 
 import Global
@@ -103,10 +103,10 @@ class ServerSMSCache():
         rds = RedisData(5)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveCode(self, phone ,sub  , code):
+    def SaveCode(self, phone ,sub  , code,expire=60):
         key = phone + "$" + str(sub)
         self.redis_ctl.set( key , code)
-        self.redis_ctl.expire(key,60)
+        self.redis_ctl.expire(key,expire)
 
     def GetCode(self,  phone ,sub):
         key = phone + "$" + str(sub)
@@ -205,6 +205,9 @@ class ServerMailCache():
         else:
             msg = "\'\'"
         return msg
+
+
+
 
 
     def GetMailDet(self , uid):
@@ -329,12 +332,8 @@ class ServerUserCache():
 
     def SaveUser(self, username,arr):
         key = username
-        self.redis_ctl.hset(key, "uid", str(arr[0]))
+        self.redis_ctl.hset( key , "uid" ,str(arr[0]) )
         self.redis_ctl.hset(key, "cdate", str(arr[1]))
-        self.redis_ctl.hset(key, "organization", str(arr[2]))
-        self.redis_ctl.hset(key, "distributor", str(arr[3]))
-        self.redis_ctl.hset(key, "Power", str(arr[4]))
-        self.redis_ctl.hset(key, "AccountPower", str(arr[5]))
 
     def GetData(self,  state , name):
         value = self.redis_ctl.hget(state,name)
@@ -346,19 +345,44 @@ class ServerUserCache():
 
         return self.redis_ctl.hexists("uid",username)
 
-    def redis_ip_set(self, username, data):
-        if data["platform"] != 10:
-            self.redis_ctl.hset(username, "app_ip", data["local_ip"])
-        else:
-            self.redis_ctl.hset(username, "editor_ip", data["local_ip"])
-        self.redis_ctl.hset(username, "platfrom", data["platform"])
-        return True
 
-    def redis_user_get(self, username, data):
-        data_list = self.redis_ctl.hmget(username, data)
-        data_list = [str(x, encoding='utf-8') if x is not None else '' for x in data_list]
-        return data_list
+class ServerPayCache():
 
+    def __init__(self):
+        rds = RedisData(10)
+        self.redis_ctl = rds.redis_pool()
+
+    def SaveOrder(self,key):
+        self.redis_ctl.set(key,"1")
+        self.redis_ctl.expire(key, 60*60*24)
+
+    def GetOrder(self, key):
+        return self.redis_ctl.exists(key)
+
+    def Exist(self,username):
+
+        return self.redis_ctl.hexists("uid",username)
+
+
+# class ServerConfigCache():
+#
+#     def __init__(self):
+#         rds = RedisData(9)
+#         self.redis_ctl = rds.redis_pool()
+#
+#     def LoadConfig(self):
+#         DB = DBManager()
+#         sql = "select * from tb_xr_vip_score;"
+#         data = DB
+#         self.redis_ctl.set(key,"1")
+#         self.redis_ctl.expire(key, 60*60*24)
+#
+#     def GetOrder(self, key):
+#         return self.redis_ctl.exists(key)
+#
+#     def Exist(self,username):
+#
+#         return self.redis_ctl.hexists("uid",username)
 
 
 C_ServerEventCache = ServerEventCache()

@@ -116,7 +116,7 @@ class pay_ali:
 
         else:
             # 无需购买 这里后续需要处理一下
-            json_bck["Code"] = 0
+            json_bck["Code"] = Json_Request["Code"]
             json_bck["ERR"] = 99
 
         return json_bck

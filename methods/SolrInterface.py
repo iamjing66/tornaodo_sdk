@@ -184,7 +184,6 @@ class SolrInterface:
         distributor = 0
         useIP = 0
         platform = 10
-        # TODO
         data = ServerUserCache.redis_user_get(username, ["organization", "distributor", "editor_ip", "app_ip"])
         logging.info("redis data: %s" % data)
         if data:

@@ -6,6 +6,7 @@ from handlers.base import BaseHandler
 from handlers.kbeServer.XREditor.Interface import interface_account
 from methods.DBManager import DBManager
 
+
 class WechatLoginCallBackRequest(BaseHandler):
 
     def get(self):
@@ -30,8 +31,8 @@ class WechatLoginCallBackRequest(BaseHandler):
                 #{'openid': 'oWlIt5unXOcY1NxIMZkButjOPbqs', 'nickname': 'lyyym', 'sex': 0, 'language': '', 'city': '', 'province': '', 'country': '', 'headimgurl': 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKOjmsCYpuqtJZ7LTnkYQfaoGic651kicHlTLiaLicfSxfJuLYAuJDib6n8f1oc5Cicj6NKSOdHHzjpCulw/132', 'privilege': [], 'unionid': 'o8eNzw__wuk6KgOWP43xEep4QtxQ'}
                 logging.info("[gettorken] openid = %s , unionid = %s"% (openid ,unionid))
                 DB = DBManager()
-                username = interface_account.JugeWechatState(DB,unionid)
-                DB.close()
+                username = interface_account.JugeUserExist(DB,unionid)
+
                 if not username:
                     #获取用户信息
                     json_userinfo = application.App.WechatLogin.get_WechatUserInfo(access_token,openid)
@@ -43,9 +44,13 @@ class WechatLoginCallBackRequest(BaseHandler):
                         print("nickname = " , nickname)
                         print("headimgurl = ", headimgurl)
                         print("sex = ", sex)
-                        #logging.info("[userinfo]nickname = %s, , headimgurl = %s , sex = %s " % (nickname,headimgurl,str(sex)))
-                        application.App.Redis_Wechat.SaveCode(state,nickname,headimgurl,str(sex),unionid)
 
+                        #这里注册
+                        interface_account.InterfaceRegister(DB,unionid,'111111',nickname,headimgurl,True)
+
+                        #logging.info("[userinfo]nickname = %s, , headimgurl = %s , sex = %s " % (nickname,headimgurl,str(sex)))
+                        #application.App.Redis_Wechat.SaveCode(state,nickname,headimgurl,str(sex),unionid)
+                        application.App.Redis_Wechat.SavUserName(state, unionid)
                         self.write("Wechat Login To Bind Phone")
                     else:
                         self.write("Wechat Login Error 1")
@@ -56,7 +61,7 @@ class WechatLoginCallBackRequest(BaseHandler):
                 #  'headimgurl': 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKOjmsCYpuqtJZ7LTnkYQfaoGic651kicHlTLiaLicfSxfJuLYAuJDib6n8f1oc5Cicj6NKSOdHHzjpCulw/132', 'privilege': [],
                 # 'unionid': 'o8eNzw__wuk6KgOWP43xEep4QtxQ'}
                 #logging.info("[userinfo]json_userinfo = %s" % json_userinfo)
-
+                DB.close()
             else:
                 self.write("Wechat Login Error 2")
         else:

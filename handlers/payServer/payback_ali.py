@@ -10,7 +10,7 @@ from handlers.payServer.PayDo_VipBag import PayDoVipBagClass
 from handlers.kbeServer.Editor.Interface.interface_solr import Solr_PayLog
 import logging
 from handlers.kbeServer.Editor.Interface import interface_wit
-from handlers.kbeServer.XREditor.Interface import interface_account
+from handlers.kbeServer.XREditor.Interface import xrinterface_work,xr_interface_vip
 class payback_ali:
 
 
@@ -36,6 +36,10 @@ class payback_ali:
             self.DoSISCourseBuyNum(_order,CData)
         elif AppCode == 401:
             self.DoChongzhi(_order, CData, DB,"xreditor")
+        elif AppCode == 402:
+            xrinterface_work.RmbBuy(_order, CData, DB)
+        elif AppCode == 403:
+            xr_interface_vip.VipBuy(_order, CData, DB)
     #DIY买看
     def DoMaikan(self,_order,CData,DB):
 
@@ -72,7 +76,6 @@ class payback_ali:
         #SolrInst.Solr_Pay(2, proId, _name, _from, saleModules, 5,1, price, "", type, int(time.time()), 0, organization,distributor, UserName, UID, _userType,_ip)
         # interface_solr.Solr_PayLog("", objName, 1, 9, 0, _price, 7, "", int(time.time()), 0, UID, "pc")
         Solr_PayLog(proId, _name, saleModules, 5, 1, price, 10, "", int(time.time()), 0, UID, "vr", 2, UserName)
-
     # SIS课程购买
     def DoSisCourse(self,_order, CData,DB):
         _arr_pam = CData.split('@')

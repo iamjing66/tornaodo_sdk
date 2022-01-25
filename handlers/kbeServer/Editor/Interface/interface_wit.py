@@ -35,7 +35,7 @@ def ReduceWitScore(DB,uid ,score_num):
 
     application.App.Redis_Wit.SaveWit(uid,iWit,iWit_RMB,0)
 
-    pro_status.syncTrigger("xreditor", uid, 404, str((iWit+iWit_RMB)))
+    pro_status.syncTrigger("xreditor", uid, 405, str((iWit+iWit_RMB)))
 
     return True
     # sql = "update tb_userdata set Wit_Score = "+str(iWit)+",Wit_RMB = "+str(iWit_RMB)+" where uid = "+str(uid)
@@ -70,17 +70,20 @@ def AddWitScoreWithType(DB,uid ,score_num ,type):
         application.App.Redis_Wit.AddWit(uid, score_num, 0, 2)
 
     wit = application.App.Redis_Wit.GetWit(uid,0)
-    pro_status.syncTrigger("xreditor",uid,404,str(wit))
+    pro_status.syncTrigger("xreditor",uid,405,str(wit))
 
     return True
 
 #增加智慧豆
 def AddWitScoreWithUserName(DB,username ,score_num ,type):
 
+    print("AddWitScoreWithUserName = " , username,score_num,type)
+
     if score_num <= 0:
         return False
 
-    uid = application.App.Redis_User.GetData(username)
+    uid = application.App.Redis_User.GetData(username,"uid")
+    print("AddWitScoreWithUserName1 = ", uid)
     if not uid :
         return False
 
@@ -101,7 +104,7 @@ def AddWitScoreWithUserName(DB,username ,score_num ,type):
         application.App.Redis_Wit.AddWit(uid, score_num, 0, 2)
 
     wit = application.App.Redis_Wit.GetWit(uid, 0)
-    pro_status.syncTrigger("xreditor", uid, 404, str(wit))
+    pro_status.syncTrigger("xreditor", uid, 405, str(wit))
     return True
 
 
@@ -113,7 +116,7 @@ def TB_Wit(DB,username):
     #     return int(result[0]) + int(result[1])
     # return 0
 
-    uid = application.App.Redis_User.GetData(username)
+    uid = application.App.Redis_User.GetData(username,"uid")
     if not uid:
         return 0
 

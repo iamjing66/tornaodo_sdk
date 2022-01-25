@@ -75,6 +75,8 @@ def interface_sendSMS(DB,subCode, uid, username, data,languageStr = "ch"):
             json_data["code"] = 0  # 该手机号未绑定
             json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_15",languageStr)
             return json_data
+    elif subCode == 405:    #绑定手机号
+        phone = username
     else:
         phone = data["phone"]
         #uname = username
@@ -82,7 +84,7 @@ def interface_sendSMS(DB,subCode, uid, username, data,languageStr = "ch"):
     sms_code = ""
     if subCode == 0:
         sms_code = "SMS_169641656"
-    elif subCode == 1 or subCode == 401 or subCode == 402 or subCode == 403 or subCode == 404:
+    elif subCode == 1 or subCode == 401 or subCode == 402 or subCode == 403 or subCode == 404 or subCode == 405:
         sms_code = "SMS_169641656"
     elif subCode == 2:
         sms_code = "SMS_169641656"

@@ -180,7 +180,7 @@ def Transactions_Code_4007(self_uid,self_username,languageStr,json_data):
 
     #logging.info("getphone code：[%s] - [%s] " % (phone, code))
     #json_data 结构
-    pid = json_data["pid"]                      # 作品ID
+    pid = int(json_data["pid"])                      # 作品ID
     wname = json_data["wname"]                  #作品名称
     classiy = int(json_data["classiy"])         #作品分类
     platform = json_data["platform"]            #发布平台
@@ -353,3 +353,133 @@ def Transactions_Code_5002(self_uid,self_username,languageStr,json_data):
     DB.destroy()
 
     return json_back
+
+
+#购买作品
+def Transactions_Code_4012(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #logging.info("getphone code：[%s] - [%s] " % (phone, code))
+    #json_data 结构
+    pid = int(json_data["pid"])         #作品ID
+    uid = int(json_data["uid"])         #用户id
+    if pid < 1 or uid < 1:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+    else:
+
+        DB = DBManager()
+        json_back = xrinterface_work.Buy(DB,self_uid,pid,uid,languageStr)
+        DB.destroy()
+
+    return json_back
+
+#作品复制
+def Transactions_Code_4013(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #logging.info("getphone code：[%s] - [%s] " % (phone, code))
+    #json_data 结构
+    pid = int(json_data["pid"])         #作品ID
+
+    if pid < 1:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+    else:
+
+        DB = DBManager()
+        json_back = xrinterface_work.CopyWork(DB,self_uid,pid,languageStr)
+        DB.destroy()
+
+    return json_back
+
+
+#取消发布
+def Transactions_Code_4014(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #logging.info("getphone code：[%s] - [%s] " % (phone, code))
+    #json_data 结构
+    pid = int(json_data["pid"])                      # 作品ID
+
+    if pid < 0:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+    else:
+
+        DB = DBManager()
+        json_back = xrinterface_work.CancelPublish(DB,self_uid,pid,languageStr)
+        DB.destroy()
+
+    return json_back
+
+
+#下架作品
+def Transactions_Code_4015(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #logging.info("getphone code：[%s] - [%s] " % (phone, code))
+    #json_data 结构
+    pid = int(json_data["pid"])                      # 作品ID
+
+    if pid < 0:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+    else:
+
+        DB = DBManager()
+        json_back = xrinterface_work.MarketOff(DB,self_uid,pid,languageStr)
+        DB.destroy()
+
+    return json_back
+
+#上架作品
+def Transactions_Code_4015(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #logging.info("getphone code：[%s] - [%s] " % (phone, code))
+    #json_data 结构
+    pid = int(json_data["pid"])                      # 作品ID
+
+    if pid < 0:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+    else:
+
+        DB = DBManager()
+        json_back = xrinterface_work.MarketOn(DB,self_uid,pid,languageStr)
+        DB.destroy()
+
+    return json_back
+
+

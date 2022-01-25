@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
+import json
 import logging
-
 import Global
 
 
@@ -321,7 +321,18 @@ def new_do_code(DB, OpenCode, page, version):
     elif OpenCode == "126":
         table_project = "tb_config_ui"
         sql_str = "select * from " + table_project
-
+    elif OpenCode == "127":
+        table_project = "tb_xr_workclassify"
+        sql_str = "select CID,CNAME,EName,state from " + table_project + " order by `sort`"
+    elif OpenCode == "128":
+        table_project = "tb_xr_tags"
+        sql_str = "select tid,tname,tenname from " + table_project+ " order by `sort`"
+    elif OpenCode == "129":
+        table_project = "tb_xr_platform"
+        sql_str = "select TID,TNAME from " + table_project+ " order by `sort`"
+    elif OpenCode == "130":
+        table_project = "tb_xr_fileversion_data"
+        sql_str = "select MID,RID,resType,resPath,resData,resversion from "
     data = DB.fetchall(sql_str, None)
     _cback = new_get_sql_data(OpenCode, data)
     version = GetCodeVersion(DB, str(OpenCode))
@@ -392,6 +403,14 @@ def new_get_sql_data(OpenCode, data):
                 elif OpenCode == "125":
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "126":
+                    _backlist.append("`".join([str(i) for i in minfo]))
+                elif OpenCode == "127":
+                    _backlist.append("`".join([str(i) for i in minfo]))
+                elif OpenCode == "128":
+                    _backlist.append("`".join([str(i) for i in minfo]))
+                elif OpenCode == "129":
+                    _backlist.append("`".join([str(i) for i in minfo]))
+                elif OpenCode == "130":
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "205":
                     _backlist.append("`".join([
@@ -784,6 +803,7 @@ def Server_ConfigGet(DB,params):
         "Data": "",
         "OpenCode": ""
     }
+    _sql = ""
     if params == "":
         json_data["code"] = "0"
         json_data["Data"] = ""
@@ -812,7 +832,11 @@ def Server_ConfigGet(DB,params):
     elif OpenCode == "208":
         _table_name = "tb_discount"
         _sql = "select CID,DAYS,Discount from " + _table_name + limit
-
+    elif OpenCode == "xrvipconfig":
+        _table_name = "tb_xr_vip_score"
+        _sql = "select * from " + _table_name+ limit
+    elif OpenCode == "xrworkconfig":
+        _sql = "select `import`,`vipimport`,`template`,`viptemplate`,`shoucang`,`vipshoucang` from tb_xr_user_config where id = 1 " + limit
     ##print(_sql)
 
     ##print(_sql)
@@ -820,6 +844,7 @@ def Server_ConfigGet(DB,params):
     _cback = ""
     if data:
         minfo = list(data)
+
         if OpenCode == "202":
             for info in minfo:
                 if _cback == "":
@@ -862,7 +887,31 @@ def Server_ConfigGet(DB,params):
                     _cback = str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])
                 else:
                     _cback = _cback + "^" + str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])
+        elif OpenCode == "xrvipconfig":
+            vipdata = {
 
+            }
+            for info in minfo:
+                di = {
+                    "id":int(info[1]),
+                    "cost": int(info[2]),
+                    "desc": info[3],
+                }
+                vipdata[di["id"]] = di
+
+            _cback = json.dumps(vipdata)
+        elif OpenCode == "xrworkconfig":
+            workdata = {
+
+            }
+            for info in minfo:
+                workdata["import"] = int(info[0])
+                workdata["vipimport"] = int(info[1])
+                workdata["template"] = int(info[2])
+                workdata["viptemplate"] = int(info[3])
+                workdata["shoucang"] = int(info[4])
+                workdata["vipshoucang"] = int(info[5])
+            _cback = json.dumps(workdata)
     json_data["code"] = "1"
     json_data["Data"] = _cback
     return json_data

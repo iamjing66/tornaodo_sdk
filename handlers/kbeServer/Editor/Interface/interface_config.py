@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-
+import json
 import logging
 from handlers.kbeServer.Editor.Interface import interface_res
 from methods.DBManager import DBManager
@@ -14,7 +14,7 @@ class IConfig:
         self.LimitCount = 500
         #self.ReadComData()
         self.Content = ""
-        self.Config_List = ["203","204","207","208"]  # "202",
+        self.Config_List = ["203","204","207","208","xrvipconfig","xrworkconfig"]  # "202",
         self.DB = DBManager()
         # 配表数据
         # = 课程包
@@ -26,6 +26,8 @@ class IConfig:
         #self.LeftBagConfig = {}
         self.ChannelConfig = {}
         self.ChannelZKConfig = {}
+        self.XrVipConfig = {}
+        self.XrWorkConfig = {}
         self.DataConfig = {"bagprice": 0}
         #self.ReadConfig()
 
@@ -86,6 +88,10 @@ class IConfig:
                 self.ConfigSure_Channel(self.Content)
             elif code == "208":
                 self.ConfigSure_ChannelZK(self.Content)
+            elif code == "xrvipconfig":
+                self.ConfigXrVipConfig(self.Content)
+            elif code == "xrworkconfig":
+                self.ConfigXrWorkConfig(self.Content)
 
             if self.Config_Index >= len(self.Config_List):
                 logging.info("Config Loaded")
@@ -246,6 +252,17 @@ class IConfig:
                         _arr1 = _arr_str.split('*')
                         self.ChannelZKConfig[int(_arr1[0])] = [int(_arr1[1]), _arr1[2]]
 
+
+
+    def ConfigXrVipConfig(self,data):
+        #print("data" , data)
+        self.XrVipConfig = json.loads(data)
+        print("self.XrVipConfig = " , self.XrVipConfig)
+
+
+    def ConfigXrWorkConfig(self,data):
+        self.XrWorkConfig = json.loads(data)
+        print("self.XrVipConfig = " , self.XrWorkConfig)
 
 
 IC = IConfig()

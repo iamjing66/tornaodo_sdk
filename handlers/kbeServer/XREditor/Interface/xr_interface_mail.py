@@ -12,13 +12,13 @@ def writemail(DB,channel,title,body,languageStr):
         "msg": ""
     }
     now = int(time.time())
-    sql = "insert into tb_xr_message (msg_channel,msg_title,msg_body,msg_writedate) value (" + str(channel) + ",'" + title + "','" + body + "',"+now+");"
+    sql = "insert into tb_xr_message (msg_channel,msg_title,msg_body,msg_writedate) value (" + str(channel) + ",'" + title + "','" + body + "',"+str(now)+");"
     # print("WriteMail,",sql)
     result = DB.edit(sql, None)
     if result:
         # 这里增加一个异步通知
         # 广播消息
-        SyncMainClass.InsertSyncData("xreditor", 401, "", 0, 0, channel, "", DB)
+        SyncMainClass.InsertSyncData("xreditor", 404, "", 0, 0, channel, "", DB)
         json_data["code"] = 1
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_3_1", languageStr)
     else:
@@ -29,11 +29,34 @@ def writemail(DB,channel,title,body,languageStr):
     return json_data
 
 
+def GetNotReadMailState(DB,uid):
+
+    userdate = interface_mail.GetUsernameMailData(DB, uid)
+    # 已删
+    mdeted = application.App.Redis_Mail.GetMailDet(uid)
+    # 已读
+    mReaded = application.App.Redis_Mail.GetMailRead(uid)
+    mReadedArr = mReaded.split(',')
+    #print("[mail] maxnum = ", mdeted)
+    #mdeted = "2095,2094"
+    sql = "select ID from (select ID,msg_writedate,msg_title,msg_body,msg_talker,msg_channel from tb_xr_message where (msg_channel = " + str(
+        uid) + " or msg_channel = 0) and msg_writedate >= "+str(userdate)+" and id not in ("+mdeted+") order by id desc ) t1 ;"
+    data = DB.fetchall(sql,None)
+    if data:
+        list_data = list(data)
+        for minfo_data in list_data:
+            if str(minfo_data[0]) not in mReadedArr:
+                return 1
+    return 0
+
+
+
 def GetMaxMailNum(DB,uid):
 
     userdate = interface_mail.GetUsernameMailData(DB, uid)
     # 已删
     mdeted = application.App.Redis_Mail.GetMailDet(uid)
+    print("[mail] maxnum = ", mdeted)
     #mdeted = "2095,2094"
     sql = "select count(id) from (select ID,msg_writedate,msg_title,msg_body,msg_talker,msg_channel from tb_xr_message where (msg_channel = " + str(
         uid) + " or msg_channel = 0) and msg_writedate >= "+str(userdate)+" and id not in ("+mdeted+") order by id desc ) t1 ;"
@@ -50,15 +73,16 @@ def GetMail(DB,uid,page,hnum,languageStr):
     }
 
     maxnum = GetMaxMailNum(DB,uid)
+    print("[mail] maxnum = ",maxnum)
     if maxnum == 0:
         json_data["code"] = -1
         json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_3_2", languageStr)
     else:
-
+        #print("maxnum%hnum",maxnum%hnum,maxnum,hnum,maxnum/hnum,int(maxnum/hnum))
         if maxnum%hnum == 0:
-            maxpage =  maxnum/hnum
+            maxpage =  int(maxnum/hnum)
         else:
-            maxpage = maxnum / hnum + 1
+            maxpage = int(maxnum / hnum) + 1
         if page > maxpage:
             json_data["code"] = -2
             json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_3_3", languageStr)
@@ -74,6 +98,8 @@ def GetMail(DB,uid,page,hnum,languageStr):
             mdeted = application.App.Redis_Mail.GetMailDet(uid)
             #mdeted = "2095,2094"
             ##print("userdate",userdate)
+            print("[mail] mreaded = ", mreaded)
+            print("[mail] mdeted = ", mdeted)
             json_mail = {
 
             }
@@ -92,7 +118,7 @@ def GetMail(DB,uid,page,hnum,languageStr):
                     json_mail[minfo_data[0]] = info
                 json_data["code"] = "1"
                 json_data["msg"] = json.dumps(json_mail)
-                json_data["pam"] = str(maxnum)
+                json_data["pam"] = str(maxpage)
             else:
                 json_data["code"] = -3
                 json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_2", languageStr)
@@ -188,12 +214,12 @@ def DeleteReaded(uid,languageStr):
 
     mdeted = application.App.Redis_Mail.GetMailDet(uid)
     if len(mdeted) > 0:
-        tarr1 = mreaded.split(',')
+        tarr1 = mdeted.split(',')
     else:
         tarr1 = []
 
 
-    for id in mreaded:
+    for id in tarr:
         if id not in tarr1:
             tarr1.append(id)
             application.App.Redis_Mail.SaveMailDelete(uid, id)

@@ -148,6 +148,7 @@ class ProStatus:
 
     def DoSyncThing(self,uuid,code,pam):
 
+        #print("DoSyncThing = ", uuid,code,pam,self.dicusers_id)
         if code == "100":
             self.user_kick(uuid)
         elif uuid in self.dicusers_id.keys():

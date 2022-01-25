@@ -56,7 +56,7 @@ def Transactions_Code_1002(self_uid,self_username,languageStr,json_data):
 
         else:
 
-            if len(password) < 6 or len(password) > 50:
+            if len(password) < 6 or len(password) > 16:
                 json_back["code"] = -3  # 密码长度不符
                 json_back["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_7",languageStr)
             else:
@@ -83,9 +83,9 @@ def Transactions_Code_1003(self_uid,self_username,languageStr,json_data):
     # logging.info("alter user：[%s] - [%s] " % (username,password))
 
     # 获取下db的句柄，如果需要操作数据库的话
-    #DB = DBManager()
-    json_back = interface_account.WechatLogin(state,languageStr)
-    #DB.destroy()
+    DB = DBManager()
+    json_back = interface_account.WechatLogin(DB,state,languageStr)
+    DB.destroy()
     return json_back
 
 
@@ -104,15 +104,17 @@ def Transactions_Code_1004(self_uid,self_username,languageStr,json_data):
     unionid = json_data["unionid"]
     phone = json_data["phone"]
     phonecode = json_data["phonecode"]       #
-    password = json_data["password"]  #
+    #password = json_data["password"]  #
     #type = int(json_data["type"])  #
-    if len(unionid) < 1 or len(phonecode) < 1 or len(phone) < 1 or len(password) < 1:
+    if len(unionid) < 1 or len(phonecode) < 1 or len(phone) < 1:
         json_back["code"] = 0  #参数异常
         json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
         return json_back
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    json_back = interface_account.LoginAutoRegester(DB,phone,phonecode,unionid , languageStr,402,password)
+    json_back = interface_account.BindPhone(DB,phone,phonecode,402 , unionid , languageStr)
+    if json_back["code"] == 1:
+        json_back = interface_account.Login(DB,unionid,"", languageStr)
     DB.destroy()
     return json_back
 
@@ -137,7 +139,7 @@ def Transactions_Code_1005(self_uid,self_username,languageStr,json_data):
         return json_back
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    json_back = interface_account.LoginAutoRegester(DB,phone,phonecode,"" , languageStr,403)
+    json_back = interface_account.LoginAutoRegester(DB,phone,phonecode, languageStr,403)
     DB.destroy()
     return json_back
 
@@ -161,14 +163,15 @@ def Transactions_Code_1006(self_uid,self_username,languageStr,json_data):
         return json_back
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    sql = "select username from tb_userdata where unionid = '"+unionid+"' limit 0,1"
-    data = DB.fetchone(sql,None)
+    # sql = "select username from tb_userdata where unionid = '"+unionid+"' limit 0,1"
+    # data = DB.fetchone(sql,None)
+    data = interface_account.JugeUserExist(DB,unionid)
     if data:
         username = data[0]
         json_back = interface_account.Login(DB,username,"", languageStr)
     else:
         json_back["code"] = -1  # 参数异常
-        json_back["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_2", languageStr)
+        json_back["msg"] = Global.LanguageInst.GetMsg("SMSGID_1_16", languageStr)
     DB.destroy()
     return json_back
 
@@ -240,6 +243,34 @@ def Transactions_Code_1009(self_uid,self_username,languageStr,json_data):
     DB.destroy()
 
     return json_back
+
+
+#绑定手机号
+def Transactions_Code_1010(self_uid,self_username,languageStr,json_data):
+
+    #回调json
+    json_back = {
+        "code" : 0,
+        "msg": "",
+        "pam": ""
+    }
+
+    #json_data 结构
+    username = json_data["username"]
+    phone = json_data["phone"]
+    phonecode = json_data["phonecode"]       #
+    #password = json_data["password"]  #
+    #type = int(json_data["type"])  #
+    if len(username) < 1 or len(phonecode) < 1 or len(phone) < 1:
+        json_back["code"] = 0  #参数异常
+        json_back["msg"] =  Global.LanguageInst.GetMsg("SMSGID_0_1",languageStr)
+        return json_back
+    # 获取下db的句柄，如果需要操作数据库的话
+    DB = DBManager()
+    json_back = interface_account.BindPhone(DB,phone,phonecode,405 , username , languageStr)
+    DB.destroy()
+    return json_back
+
 
 
 #配置资源版本获取

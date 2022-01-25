@@ -5,6 +5,7 @@ import json
 import time
 import logging
 import Global
+import application
 from handlers.base import BaseHandler
 from handlers.payServer.pay_ali import AliClass
 from handlers.payServer.pay_wechat import WechatClass
@@ -283,7 +284,9 @@ class WechatPayCallBack(BaseHandler):
                             _order = _arr_pam[3]
                             _price = int(_arr_pam[4])
                             DB = DBManager()
-                            if interface_order.GetPayFlag(_order,DB) != 0:
+                            if application.App.Redis_PayOrder.GetOrder(_order):
+
+                            #if interface_order.GetPayFlag(_order,DB) != 0:
                                 logging.error("Err_repit")
                                 json_bck["code"] = "Err_repit"
                             elif _order != order_no or _price != int(amount):
@@ -291,7 +294,8 @@ class WechatPayCallBack(BaseHandler):
                             else:
                                 PayBackAliClass.Do(AppCode, _passback_params,_order,DB)
                                 #self.SetPayOrders(_order)
-                                interface_order.UpdatePayOrder(_order, 1, DB)
+                                #interface_order.UpdatePayOrder(_order, 1, DB)
+                                application.App.Redis_PayOrder.SaveOrder(_order)
                                 json_bck["code"] = "SUCCESS"
                             DB.destroy()
                     else:

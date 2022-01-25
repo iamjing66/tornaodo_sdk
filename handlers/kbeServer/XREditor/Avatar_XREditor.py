@@ -1,6 +1,6 @@
 
 import logging
-from handlers.kbeServer.XREditor.Response import xr_response_account,xr_response_work,xr_response_gm,xr_response_mail
+from handlers.kbeServer.XREditor.Response import xr_response_account,xr_response_work,xr_response_gm,xr_response_mail,xr_response_vip
 class Avatar_XREditor:    #继承base.py中的类BaseHandler
 
     def __init__(self):
@@ -30,6 +30,8 @@ class Avatar_XREditor:    #继承base.py中的类BaseHandler
             json_dback = xr_response_account.Transactions_Code_1008(self_uid, self_username,languageStr, json_data)
         elif subCode == 1009:   #登录获取用户数据
             json_dback = xr_response_account.Transactions_Code_1009(self_uid, self_username,languageStr, json_data)
+        elif subCode == 1010:   #绑定手机号
+            json_dback = xr_response_account.Transactions_Code_1010(self_uid, self_username,languageStr, json_data)
         elif subCode == 2001:   #获取资源最新版本号
             json_dback = xr_response_account.Transactions_Code_2001(self_uid, self_username,languageStr, json_data)
         elif subCode == 2002:   #获取资源配表数据
@@ -58,6 +60,16 @@ class Avatar_XREditor:    #继承base.py中的类BaseHandler
             json_dback = xr_response_work.Transactions_Code_4010(self_uid, self_username, languageStr, json_data)
         elif subCode == 4011:  # 作品审核
             json_dback = xr_response_work.Transactions_Code_4011(self_uid, self_username, languageStr, json_data)
+        elif subCode == 4012:  # 购买作品
+            json_dback = xr_response_work.Transactions_Code_4012(self_uid, self_username, languageStr, json_data)
+        elif subCode == 4013:   #作品复制
+            json_dback = xr_response_work.Transactions_Code_4013(self_uid, self_username,languageStr, json_data)
+        elif subCode == 4014:   #取消发布
+            json_dback = xr_response_work.Transactions_Code_4014(self_uid, self_username,languageStr, json_data)
+        elif subCode == 4015:   #下架作品
+            json_dback = xr_response_work.Transactions_Code_4015(self_uid, self_username,languageStr, json_data)
+        elif subCode == 4016:   #上架作品
+            json_dback = xr_response_work.Transactions_Code_4016(self_uid, self_username,languageStr, json_data)
         elif subCode == 5001:  # 作品市场-普通作品/精品市场
             json_dback = xr_response_work.Transactions_Code_5001(self_uid, self_username, languageStr, json_data)
         elif subCode == 5002:  # 个人作品集
@@ -68,6 +80,8 @@ class Avatar_XREditor:    #继承base.py中的类BaseHandler
             json_dback = xr_response_gm.Transactions_Code_7002(self_uid, self_username, languageStr, json_data)
         elif subCode == 7003:   #删除账号
             json_dback = xr_response_gm.Transactions_Code_7003(self_uid, self_username,languageStr, json_data)
+        elif subCode == 7004:   #删除VIP
+            json_dback = xr_response_gm.Transactions_Code_7004(self_uid, self_username,languageStr, json_data)
         elif subCode == 6001:  #获取邮件列表
             json_dback = xr_response_mail.Transactions_Code_6001(self_uid, self_username, languageStr, json_data)
         elif subCode == 6002:  #读邮件
@@ -78,6 +92,8 @@ class Avatar_XREditor:    #继承base.py中的类BaseHandler
             json_dback = xr_response_mail.Transactions_Code_6004(self_uid, self_username, languageStr, json_data)
         elif subCode == 6005:  #删除已读
             json_dback = xr_response_mail.Transactions_Code_6005(self_uid, self_username, languageStr, json_data)
+        elif subCode == 8001:  #购买vip
+            json_dback = xr_response_vip.Transactions_Code_8001(self_uid, self_username, languageStr, json_data)
         return json_dback
 
 
