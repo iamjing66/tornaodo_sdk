@@ -236,10 +236,12 @@ def DoLogin(DB,USERNAME,vipDate,SoftType):
         interface_solr.RequestSolr(4,json_data)
 
         if SoftType == "pc":
-            sql = "update tb_userdata set state = 1 where username = '"+ USERNAME +"'"
+            ServerUserCache.redis_state_set(USERNAME, 'state', 1)
+            # sql = "update tb_userdata set state = 1 where username = '"+ USERNAME +"'"
         else:
-            sql = "update tb_userdata set appstate = 1 where username = '"+ USERNAME +"'"
-        DB.edit(sql, None)
+            ServerUserCache.redis_state_set(USERNAME, 'appstate', 1)
+            # sql = "update tb_userdata set appstate = 1 where username = '"+ USERNAME +"'"
+        # DB.edit(sql, None)
 
 
 
@@ -272,10 +274,12 @@ def DoLogout(DB,USERNAME,jsondata):
         interface_solr.RequestSolr(4, json_data)
 
         if SoftType == "pc":
-            sql = "update tb_userdata set state = 0 where username = '"+ USERNAME +"'"
+            ServerUserCache.redis_state_set(USERNAME, 'state', 0)
+            # sql = "update tb_userdata set state = 0 where username = '"+ USERNAME +"'"
         else:
-            sql = "update tb_userdata set appstate = 0 where username = '"+ USERNAME +"'"
-        DB.edit(sql, None)
+            ServerUserCache.redis_state_set(USERNAME, 'state', 0)
+            # sql = "update tb_userdata set appstate = 0 where username = '"+ USERNAME +"'"
+        # DB.edit(sql, None)
 
     return 1
 

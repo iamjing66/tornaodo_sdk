@@ -326,6 +326,8 @@ class ServerUserCache():
         self.redis_ctl.hset(key, "distributor", str(arr[3]))
         self.redis_ctl.hset(key, "Power", str(arr[4]))
         self.redis_ctl.hset(key, "AccountPower", str(arr[5]))
+        self.redis_ctl.hset(key, "state", str(arr[6]))
+        self.redis_ctl.hset(key, "appstate", str(arr[7]))
 
     def GetData(self, state, name):
         value = self.redis_ctl.hget(state, name)
@@ -349,6 +351,10 @@ class ServerUserCache():
         data_list = self.redis_ctl.hmget(username, data)
         data_list = [str(x, encoding='utf-8') if x is not None else ''for x in data_list]
         return data_list
+
+    def redis_state_set(self, username, key, value):
+        self.redis_ctl.hset(username, key, value)
+        return True
 
 
 class ServerPayCache():
