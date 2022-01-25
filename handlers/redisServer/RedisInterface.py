@@ -347,10 +347,7 @@ class ServerUserCache():
 
     def redis_user_get(self, username, data):
         data_list = self.redis_ctl.hmget(username, data)
-        data_list = [
-            str(x, encoding='utf-8') if x is not None else ''
-            for x in data_list
-        ]
+        data_list = [str(x, encoding='utf-8') if x is not None else ''for x in data_list]
         return data_list
 
 
