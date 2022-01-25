@@ -63,9 +63,9 @@ class RedisData():
     def redis_pool(self):
         print(self.redis_config)
         return redis.Redis(host=self.redis_config["host"],
-                    port=self.redis_config["port"],
-                    db=self.redis_config["db"],
-                    password=self.redis_config["password"])
+                           port=self.redis_config["port"],
+                           db=self.redis_config["db"],
+                           password=self.redis_config["password"])
         #rdp = redis.ConnectionPool(self.redis_config)
         #rdc = redis.StrictRedis(connection_pool=rdp,encoding='utf8',decode_responses=True)
 
@@ -83,7 +83,6 @@ class ServerEventCache():
 
     def GetKeys(self, key):
         return self.redis_ctl.hkeys(key)
-
 
     def GetValue(self, key,name):
         return self.redis_ctl.hget(key,name)
@@ -103,12 +102,12 @@ class ServerSMSCache():
         rds = RedisData(5)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveCode(self, phone ,sub  , code,expire=60):
+    def SaveCode(self, phone, sub, code, expire=60):
         key = phone + "$" + str(sub)
-        self.redis_ctl.set( key , code)
-        self.redis_ctl.expire(key,expire)
+        self.redis_ctl.set(key, code)
+        self.redis_ctl.expire(key, expire)
 
-    def GetCode(self,  phone ,sub):
+    def GetCode(self, phone, sub):
         key = phone + "$" + str(sub)
         code = self.redis_ctl.get(key)
         #print("record phonecode = " , code)
@@ -117,7 +116,7 @@ class ServerSMSCache():
 
         return code.decode()
 
-    def DetCode(self, phone ,sub):
+    def DetCode(self, phone, sub):
         key = phone + "$" + str(sub)
         self.redis_ctl.delete(key)
 
@@ -128,32 +127,32 @@ class ServerWechatLoginCache():
         rds = RedisData(5)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveCode(self, state , nickname  , headimg, sex , unionid):
+    def SaveCode(self, state, nickname, headimg, sex, unionid):
         key = state
-        self.redis_ctl.hset( key , "nickname" ,nickname )
+        self.redis_ctl.hset(key, "nickname", nickname)
         self.redis_ctl.hset(key, "headimg", headimg)
         self.redis_ctl.hset(key, "sex", sex)
         self.redis_ctl.hset(key, "unionid", unionid)
 
-    def GetCode(self,  state , name):
-        value = self.redis_ctl.hget(state,name)
+    def GetCode(self, state, name):
+        value = self.redis_ctl.hget(state, name)
         if value:
             return value.decode()
         return value
 
 
-    def SavUserName(self,state,username):
+    def SavUserName(self, state, username):
         key = "un"+state
-        self.redis_ctl.set(key,username)
+        self.redis_ctl.set(key, username)
 
-    def GetUserName(self,state):
+    def GetUserName(self, state):
         key = "un"+state
         value = self.redis_ctl.get(key)
         if value:
             return value.decode()
         return value
 
-    def DetCode(self, phone ,sub):
+    def DetCode(self, phone, sub):
         key = phone + "$" + str(sub)
         self.redis_ctl.delete(key)
 
@@ -164,7 +163,7 @@ class ServerMailCache():
         rds = RedisData(7)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveMailRead(self , uid,mid):
+    def SaveMailRead(self, uid, mid):
 
         key = "mailread"+str(uid)
         value = self.redis_ctl.get(key)
@@ -175,11 +174,11 @@ class ServerMailCache():
             msg = msg + ","+str(mid)
         else:
             msg = str(mid)
-        self.redis_ctl.set(key,msg)
+        self.redis_ctl.set(key, msg)
 
         return mid
 
-    def SaveMailDelete(self, uid , mid):
+    def SaveMailDelete(self, uid, mid):
 
         key = "maildet" + str(uid)
         value = self.redis_ctl.get(key)
@@ -194,10 +193,9 @@ class ServerMailCache():
 
         return mid
 
+    def GetMailRead(self, uid):
 
-    def GetMailRead(self , uid):
-
-        key = "mailread"+str(uid)
+        key = "mailread" + str(uid)
         value = self.redis_ctl.get(key)
         msg = ""
         if value:
@@ -206,13 +204,9 @@ class ServerMailCache():
             msg = "\'\'"
         return msg
 
+    def GetMailDet(self, uid):
 
-
-
-
-    def GetMailDet(self , uid):
-
-        key = "maildet"+str(uid)
+        key = "maildet" + str(uid)
         value = self.redis_ctl.get(key)
         msg = ""
         if value:
@@ -228,51 +222,48 @@ class ServerWechatLoginCache():
         rds = RedisData(5)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveCode(self, state , nickname  , headimg, sex , unionid):
+    def SaveCode(self, state, nickname, headimg, sex, unionid):
         key = state
-        self.redis_ctl.hset( key , "nickname" ,nickname )
+        self.redis_ctl.hset(key, "nickname", nickname)
         self.redis_ctl.hset(key, "headimg", headimg)
         self.redis_ctl.hset(key, "sex", sex)
         self.redis_ctl.hset(key, "unionid", unionid)
 
-    def GetCode(self,  state , name):
-        value = self.redis_ctl.hget(state,name)
+    def GetCode(self, state, name):
+        value = self.redis_ctl.hget(state, name)
         if value:
             return value.decode()
         return value
 
+    def SavUserName(self, state, username):
+        key = "un" + state
+        self.redis_ctl.set(key, username)
 
-    def SavUserName(self,state,username):
-        key = "un"+state
-        self.redis_ctl.set(key,username)
-
-    def GetUserName(self,state):
-        key = "un"+state
+    def GetUserName(self, state):
+        key = "un" + state
         value = self.redis_ctl.get(key)
         if value:
             return value.decode()
         return value
 
-    def DetCode(self, phone ,sub):
+    def DetCode(self, phone, sub):
         key = phone + "$" + str(sub)
         self.redis_ctl.delete(key)
 
 
-
 class ServerWitCache():
-
     def __init__(self):
         rds = RedisData(8)
         self.redis_ctl = rds.redis_pool()
 
-    def GetWit(self, uid , code):
+    def GetWit(self, uid, code):
 
         moneyg = 0
         moneyz = 0
 
         if code == 1 or code == 0:
-            key = "witg"+str(uid)
-            moneyg = self.redis_ctl.get( key)
+            key = "witg" + str(uid)
+            moneyg = self.redis_ctl.get(key)
             if not moneyg:
                 moneyg = 0
             else:
@@ -286,18 +277,17 @@ class ServerWitCache():
             else:
                 moneyz = int(moneyz.decode())
 
-
         return moneyz + moneyg
 
-    def SaveWit(self,uid,iWit,iWit_RMB,code):
+    def SaveWit(self, uid, iWit, iWit_RMB, code):
         if code == 1 or code == 0:
             key = "witg" + str(uid)
-            self.redis_ctl.set(key,str(iWit))
+            self.redis_ctl.set(key, str(iWit))
         if code == 2 or code == 0:
             key = "witz" + str(uid)
             self.redis_ctl.set(key, str(iWit_RMB))
 
-    def AddWit(self,uid,iWit,iWit_RMB,code):
+    def AddWit(self, uid, iWit, iWit_RMB, code):
         if code == 1 or code == 0:
             key = "witg" + str(uid)
             money = self.redis_ctl.get(key)
@@ -306,7 +296,7 @@ class ServerWitCache():
             else:
                 money = int(money.decode())
             money += iWit
-            self.redis_ctl.set(key,money)
+            self.redis_ctl.set(key, money)
         if code == 2 or code == 0:
             key = "witz" + str(uid)
             money = self.redis_ctl.get(key)
@@ -317,51 +307,68 @@ class ServerWitCache():
             money += iWit_RMB
             self.redis_ctl.set(key, money)
 
-    def Exist(self,uid):
+    def Exist(self, uid):
 
         key = "witg" + str(uid)
         return self.redis_ctl.exists(key)
 
 
-
 class ServerUserCache():
-
     def __init__(self):
         rds = RedisData(9)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveUser(self, username,arr):
+    def SaveUser(self, username, arr):
         key = username
-        self.redis_ctl.hset( key , "uid" ,str(arr[0]) )
+        self.redis_ctl.hset(key, "uid", str(arr[0]))
         self.redis_ctl.hset(key, "cdate", str(arr[1]))
+        self.redis_ctl.hset(key, "organization", str(arr[2]))
+        self.redis_ctl.hset(key, "distributor", str(arr[3]))
+        self.redis_ctl.hset(key, "Power", str(arr[4]))
+        self.redis_ctl.hset(key, "AccountPower", str(arr[5]))
 
-    def GetData(self,  state , name):
-        value = self.redis_ctl.hget(state,name)
+    def GetData(self, state, name):
+        value = self.redis_ctl.hget(state, name)
         if value:
             return value.decode()
         return None
 
-    def Exist(self,username):
+    def Exist(self, username):
 
-        return self.redis_ctl.hexists("uid",username)
+        return self.redis_ctl.hexists("uid", username)
+
+    def redis_ip_set(self, username, data):
+        if data["platform"] != 10:
+            self.redis_ctl.hset(username, "app_ip", data["local_ip"])
+        else:
+            self.redis_ctl.hset(username, "editor_ip", data["local_ip"])
+        self.redis_ctl.hset(username, "platfrom", data["platform"])
+        return True
+
+    def redis_user_get(self, username, data):
+        data_list = self.redis_ctl.hmget(username, data)
+        data_list = [
+            str(x, encoding='utf-8') if x is not None else ''
+            for x in data_list
+        ]
+        return data_list
 
 
 class ServerPayCache():
-
     def __init__(self):
         rds = RedisData(10)
         self.redis_ctl = rds.redis_pool()
 
-    def SaveOrder(self,key):
-        self.redis_ctl.set(key,"1")
-        self.redis_ctl.expire(key, 60*60*24)
+    def SaveOrder(self, key):
+        self.redis_ctl.set(key, "1")
+        self.redis_ctl.expire(key, 60 * 60 * 24)
 
     def GetOrder(self, key):
         return self.redis_ctl.exists(key)
 
-    def Exist(self,username):
+    def Exist(self, username):
 
-        return self.redis_ctl.hexists("uid",username)
+        return self.redis_ctl.hexists("uid", username)
 
 
 # class ServerConfigCache():
@@ -386,7 +393,3 @@ class ServerPayCache():
 
 
 C_ServerEventCache = ServerEventCache()
-
-
-
-
