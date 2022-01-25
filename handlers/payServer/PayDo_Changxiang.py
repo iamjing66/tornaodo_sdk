@@ -39,14 +39,17 @@ class paydo_changxiang:
         _from = _arr_pam[13]
         _userType = int(_arr_pam[14])
         _ip = _arr_pam[15]
-        _wid = _arr_pam[16]
+        wid = _arr_pam[16]
 
         toclient = ""
         _now = int(time.time())
         cids = CID.split(',')
+        wids = wid.split(',')
         #print("cids", cids)
         for _cid in cids:
             #print("_cid", _cid)
+            i = cids.index(_cid)
+            _wid = wids[i]
             _pdate = self.GetMonthBuy(_cid , UID, DB)
             #print("_pdate", _pdate)
             _INSERT = 0
