@@ -18,7 +18,7 @@ def Transactions_Code_1012(self_uid, self_username, json_data):
     uid = int(json_data["uid"])
 
     DB = DBManager()
-    json_back["code"] = interface_account.PC_lOGON(DB,self_uid,uid, self_uid)
+    json_back["code"] = interface_account.PC_lOGON(DB,self_uid,uid)
     DB.destroy()
     return json_back
 
@@ -76,7 +76,7 @@ def Transactions_Code_1019(self_uid, self_username, json_data):
     #验证下账号
     json_back["code"] = interface_account.BaseLogin(DB,username,password)
     if json_back["code"] == 1:
-        json_back["pam"] = interface_account.PC_lOGON(DB,self_username,json_data, self_uid)
+        json_back["pam"] = interface_account.PC_lOGON(DB,self_username,json_data)
     # TODO 用户登录后，更新用户的 redis
     # 顶号
     # interface_user.IUser_Diffusion(1, self_uid, username, {}, "editor")
@@ -290,7 +290,7 @@ def Transactions_Code_1040( self_uid , self_username , json_data):
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    json_back["code"] = interface_account.DoLogout(DB,self_username,json_data, self_uid)
+    json_back["code"] = interface_account.DoLogout(DB,self_username,json_data)
     #pam = "账号类型$补偿包裹"
     DB.destroy()
     return json_back

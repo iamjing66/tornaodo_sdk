@@ -36,10 +36,9 @@ def BaseLogin(DB,username,password):
         return 0
 
 
-def PC_lOGON(DB,Username, json_data, uid):
+def PC_lOGON(DB,Username, json_data):
 
     #基础数据
-    # TODO 判断用户，问题 新用户不存在redis
     uid = 0
     sql = "select * from tb_userdata where binary UserName = '"+str(Username) + "'"
     # print("pc_login :" , sql)
@@ -150,13 +149,13 @@ def PC_lOGON(DB,Username, json_data, uid):
     solr_redis = ServerUserCache.redis_ip_set(Username, json_data)
     if solr_redis:
         #登录的索引库在互动引擎中
-        DoLogin(DB,Username, VipDate, "pc", uid)
+        DoLogin(DB,Username, VipDate, "pc")
 
     return _SEND
 
 
 #VR登录数据
-def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
+def VR_LOGIN(DB,VR_USERNAME,json_data):
 
     _userdata_string = ""
     vipdate = 0
@@ -174,7 +173,7 @@ def VR_LOGIN(DB,VR_USERNAME,json_data, uid):
         # 记录redis缓存
     solr_redis = ServerUserCache.redis_ip_set(VR_USERNAME, json_data)
     if solr_redis:
-        DoLogin(DB, VR_USERNAME, vipdate, "vr", uid)
+        DoLogin(DB, VR_USERNAME, vipdate, "vr")
 
     return _userdata_string
 
@@ -833,7 +832,7 @@ def N_WriteRoleData(DB,self_uid,name,iedent,school,_class):
     return 1
 
 #=====导出视频
-def DaochuVedio(DB, tlong, uid, course_type, video_type):
+def DaochuVedio(DB, tlong, uid, course_type, video_type, self_username):
 
 
     if tlong <= 0:

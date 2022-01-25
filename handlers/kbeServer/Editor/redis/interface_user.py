@@ -4,7 +4,6 @@ import random
 
 import Global
 from methods.DBManager import DBManager
-from handlers.redisServer.RedisInterface import RedisData
 
 class redisu:
 
