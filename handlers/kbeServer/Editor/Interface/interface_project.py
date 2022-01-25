@@ -174,7 +174,7 @@ def CopyMyProjectToAccount(DB,self_uid,pid,pname,username,cmode):
             return -1
 
     ARRID = interface_global.NewPIDFromUserName(DB,username)
-    NPID = ARRID[0]
+    NPID = ARRID[0] + 1
     P_UID = ARRID[1]
     
     b_type = False

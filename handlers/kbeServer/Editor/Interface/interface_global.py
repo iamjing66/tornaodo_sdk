@@ -94,7 +94,7 @@ def NewPIDFromUserName(DB,username):
     sql = "select PID,UID FROM tb_userdata WHERE UserName = '"+str(username)+"'"
     result = DB.fetchone(sql,None)
     if result:
-        NID = 10002 + int(result[0])
+        NID = 10001 + int(result[0])
         #NID = NID + 1
         UID = int(result[1])
         sql = "Update tb_userdata set PID = PID + 1 WHERE UserName = '"+str(username)+"'"
