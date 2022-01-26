@@ -31,7 +31,8 @@ def PAYPAM_Changxiang(paydata, DB):
             w_type = str(minfo[2])
             w_types_list.append(w_type)
         w_types = ",".join(w_types_list)
-
+    list_channel = sorted(channel.split(","), key=lambda i: int(i))
+    sort_channel = ",".join(list_channel)
     if _price2 > 0:
         sql_str = "select Days,`Discount` from tb_discount where CID = " + str(month) + ";"
 
@@ -51,7 +52,7 @@ def PAYPAM_Changxiang(paydata, DB):
                 _power = 0
                 if "power" in json_data.keys():
                     _power = json_data["power"]
-                params = str(channel) + "@" + str(month) + "@" + str(days) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@" + json_data["ip"] + "@" + str(w_types)
+                params = str(sort_channel) + "@" + str(month) + "@" + str(days) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@" + json_data["ip"] + "@" + str(w_types)
 
                 Data = {
                     "name": "频道畅享",
