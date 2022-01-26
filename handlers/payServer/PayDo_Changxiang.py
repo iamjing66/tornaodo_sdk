@@ -41,16 +41,17 @@ class paydo_changxiang:
         _ip = _arr_pam[15]
         wid = _arr_pam[16]
 
-        toclient = ""
         _now = int(time.time())
         cids = CID.split(',')
         wids = wid.split(',')
+        back_str = ""
+        back_list = []
         #print("cids", cids)
         for _cid in cids:
             #print("_cid", _cid)
             i = cids.index(_cid)
             _wid = wids[i]
-            _pdate = self.GetMonthBuy(_cid , UID, DB)
+            _pdate = self.GetMonthBuy(_cid, UID, DB)
             #print("_pdate", _pdate)
             _INSERT = 0
             if _pdate == 0:
@@ -66,24 +67,16 @@ class paydo_changxiang:
                 sql = "update `tb_channel_buy` set `DATE` = " + str(_pdate) + " WHERE UID = " + str(UID) + " AND CID = '" + _cid + "';"
             DB.edit(sql,None)
 
-            if toclient == "":
-                toclient = str(_cid)+"$"+str(_pdate)
-            else:
-                toclient = toclient + "@" + str(_cid)+"$"+str(_pdate)
-
+            back_list.append("$".join([str(_cid), str(_pdate)]))
 
             # 日志索引库
             # 支付记录
             proId = str(_cid)
             name = "频道包月"
-            #type = 1
-            #saleModules = 7
-
-            #SolrInst.Solr_Pay(2, proId, name, _from, saleModules,6, 1, price, "", type, int(time.time()), _pdate,organization, distributor, UserName, UID, _userType,_ip)
             Solr_PayLog(proId, name, 12, 6, 1, price, 1, "", int(time.time()), _pdate, UID, "vr", int(_wid), UserName)
 
-        return toclient
-
+        back_str = "!".join(back_list)
+        return back_str
 
 
 PayDoChangxiangClass = paydo_changxiang()
