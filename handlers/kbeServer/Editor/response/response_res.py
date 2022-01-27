@@ -14,7 +14,6 @@ def update_user_save(uid) -> Tuple[int, str]:
     description:
         用户开通云存储功能
     args:
-        DB:数据库连接
         uid:用户id
     return:
         0:失败
@@ -34,7 +33,6 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     description:
         验证用户能否上传资源
     args:
-        DB:数据库连接
         uid:用户id
         res_name:资源名称
     return:
@@ -57,7 +55,6 @@ def resource_upload(uid, res_name, pic_path, res_path,
     description:
         用户上传资源成功（obs调用成功以后）
     args:
-        DB:数据库连接
         uid:用户id
         res_name:资源名称
         pic_path:资源图片路径
@@ -92,7 +89,6 @@ def del_resource(uid, res_id) -> Tuple[int, str]:
     description:
         删除当前资源数据
     args:
-        DB: 数据库连接
         uid: 用户id
         res_id: 资源id
     return:
@@ -111,7 +107,6 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
     description:
         转移资源类型
     args:
-        DB: 数据库连接
         uid: 用户id
         res_id: 资源id
         res_type: 要转移到的资源类型id
@@ -145,7 +140,6 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
     description:
         获取用户上传资源数据
     args:
-        DB: 数据库连接
         uid: 用户id
         page: 页码
     return:
@@ -175,7 +169,6 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
     description:
         新建资源类型
     args:
-        DB: 数据库连接
         uid: 用户id
         type_name: 资源类型名称
         tid: 资源类型id
@@ -207,7 +200,6 @@ def del_res_type(uid, tid) -> Tuple[int, str]:
     description:
         删除资源类型
     args:
-        DB: 数据库连接
         uid: 用户id
         tid: 资源类型id
     return:
@@ -231,7 +223,6 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
     description:
         获取用户资源类型
     args:
-        DB: 数据库连接
         uid: 用户id
     return:
         0: 失败
