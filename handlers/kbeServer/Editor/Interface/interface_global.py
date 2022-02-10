@@ -172,7 +172,7 @@ def MonthedChannel(DB,self_uid,channelID,monthID,AppType):
 
     sql = "select phone from tb_userdata where uid = " + str(self_uid)
     sData = DB.fetchone(sql,None)
-    if sData:
+    if sData[0]:
         pay_url = str(channelID) + "@" + str(monthID)  # + "$" + str(AppType) + "$" + str(self.Editor_UID)
         logging.info("MonthedChannel:%s" % pay_url)
         smsResponse = interface_sms.SendSms(3,self_uid,sData[0], pay_url)
