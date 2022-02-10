@@ -8,11 +8,8 @@ import Global
 
 class DBManager:
 
-
     def connectDB(self, host, database, user=None, password=None):
         return pymysql.connect(host, user, password, database)
-
-
 
     def __init__(self):
         self.conn = None
@@ -43,7 +40,6 @@ class DBManager:
             self.cur.close()
             self.conn.close()
         return True
-
 
     # 执行数据库的sq语句,主要用来做插入操作
     def execute(self, sql, params=None, commit=False):
@@ -91,7 +87,6 @@ class DBManager:
             return False
         return rowcount
 
-
     # 查询所有数据
     def fetchall(self, sql, params=None):
         res = self.execute(sql, params)
@@ -106,7 +101,7 @@ class DBManager:
     # 查询一条数据
     def fetchone(self, sql, params=None):
         res = self.execute(sql, params)
-        #print("res",res,type(res))
+        # print("res",res,type(res))
         # if isinstance(res,int) and res == 0:
         #     logging.info("DoSql - fetchone:No rowcount : " + sql)
         #     return True
@@ -129,11 +124,10 @@ class DBManager:
         logging.info("查询成功")
         return result
 
-
     # 增删改数据
     def edit(self, sql, params=None):
         res = self.execute(sql, params, True)
-        #print("DoSql - edit: Res:",res,type(res))
+        # print("DoSql - edit: Res:",res,type(res))
         # if res == 0:
         #     logging.info("DoSql - edit:No rowcount : " + sql)
         #     return True
@@ -147,7 +141,7 @@ class DBManager:
 
         return True
 
-    #数据转换json
+    # 数据转换json
     def fetchone_json(self, result):
 
         json_data = {}
@@ -155,13 +149,13 @@ class DBManager:
 
         if result and len(result) > 0:
             for value in result:
-                json_data["value"+str(pos)] = value
-                pos+=1
+                json_data["value" + str(pos)] = value
+                pos += 1
 
         return json_data
 
     # 数据转换json
-    def fetchall_json(self, result,key):
+    def fetchall_json(self, result, key):
 
         json_data = {}
 
@@ -174,7 +168,6 @@ class DBManager:
                     if pos_two > 0:
                         json_data[line_name]["value" + str(pos_two)] = value
                     pos_two += 1
-
 
         return json_data
 
