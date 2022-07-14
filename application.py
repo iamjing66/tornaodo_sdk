@@ -8,7 +8,7 @@ import Global
 import logging
 from methods.languageinterface import InterfaceLanguage
 from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache, ServerSMSCache, ServerWechatLoginCache, \
-    ServerMailCache,ServerWitCache,ServerUserCache,ServerPayCache
+    ServerMailCache, ServerWitCache, ServerUserCache, ServerPayCache
 import tornado.web
 
 from alipay.aop.api.AlipayClientConfig import AlipayClientConfig
@@ -18,8 +18,9 @@ from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.profile import region_provider
 import time
 
+
 #############
-#本服务用来负责读操作
+# 本服务用来负责读操作
 #############
 
 
@@ -36,7 +37,7 @@ class Application(tornado.web.Application):
         self.SUID = ""
 
         self.WechatLogin = None
-        #redis实例
+        # redis实例
         self.Redis_SMS = None
         self.Redis_Wechat = None
         self.Redis_Mail = None
@@ -44,12 +45,12 @@ class Application(tornado.web.Application):
         self.Redis_User = None
         self.Redis_PayOrder = None
 
-    def DoInit(self,_ip,_port):
+    def DoInit(self, _ip, _port):
 
         self.SIp = _ip
         self.SPort = _port
-        self.SAddress = _ip+":"+str(_port)
-        self.RedisServerAddress = _ip+"*"+str(_port)
+        self.SAddress = _ip + ":" + str(_port)
+        self.RedisServerAddress = _ip + "*" + str(_port)
         logging.info("[ServerSetup] addresse = " + self.SAddress)
         serverlist = Global.get_config.redis_config()
         logging.info("[ServerSetup] serverlist = " + str(serverlist))
@@ -59,13 +60,13 @@ class Application(tornado.web.Application):
         ak = 1
         if akpos:
             ak = int(akpos)
-        rds.set("ak",str(ak+1))
+        rds.set("ak", str(ak + 1))
         self.SUID = str(serverlist.index(self.SAddress)) + str(ak)
         logging.info("[ServerSetup] SUID = " + str(self.SUID))
 
-        #初始化缓存实例
+        # 初始化缓存实例
         self.RedisInst()
-        #处理所有初始化
+        # 处理所有初始化
         self.DoInit_All()
 
         # rs = RedisData(1).redis_pool()
@@ -78,7 +79,7 @@ class Application(tornado.web.Application):
         else:
             self.MainServer = False
         logging.info("[ServerSetup] MainServer = " + str(self.MainServer))
-        #工作事务
+        # 工作事务
         self.worktimer = time.strftime("%Y-%m-%d", time.localtime())
 
         print("self.MainServer", self.MainServer)
@@ -87,7 +88,6 @@ class Application(tornado.web.Application):
         # t.start()
         tornado.ioloop.IOLoop.instance().call_later(5, self.Worker)
 
-
     def RedisInst(self):
         self.Redis_SMS = ServerSMSCache()
         self.Redis_Wechat = ServerWechatLoginCache()
@@ -95,6 +95,7 @@ class Application(tornado.web.Application):
         self.Redis_Wit = ServerWitCache()
         self.Redis_User = ServerUserCache()
         self.Redis_PayOrder = ServerPayCache()
+
     def Worker(self):
 
         try:
@@ -112,28 +113,25 @@ class Application(tornado.web.Application):
         else:
             pass
 
+        # tornado.ioloop.IOLoop.instance().call_later(2, self.Worker)
 
-        #tornado.ioloop.IOLoop.instance().call_later(2, self.Worker)
-
-
-    #启动事务 - 所有服务
+    # 启动事务 - 所有服务
     def DoInit_All(self):
 
         # 配置数据
         IC.ReadConfig()
 
-        #加密配置
+        # 加密配置
         self.acs_client = AcsClient(Global.ACCESS_KEY_ID, Global.ACCESS_KEY_SECRET, Global.REGION)
         region_provider.add_endpoint(Global.PRODUCT_NAME, Global.REGION, Global.DOMAIN)
 
         #
         self.WechatLogin = WxAuthorKFZServer()
 
-        #订单号
+        # 订单号
         self.Ali_Order = 1
 
-
-        #app支付初始化
+        # app支付初始化
         # app支付 - 阿里云支付
         alipay_client_config = AlipayClientConfig()
         alipay_client_config.server_url = "https://openapi.alipay.com/gateway.do"
@@ -145,22 +143,20 @@ class Application(tornado.web.Application):
         self.aliclient = DefaultAlipayClient(alipay_client_config=alipay_client_config)
         self.alimodel = AlipayTradeAppPayModel()
 
-
-        #清理业务缓存
-        #顶号业务
+        # 清理业务缓存
+        # 顶号业务
         key = self.RedisServerAddress + "$C1"
         data = C_ServerEventCache.GetKeys(key)
         if len(data) > 0:
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key, uuid)
 
-        #邮件业务
+        # 邮件业务
         key = self.RedisServerAddress + "$106"
         data = C_ServerEventCache.GetKeys(key)
         if len(data) > 0:
             for uuid in data:
                 C_ServerEventCache.DeleteKeys(key, uuid)
-
 
     # 启动事务 - 主服务
     def DoInit_Main(self):
@@ -174,59 +170,36 @@ class Application(tornado.web.Application):
             for uuid in data:
                 rds.hdel(key, uuid)
 
-
-    #事务处理 - 所有服务
+    # 事务处理 - 所有服务
     def DoEvent_All(self):
 
-        #处理事务
-        #logging.info("[Do Event All]" + self.SAddress)
+        # 处理事务
+        # logging.info("[Do Event All]" + self.SAddress)
 
-        #处理异步事务
-        key = self.RedisServerAddress+"$CFD"
+        # 处理异步事务
+        key = self.RedisServerAddress + "$CFD"
         data = C_ServerEventCache.GetKeys(key)
 
         if len(data) > 0:
-            #logging.info("[redis] DoEvent_All data = %s - key = %s" % ( data, key))
+            # logging.info("[redis] DoEvent_All data = %s - key = %s" % ( data, key))
             for uuid in data:
-                #logging.info("[redis] DoEvent_All uuid1 = %s " % str(uuid))
+                # logging.info("[redis] DoEvent_All uuid1 = %s " % str(uuid))
 
-
-                value = C_ServerEventCache.GetValue(key,uuid).decode().split('$')
-                #logging.info("[redis] DoEvent_All uuid2 = %s " % str(uuid))
+                value = C_ServerEventCache.GetValue(key, uuid).decode().split('$')
+                # logging.info("[redis] DoEvent_All uuid2 = %s " % str(uuid))
                 C_ServerEventCache.DeleteKeys(key, uuid)
 
-                #logging.info("[redis] DoEvent_All uuid3 = %s " % str(uuid))
+                # logging.info("[redis] DoEvent_All uuid3 = %s " % str(uuid))
                 code = value[0]
                 pam = value[1]
-                logging.info("[redis] data uuid = %s code = %s - pam = %s" % (str(uuid),str(code), str(pam)))
-                pro_status.DoSyncThing(uuid.decode(),code,pam)
+                logging.info("[redis] data uuid = %s code = %s - pam = %s" % (str(uuid), str(code), str(pam)))
+                pro_status.DoSyncThing(uuid.decode(), code, pam)
 
-        # key = self.RedisServerAddress + "$106"
-        # data = C_ServerEventCache.GetKeys(key)
-        # if len(data) > 0:
-        #     logging.info("[DoEvent_All] Mail data = %s - key = %s" % (data, key))
-        #     for uuid in data:
-        #         self.DoEvent_Mail(uuid.decode(),C_ServerEventCache.GetValue(key,uuid).decode())
-        #         C_ServerEventCache.DeleteKeys(key, uuid)
-
-
-
-    # def DoEvent_Kick(self,uuid):
-    #
-    #     print("DoEvent = " , uuid)
-    #     pro_status.user_kick(uuid)
-    #
-    # def DoEvent_Mail(self, uuid,value):
-    #
-    #     print("DoEvent = ", uuid,value)
-    #     pro_status.DoMessage_Mail(uuid,value)
-
-    #事务处理 - 主服务
+    # 事务处理 - 主服务
     def DoEvent_Main(self):
         pass
 
-
-    #0点事务
+    # 0点事务
     def WorkZero(self):
 
         now = time.strftime("%Y-%m-%d", time.localtime())
@@ -235,7 +208,6 @@ class Application(tornado.web.Application):
             self.DoZero_All()
             if self.MainServer:
                 self.DoZero_Main()
-
 
     # 0点事务 - 所有服务
     def DoZero_All(self):
@@ -247,6 +219,6 @@ class Application(tornado.web.Application):
 
 
 App = Application(
-    handlers = Urls,
+    handlers=Urls,
     **Global.settings
-    )
+)

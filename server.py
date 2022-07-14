@@ -21,18 +21,19 @@ from tornado.options import define, options
 
 from handlers.wechatGZH.wxtoken import WxShedule
 
-define("port", default = 9001, help = "run on the given port", type = int)
+define("port", default=9001, help="run on the given port", type=int)
 
 
 def init_logging():
     tornado.options.parse_command_line()
     from tornado.log import LogFormatter
 
-
-    file_handler = logging.handlers.TimedRotatingFileHandler(Global.settings["log_file"], when="MIDNIGHT", interval=1, backupCount=30)
+    file_handler = logging.handlers.TimedRotatingFileHandler(Global.settings["log_file"], when="MIDNIGHT", interval=1,
+                                                             backupCount=30)
     access_log = logging.getLogger()
     datefmt = '[%Y-%m-%d %H:%M:%S %z]'
-    fmt = '%(asctime)s [%(levelname)s %(name)s pid:%(process)d port:{port} %(filename)s:%(lineno)d] %(message)s'.format(port=options.port or '')
+    fmt = '%(asctime)s [%(levelname)s %(name)s pid:%(process)d port:{port} %(filename)s:%(lineno)d] %(message)s'.format(
+        port=options.port or '')
     formatter = LogFormatter(color=True, fmt=fmt, datefmt=datefmt)
 
     # # 输出格式
@@ -40,9 +41,9 @@ def init_logging():
     #     "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s] [%(lineno)d]  %(message)s"
     # )
 
-
     file_handler.setFormatter(formatter)
     access_log.addHandler(file_handler)
+
 
 def kill_server(sig, frame):
     logging.info('Caught signal: %s stop server(%s)' % (sig, options.port))
@@ -76,8 +77,6 @@ def main():
 
     http_server.listen(options.port)
 
-
-
     print("Development server is running at http://127.0.0.1:%s" % options.port)
     print("Quit the server with Control-C")
     tornado.ioloop.IOLoop.instance().start()
@@ -85,17 +84,15 @@ def main():
 
 def get_host_ip():
     try:
-        s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-        s.connect(('10.0.0.1',8080))
-        ip= s.getsockname()[0]
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('10.0.0.1', 8080))
+        ip = s.getsockname()[0]
     finally:
         s.close()
     return ip
 
 
 init_logging()
-
-
 
 if __name__ == "__main__":
     main()
