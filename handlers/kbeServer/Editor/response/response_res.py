@@ -50,8 +50,8 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
 
 
 def resource_upload(uid, res_name, pic_path, res_path,
-                    res_type) -> Tuple[int, str]:
-    '''
+                    res_type) -> Tuple[int, str, int]:
+    """
     description:
         用户上传资源成功（obs调用成功以后）
     args:
@@ -63,7 +63,7 @@ def resource_upload(uid, res_name, pic_path, res_path,
     return:
         0:失败
         1:成功
-    '''
+    """
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     rid_sql = "select rid from tb_config_res where ID = (select max(id) from tb_config_res);"
     data_rid = DB.fetchone(rid_sql)
@@ -85,7 +85,7 @@ def resource_upload(uid, res_name, pic_path, res_path,
 
 
 def del_resource(uid, res_id) -> Tuple[int, str]:
-    '''
+    """
     description:
         删除当前资源数据
     args:
@@ -94,7 +94,7 @@ def del_resource(uid, res_id) -> Tuple[int, str]:
     return:
         0: 失败
         1: 成功
-    '''
+    """
     sql = "update tb_p_res set isdel = 1 where uid = %s and rid = %s;"
     data = DB.edit(sql, (uid, res_id))
     if data:
@@ -103,7 +103,7 @@ def del_resource(uid, res_id) -> Tuple[int, str]:
 
 
 def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
-    '''
+    """
     description:
         转移资源类型
     args:
@@ -115,7 +115,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
         1: 成功
         -1: 资源类型不存在
         -2: 资源不存在
-    '''
+    """
     sql_type = "select id from tb_p_resType where createUserId = %s and tid = %s;"
     data_type = DB.fetchone(sql_type, (uid, res_type))
     if not data_type:
@@ -136,7 +136,7 @@ def transfer_resource(uid, res_id, res_type) -> Tuple[int, str]:
 
 
 def user_upload_data(uid, page) -> Tuple[int, int, str]:
-    '''
+    """
     description:
         获取用户上传资源数据
     args:
@@ -148,7 +148,7 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
         msg:
             1: 还有数据
             -1: 没有数据
-    '''
+    """
     user_list = []
     user_data = ""
     msg = -1
@@ -165,7 +165,7 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
 
 
 def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
-    '''
+    """
     description:
         新建资源类型
     args:
@@ -178,7 +178,7 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
         1: 成功
         -1: 资源类型数量超过五个
         -2: 资源类型已存在
-    '''
+    """
     sql_user_type = "select count(id) from tb_p_resType where createUserId = %s and isDel = 0;"
     data_type = DB.fetchone(sql_user_type, uid)
     if data_type:
@@ -196,7 +196,7 @@ def create_new_type(uid, type_name, tid, desc) -> Tuple[int, str]:
 
 
 def del_res_type(uid, tid) -> Tuple[int, str]:
-    '''
+    """
     description:
         删除资源类型
     args:
@@ -206,7 +206,7 @@ def del_res_type(uid, tid) -> Tuple[int, str]:
         0: 失败
         1: 成功
         -1: 该资源类型下有资源，不能删除
-    '''
+    """
     sql_res = "select id from tb_p_res where uid = %s and TID = %s and isDel = 0;"
     data_res = DB.fetchone(sql_res, (uid, tid))
     if data_res:
@@ -219,7 +219,7 @@ def del_res_type(uid, tid) -> Tuple[int, str]:
 
 
 def get_user_res_type(uid) -> Tuple[int, str, str]:
-    '''
+    """
     description:
         获取用户资源类型
     args:
@@ -227,7 +227,7 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
     return:
         0: 失败
         1: 成功
-    '''
+    """
     user_list = []
     user_data = ""
     sql = "select TID, name, `desc`, isDel from tb_p_resType where createUserId = %s;"
@@ -241,7 +241,7 @@ def get_user_res_type(uid) -> Tuple[int, str, str]:
 
 
 def update_type_name(uid, tid, name, desc) -> Tuple[int, str]:
-    '''
+    """
     description:
         修改资源类型名称
     args:
@@ -251,7 +251,7 @@ def update_type_name(uid, tid, name, desc) -> Tuple[int, str]:
         desc: 资源类型描述 使用@分隔
     return:
         1: 成功
-    '''
+    """
     tid_list = tid.split("@")
     name_list = name.split("@")
     desc_list = desc.split("@")
@@ -262,9 +262,9 @@ def update_type_name(uid, tid, name, desc) -> Tuple[int, str]:
 
 
 def sql_limit(page):
-    '''
+    """
     sql 语句分页
-    '''
-    ipage = int(page)
-    _limit = "limit " + str((ipage - 1) * 500) + ",500"
+    """
+    page = int(page)
+    _limit = "limit " + str((page - 1) * 500) + ",500"
     return _limit
