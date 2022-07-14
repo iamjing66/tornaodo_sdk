@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import time
-import Global
 import logging
-from methods.DBManager import DBManager
+import time
+
+import Global
+from handlers.kbeServer.Editor.Data import data_course, data_project
+from handlers.kbeServer.Editor.Data import data_lesson
 from handlers.kbeServer.Editor.Interface import interface_mail, interface_project, interface_obj, interface_global, \
     interface_solr, interface_wit
-from handlers.kbeServer.Editor.Data import data_course, data_project, data_obj
-from handlers.kbeServer.Editor.Data import data_lesson
+from methods.DBManager import DBManager
 
 
 # 客户端列表(带版本号)转json，用来比对
@@ -103,8 +104,6 @@ def Get(pdata, self_uid, itype, isupdate=0):
             data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(
                 sql, db, cid, uid, lversions, 0, isupdate)
     db.destroy()
-    # print("data_course_ini:",data_course_ini)
-    # print("data_lesson_ini:", data_lesson_ini)
     return data_course_ini + "！" + data_lesson_ini + "！" + str(mpage)
 
 
@@ -151,8 +150,6 @@ def GetNew(pdata, self_uid, itype):
                 sql, db, cid, uid, lversions, 0)
 
     db.destroy()
-    # print("data_course_ini:",data_course_ini)
-    # print("data_lesson_ini:", data_lesson_ini)
     return data_course_ini + "！" + data_lesson_ini + "！" + str(mpage)
 
 
@@ -191,8 +188,6 @@ def SH(db, self_uid, uid, cid, shCode):
         title = "课程未通过审核"
         tbody = "你的" + wname + "课程未通过审核"
     elif shCode == 1:
-        # ini_lesson_base = data_lesson.Data_Lesson_Base(uid, cid, 0, db, 0)
-        # print("ini_lesson_base:",ini_lesson_base)
         data_course.UpdateToDBNew(db, list_ccourse_base, cid, uid, 1)
 
         # arr_lesson = ini_lesson_base.split('^')
@@ -203,14 +198,7 @@ def SH(db, self_uid, uid, cid, shCode):
                 data__p = data_project.Data_Project_Base(p_arr[0], p_arr[1], 0, db, 2)
                 if data__p:
                     interface_project.ProjectToDB(db, p_arr[1], p_arr[0], 1, data__p)
-                # self.PassedProject(p_arr[0], p_arr[1], 1)
-                # data_o = data_obj.Data_Objs_Base(0,db,p_arr[1],p_arr[0],{},0)
-                # if data_o:
-                #     interface_obj.UpdateToDB(1,db,p_arr[0],p_arr[1],data_o)
                 interface_obj.CopyToDBNew(1, db, p_arr[0], p_arr[1], Global.GetObjTableName(p_arr[0], p_arr[1]))
-
-                # self.PassedObject(p_arr[0], p_arr[1])
-                # self.PassedExtra(p_arr[0], p_arr[1])
         # 同步到课程分类里面
         data_course.DoCourseConfig(db, uid, cid, wname)
         title = "课程通过审核"
@@ -305,24 +293,12 @@ def BuyNew(db, self_uid, uid, cid, lid, tlong):
         selfLesson["value19"] = _now + tlong
     # 修改课时数据
     # print("buy_datas", buy_datas)
-
     selfLesson["value9"] = self_uid
     # selfLesson["value10"] = int(time.time())
-
     buy_ini = data_lesson.Get_Data_Lesson_Base_JsonToIni(selfLesson)
-
     # 更新
     data_lesson.UpdateToDB(db, buy_ini, "", _cid, self_uid, 0)
-
     _back = c_string + "！" + str(_cid) + "^" + str(self_uid) + "^" + buy_ini
-
-    # 日志
-    # if btype != 0:
-    #     if bBCourse:
-    #         # interface_solr.Solr_Pay(db,2, str(_cid), _CourseName, 10, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid)
-    #         interface_solr.Solr_PayLog(str(_cid), _CourseName, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid,
-    #                                    "pc")
-
     return [1, _back]
 
 
@@ -363,9 +339,6 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
     market_lessons = data_lesson.Data_Lesson_Base(uid, cid, 1, db, 1, 1)
     if isinstance(market_lessons, str):
         return [-1, ""]  # 购买的课程不存在
-    # LID:[一年的价钱 永久价钱 到期时间 是否购买过]
-    # print("market_lessons",market_lessons)
-    # print("buy ======= 3")
     # 购买的数据
     myself_lesson = {}
     _uid = self_uid
@@ -373,9 +346,6 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
     if _cid != 0:
         myself_lesson = data_lesson.Data_Lesson_Base(_uid, _cid, 0, db, 1)  # self.ComputeBuyLesson(_uid, _cid)
         ##[一年价格 永久价格 到期时间 是否购买 课时ID 版本号]
-        # DEBUG_MSG("myself_lesson:", myself_lesson)
-        # DEBUG_MSG("market_lessons:",market_lessons)
-    # print("buy ======= 4")
     buy_datas = []
     buy_ini = ""
     if lid != 0:  # 按课时购买
@@ -389,14 +359,6 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
             # _version = myself_lesson[lid]["value18"]
             if myself_lesson[lid]["value20"] == 1:  # 永久课时
                 return [-3, ""]  # 永久课程不能购买
-        # print("buy ======= 7")
-        # if btype == 0:  #赠送
-        #     if myself_lesson[lid][2] != 0 and type == 0:
-        #         return
-        # _pdate = myself_lesson[lid]["value20"]
-        # _version += 1
-        # buy_ini = data_lesson.Get_Data_Lesson_Base_JsonToIni(market_lessons[lid])
-        # buy_datas.append([lid, market_lessons[lid]["value16"], market_lessons[lid]["value19"], _pdate, _version, market_lessons[lid]["value3"], 0])
         buy_datas.append(market_lessons[lid])
         # _bstr2 = _bstr2 + " " + market_lessons[lid]["value3"] + ","
     else:
@@ -416,25 +378,9 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
             _version = 0
             _pdate = 0
             if _lkey in myself_lesson.keys():
-                # _version = myself_lesson[_lkey]["value18"]
-                # if myself_lesson[_lkey][3] == 1:  # 买过这个课程
                 if myself_lesson[_lkey]["value19"] == 1:  # or (myself_lesson[_lkey][2] == 0 and type == 0)
                     continue
-                # if btype == 0: #赠送
-                #     if myself_lesson[_lkey][2] != 0 and type == 0:
-                #         continue
-                #     if myself_lesson[_lkey][2] == type and type > 1: #这里表示的是老师赠送课程
-                #         continue
-                # _pdate = myself_lesson[_lkey]["value20"]
-            # _version += 1
-            # buy_datas.append([_lkey, market_lessons[_lkey]["value16"], market_lessons[_lkey]["value19"], _pdate, _version,market_lessons[_lkey]["value3"]])
             buy_datas.append(market_lessons[_lkey])
-            # if buy_ini == "":
-            #     buy_ini = data_lesson.Get_Data_Lesson_Base_JsonToIni(market_lessons[_lkey])
-            # else:
-            #     buy_ini = buy_ini + "!" + data_lesson.Get_Data_Lesson_Base_JsonToIni(market_lessons[_lkey])
-            # _bstr2 = _bstr2 + " " + str(market_lessons[_lkey]["value2"]) + ","
-
     if len(buy_datas) < 1:
         return [-4, ""]  # 购买异常，没有可购买的
 
@@ -509,18 +455,13 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
                 return [-5, ""]  # 智慧豆不足
             # 制作者加钱
             _add = Price  # int(Price/2)
-            # if _add > 0:
-            #     interface_wit.AddWitScoreWithUserName(db,UserName,_add,0)
-        # self.BaseAddWit(UserName, int(Price), 3, desc)
     # 增加课程
     c_string = ""
     # DEBUG_MSG("1 _cid [%i] WID:[%i]" % (_cid, self.WID))
-    bfirst = False
     if _cid == 0:
         # DEBUG_MSG("_cid [%i] WID:[%i]" % (_cid,self.WID))
         _cid = interface_global.NewCID(db, self_uid)  # self.HttpInst.GetCID(self.UserName)
         # self.WID = _cid
-        bfirst = True
 
     # 购买写入数据
 
@@ -534,7 +475,6 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
     w_data[13] = cid
 
     data_course.UpdateToDB(db, w_data, _cid, self_uid, 0)
-    # self.Course_buy_sure(cid, uid, _cid, self.databaseID, bfirst)
     c_string = data_course.Get_Data_Course_Base_ListToIni(w_data)  # self.GetCString(_cid, self.databaseID)
 
     # 课时数据写入
@@ -572,26 +512,21 @@ def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
                         data_p = _now + type
                     else:
                         data_p = myself_lesson[info_lid]["value19"] + type
-
         # 更新数据
         buy_datas[ipos]["value19"] = data_p
         buy_datas[ipos]["value9"] = self_uid
         buy_datas[ipos]["value10"] = int(time.time())
-        # buy_datas[ipos]["value20"] = 1
         if buy_ini == "":
             buy_ini = data_lesson.Get_Data_Lesson_Base_JsonToIni(buy_datas[ipos])
         else:
             buy_ini = buy_ini + "!" + data_lesson.Get_Data_Lesson_Base_JsonToIni(buy_datas[ipos])
         ipos += 1
     data_lesson.UpdateToDB(db, buy_ini, "", _cid, self_uid, 0)
-
-    # print(c_string , " - " ,buy_ini)
     _back = c_string + "！" + str(_cid) + "^" + str(self_uid) + "^" + buy_ini
 
     # 日志
     if btype != 0:
         if bBCourse:
-            # interface_solr.Solr_Pay(db,2, str(_cid), _CourseName, 10, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid)
             interface_solr.Solr_PayLog(str(_cid), _CourseName, 1, 3, 0, Price1, 4, "0", int(time.time()), 0, self_uid,
                                        "pc", 1, self_username)
 

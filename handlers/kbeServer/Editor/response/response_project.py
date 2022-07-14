@@ -6,10 +6,10 @@ from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_project
 from handlers.kbeServer.Editor.Data import data_project
 
-#获取是否需要更新
-def GetPVersion(jddata):
 
-    DB = DBManager()
+# 获取是否需要更新
+def GetPVersion(jddata):
+    db = DBManager()
     JDATA = json.loads(jddata)
     gpid = JDATA["gpid"]
     guid = JDATA["guid"]
@@ -19,11 +19,11 @@ def GetPVersion(jddata):
     _back = "0"
 
     # 获取工程数据版本号
-    pversion = interface_project.GetPVersion(DB,guid,gpid,taget)
+    pversion = interface_project.GetPVersion(db, guid, gpid, taget)
     # BODY=====================================
 
-    _back = str(pversion) + "$"+str(gpid)+ "$"+str(guid)+ "$"+str(taget)+ "$"+From
-    DB.destroy()
+    _back = str(pversion) + "$" + str(gpid) + "$" + str(guid) + "$" + str(taget) + "$" + From
+    db.destroy()
     return _back
 
 
@@ -39,13 +39,13 @@ def Transactions_Code_1006(self_uid, self_username, json_data):
     uid = int(json_data["uid"])
     pid = int(json_data["pid"])
 
-    DB = DBManager()
-    json_back["code"] = interface_project.RemoveP(DB,self_uid,uid,pid)
-    DB.destroy()
+    db = DBManager()
+    json_back["code"] = interface_project.RemoveP(db, self_uid, uid, pid)
+    db.destroy()
     return json_back
 
 
-#删除工程
+# 删除工程
 def Transactions_Code_1007(self_uid, self_username, json_data):
     # 回调json
     json_back = {
@@ -58,14 +58,15 @@ def Transactions_Code_1007(self_uid, self_username, json_data):
     uid = int(json_data["uid"])
     pid = int(json_data["pid"])
 
-    DB = DBManager()
-    json_back["code"] = interface_project.DeleteP(DB,self_uid,uid,pid,0)
-    DB.destroy()
+    db = DBManager()
+    json_back["code"] = interface_project.DeleteP(db, self_uid, uid, pid, 0)
+    db.destroy()
     return json_back
 
-#发布到背包
-#作品 - 4
-#课程 - 3
+
+# 发布到背包
+# 作品 - 4
+# 课程 - 3
 def Transactions_Code_1009(self_uid, self_username, json_data):
     # 回调json
     json_back = {
@@ -79,12 +80,13 @@ def Transactions_Code_1009(self_uid, self_username, json_data):
     pid = json_data["pid"]
     template = json_data["template"]
 
-    DB = DBManager()
-    json_back["code"] = interface_project.FB(DB,self_uid,uid,pid,template)
-    DB.destroy()
+    db = DBManager()
+    json_back["code"] = interface_project.FB(db, self_uid, uid, pid, template)
+    db.destroy()
     return json_back
 
-#设置为模板
+
+# 设置为模板
 def Transactions_Code_1010(self_uid, self_username, json_data):
     # 回调json
     json_back = {
@@ -98,13 +100,13 @@ def Transactions_Code_1010(self_uid, self_username, json_data):
     pid = json_data["pid"]
     publish = json_data["publish"]
 
-    DB = DBManager()
-    json_back["code"] = interface_project.SetPublish(DB,self_uid,uid,pid,publish)
-    DB.destroy()
+    db = DBManager()
+    json_back["code"] = interface_project.SetPublish(db, self_uid, uid, pid, publish)
+    db.destroy()
     return json_back
 
 
-#转移/复制工程
+# 转移/复制工程
 def Transactions_Code_1011(self_uid, self_username, json_data):
     # 回调json
     json_back = {
@@ -116,17 +118,17 @@ def Transactions_Code_1011(self_uid, self_username, json_data):
     # json_data 结构
     uid = int(json_data["uid"])
     pid = int(json_data["pid"])
-    pname = json_data["pname"]          #工程名转移后的
-    username = json_data["username"]    #转移方USERNAME
-    cmode = int(json_data["cmode"])     #0-复制 1-转移
+    pname = json_data["pname"]  # 工程名转移后的
+    username = json_data["username"]  # 转移方USERNAME
+    cmode = int(json_data["cmode"])  # 0-复制 1-转移
 
-    DB = DBManager()
-    json_back["code"] = interface_project.CopyMyProjectToAccount(DB,uid,pid,pname,username,cmode)
-    DB.destroy()
+    db = DBManager()
+    json_back["code"] = interface_project.CopyMyProjectToAccount(db, uid, pid, pname, username, cmode)
+    db.destroy()
     return json_back
 
 
-#获取工程数据
+# 获取工程数据
 def Transactions_Code_1021(self_uid, self_username, json_data):
     # 回调json
     json_back = {
@@ -139,15 +141,14 @@ def Transactions_Code_1021(self_uid, self_username, json_data):
     uid = int(json_data["uid"])
     pid = int(json_data["pid"])
     From = int(json_data["from"])
-    target = int(json_data["target"])         #工程名转移后的
-    force = int(json_data["force"])    #转移方USERNAME
+    target = int(json_data["target"])  # 工程名转移后的
+    force = int(json_data["force"])  # 转移方USERNAME
 
-
-
-    DB = DBManager()
+    db = DBManager()
     json_back["code"] = 1
-    json_back["pam"] =  str(uid) + "!" + str(pid) + "!" + str(target) + "!"+ str(force)+ "!"+ str(From) + "!" +   data_project.Data_Project_Base(uid,pid,target,DB,0) + "！"
-    #1370!10008!0!1!106!
+    json_back["pam"] = str(uid) + "!" + str(pid) + "!" + str(target) + "!" + str(force) + "!" + str(
+        From) + "!" + data_project.Data_Project_Base(uid, pid, target, db, 0) + "！"
+    # 1370!10008!0!1!106!
     # 10008`tt`1621503370`1621503370`0`1002`0.0`0.0`0.0`0.0`0.0`0.0`0`0.0```58`0``0`0`0`0`1`1370`0`0`0`101``0！
-    DB.destroy()
+    db.destroy()
     return json_back
