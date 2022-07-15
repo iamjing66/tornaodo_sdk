@@ -1,7 +1,7 @@
 # coding=utf-8
-'''
+"""
 上传资源相关方法
-'''
+"""
 import hashlib
 import time
 import logging
@@ -10,7 +10,7 @@ from methods.DBManager import DB
 
 
 def update_user_save(uid) -> Tuple[int, str]:
-    '''
+    """
     description:
         用户开通云存储功能
     args:
@@ -18,7 +18,7 @@ def update_user_save(uid) -> Tuple[int, str]:
     return:
         0:失败
         1:成功
-    '''
+    """
     sql = "update tb_userdata set save_status = 1 where UID = %s"
     data = DB.edit(sql, uid)
     if data:
@@ -29,7 +29,7 @@ def update_user_save(uid) -> Tuple[int, str]:
 
 
 def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
-    '''
+    """
     description:
         验证用户能否上传资源
     args:
@@ -38,7 +38,7 @@ def resource_upload_judge(uid, res_name) -> Tuple[int, str, str]:
     return:
         0:失败
         1:成功
-    '''
+    """
     sql = "select ID from tb_p_res where Name = %s and uid = %s and isDel = 0 union all select ID from tb_config_res where name = %s;"
     data = DB.fetchone(sql, (res_name, uid, res_name))
     r_data = ""
