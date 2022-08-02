@@ -6,11 +6,9 @@ import logging
 import time
 from datetime import datetime
 
-from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_sis
 from handlers.base import BaseHandler
-
-
+from handlers.kbeServer.Editor.Interface import interface_sis
+from methods.DBManager import DBManager
 
 
 def GetSISCourse(DB, subcode, params):
@@ -18,9 +16,7 @@ def GetSISCourse(DB, subcode, params):
     if subcode == 24:
         return interface_sis.GetCourseTypeList(DB)
     elif subcode == 25:
-        return interface_sis.GetCourseDetailList(DB,params)
-
-
+        return interface_sis.GetCourseDetailList(DB, params)
 
 
 class TSisRequest(BaseHandler):
@@ -29,9 +25,9 @@ class TSisRequest(BaseHandler):
 
         account = self.get_argument("account")
         DB = DBManager()
-        sql_str = "select createxID from tclientbindingcreatex where tclientID = '"+account+"' limit 1;"
+        sql_str = "select createxID from tclientbindingcreatex where tclientID = '" + account + "' limit 1;"
 
-        data = DB.fetchone(sql_str,None)
+        data = DB.fetchone(sql_str, None)
         _cxaccount = ""
         if data:
             _cxaccount = data[0]
@@ -41,7 +37,7 @@ class TSisRequest(BaseHandler):
             _time = 0
             sql_str = "select ENDDATE from tclientpower where SACCOUNT = '" + account + "';"
 
-            data = DB.fetchone(sql_str,None)
+            data = DB.fetchone(sql_str, None)
             if data:
                 _time = int(data[0])
             if _time == 0 or int(time.time()) > _time:
@@ -53,10 +49,9 @@ class TSisRequest(BaseHandler):
         DB.destroy()
 
 
+class AccountApkHandler(BaseHandler):  # 继承base.py中的类BaseHandler
 
-class AccountApkHandler(BaseHandler):    #继承base.py中的类BaseHandler
-
-    #课程列表
+    # 课程列表
     def get(self):
 
         id = self.get_argument("id")
@@ -65,11 +60,11 @@ class AccountApkHandler(BaseHandler):    #继承base.py中的类BaseHandler
         DB = DBManager()
         # 获取 工程列表
         if wt == 0:
-            sql_str = "select ID from tb_account_apk where jgid = "+str(id)
+            sql_str = "select ID from tb_account_apk where jgid = " + str(id)
         else:
             sql_str = "select ID from tb_account_apk where teacherid = '" + str(id) + "'"
 
-        datas = DB.fetchone(sql_str,None)
+        datas = DB.fetchone(sql_str, None)
         packnamne = ""
         if datas:
             if wt == 0:
@@ -84,7 +79,7 @@ class AccountApkHandler(BaseHandler):    #继承base.py中的类BaseHandler
 class ApkInfoHandler(BaseHandler):
     def post(self):
         json_back = {
-            "code": 0
+                "code": 0
         }
         data = self.request.body.decode('utf-8')
         now_time = (datetime.now()).strftime("%y-%m-%d")

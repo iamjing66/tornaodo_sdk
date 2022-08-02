@@ -6,10 +6,10 @@ import time
 
 import Global
 from handlers.kbeServer.Editor.Data import data_course
-from handlers.kbeServer.Editor.Data import data_project, data_obj
+from handlers.kbeServer.Editor.Data import data_obj, data_project
 from handlers.kbeServer.Editor.Data import data_work
 from handlers.kbeServer.Editor.Interface import interface_account
-from handlers.kbeServer.Editor.Interface import interface_obj, interface_global
+from handlers.kbeServer.Editor.Interface import interface_global, interface_obj
 from methods.DBManager import DBManager
 
 
@@ -146,25 +146,25 @@ def ProjectToDB(db, pid, uid, target, data):
     result = db.fetchone(sql, None)
     if result:
         sql = "Update " + table_name + " set PID=" + str(data[0]) + ", PName='" + str(data[1]) + "', CreateDate=" + str(
-            data[2]) + ", EditDate=" + str(data[3]) + ", SID=" + str(data[4]) + ",BDelete = " + str(
-            data[5]) + ", C_Posx=" + str(data[6]) + ", C_Posy=" + str(data[7]) + ", C_Posz=" + str(
-            data[8]) + ", C_Rotx=" + str(data[9]) + ", C_Roty=" + str(data[10]) + ", C_Rotz=" + str(
-            data[11]) + ", Template=" + str(data[12]) + ", LightIntensity=" + str(data[13]) + ", LightColor='" + str(
-            data[14]) + "', LightAngle='" + str(data[15]) + "', Power=" + str(data[16]) + ", Sort=" + str(
-            data[17]) + ",FullViewPath='" + str(data[18]) + "', ParentPid=" + str(data[19]) + ", Publish=" + str(
-            data[20]) + ", Skybox=" + str(data[21]) + ", HType=" + str(data[22]) + ",Version=" + str(
-            data[23]) + ",p_uid = " + str(data[25]) + ",P_TYPE= " + str(data[26]) + ",PDate= " + str(
-            data[27]) + ",`From` = " + str(data[28]) + ",FromPam = '" + str(data[29]) + "' where PID = " + str(
-            pid) + " and uid =" + str(uid)
+                data[2]) + ", EditDate=" + str(data[3]) + ", SID=" + str(data[4]) + ",BDelete = " + str(
+                data[5]) + ", C_Posx=" + str(data[6]) + ", C_Posy=" + str(data[7]) + ", C_Posz=" + str(
+                data[8]) + ", C_Rotx=" + str(data[9]) + ", C_Roty=" + str(data[10]) + ", C_Rotz=" + str(
+                data[11]) + ", Template=" + str(data[12]) + ", LightIntensity=" + str(data[13]) + ", LightColor='" + str(
+                data[14]) + "', LightAngle='" + str(data[15]) + "', Power=" + str(data[16]) + ", Sort=" + str(
+                data[17]) + ",FullViewPath='" + str(data[18]) + "', ParentPid=" + str(data[19]) + ", Publish=" + str(
+                data[20]) + ", Skybox=" + str(data[21]) + ", HType=" + str(data[22]) + ",Version=" + str(
+                data[23]) + ",p_uid = " + str(data[25]) + ",P_TYPE= " + str(data[26]) + ",PDate= " + str(
+                data[27]) + ",`From` = " + str(data[28]) + ",FromPam = '" + str(data[29]) + "' where PID = " + str(
+                pid) + " and uid =" + str(uid)
     else:
         sql = "Insert into " + table_name + " (PID, PName, CreateDate, EditDate, SID,BDelete, C_Posx, C_Posy, C_Posz, C_Rotx, C_Roty, C_Rotz, Template, LightIntensity, LightColor, LightAngle, Power, Sort, FullViewPath, ParentPid, Publish, Skybox, HType,Version,UID,p_uid,P_TYPE,PDate,`From`,FromPam) values (" + str(
-            data[0]) + ",'" + str(data[1]) + "'," + str(data[2]) + "," + str(data[3]) + "," + str(data[4]) + "," + str(
-            data[5]) + "," + str(data[6]) + "," + str(data[7]) + "," + str(data[8]) + "," + str(data[9]) + "," + str(
-            data[10]) + "," + str(data[11]) + "," + str(data[12]) + "," + str(data[13]) + ",'" + str(
-            data[14]) + "','" + str(data[15]) + "'," + str(data[16]) + "," + str(data[17]) + ",'" + str(
-            data[18]) + "'," + str(data[19]) + "," + str(data[20]) + "," + str(data[21]) + "," + str(
-            data[22]) + "," + str(data[23]) + "," + str(uid) + "," + str(data[25]) + "," + str(data[26]) + "," + str(
-            data[27]) + "," + str(data[28]) + ",'" + str(data[29]) + "')"
+                data[0]) + ",'" + str(data[1]) + "'," + str(data[2]) + "," + str(data[3]) + "," + str(data[4]) + "," + str(
+                data[5]) + "," + str(data[6]) + "," + str(data[7]) + "," + str(data[8]) + "," + str(data[9]) + "," + str(
+                data[10]) + "," + str(data[11]) + "," + str(data[12]) + "," + str(data[13]) + ",'" + str(
+                data[14]) + "','" + str(data[15]) + "'," + str(data[16]) + "," + str(data[17]) + ",'" + str(
+                data[18]) + "'," + str(data[19]) + "," + str(data[20]) + "," + str(data[21]) + "," + str(
+                data[22]) + "," + str(data[23]) + "," + str(uid) + "," + str(data[25]) + "," + str(data[26]) + "," + str(
+                data[27]) + "," + str(data[28]) + ",'" + str(data[29]) + "')"
     # print("insert Into P : " , sql)
     db.edit(sql, None)
 

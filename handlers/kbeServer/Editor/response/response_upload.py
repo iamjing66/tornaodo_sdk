@@ -2,9 +2,10 @@
 # coding=utf-8
 
 import logging
-from methods.DBManager import DBManager
+
 from handlers.kbeServer.Editor.Interface import interface_course
 from handlers.kbeServer.Editor.Interface import interface_project, interface_work
+from methods.DBManager import DBManager
 
 
 def UpLoad(pdata, self_uid):

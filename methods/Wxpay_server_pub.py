@@ -6,6 +6,7 @@ from urllib.parse import quote
 import hashlib
 import xml.etree.ElementTree as ET
 
+
 class Wxpay_server_pub(WeiXinPay):
     SUCCESS, FAIL = "SUCCESS", "FAIL"
 
@@ -43,7 +44,7 @@ class Wxpay_server_pub(WeiXinPay):
         """将xml转为array"""
         array_data = {}
         root = ET.fromstring(self.xml)
-        #root = ElementTree.fromstring(self.xml)
+        # root = ElementTree.fromstring(self.xml)
         for child in root:
             value = child.text
             array_data[child.tag] = value

@@ -3,8 +3,8 @@
 
 import json
 
-class payback_wechat:
 
+class payback_wechat:
 
     def __init__(self):
         pass

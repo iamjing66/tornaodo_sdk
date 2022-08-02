@@ -1,15 +1,7 @@
-import logging
-import copy
-import Global
-import json
-import time
-import random
-from handlers.base import BaseHandler
-from methods.DBManager import DBManager
+from handlers.kbeServer.Editor.Data.data_lesson import *
 from handlers.kbeServer.Editor.Interface import interface_course
 from handlers.kbeServer.Editor.Interface import interface_lesson
-from handlers.kbeServer.Editor.Data.data_course import *
-from handlers.kbeServer.Editor.Data.data_lesson import *
+from methods.DBManager import DBManager
 
 
 # 购买课程/赠送课程
@@ -21,9 +13,9 @@ from handlers.kbeServer.Editor.Data.data_lesson import *
 def Transactions_Code_1001(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -48,9 +40,9 @@ def Transactions_Code_1001(self_uid, self_username, json_data):
 def Transactions_Code_1002(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -72,9 +64,9 @@ def Transactions_Code_1002(self_uid, self_username, json_data):
 def Transactions_Code_1004(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -93,9 +85,9 @@ def Transactions_Code_1004(self_uid, self_username, json_data):
 def Transactions_Code_1022(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构

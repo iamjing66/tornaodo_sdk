@@ -11,35 +11,34 @@ from alipay.aop.api.request.AlipayTradePrecreateRequest import AlipayTradePrecre
 
 from handlers.payServer.pay_pam import payPamClass
 
+
 class pay_ali:
 
     def __init__(self):
-        #支付宝支付
+        # 支付宝支付
         pass
 
-
-    def PayMain(self,AppType,UID,UserName,AppCode,PayData,_out_trade_no,DB,ali_client,ali_model,CB):
+    def PayMain(self, AppType, UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB):
 
         if AppType == 1:
-            return self.AppPay(UID,UserName,AppCode,PayData,_out_trade_no,DB,ali_client,ali_model,CB)
+            return self.AppPay(UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB)
         elif AppType == 2:
-            return self.SaomaPay(UID,UserName, AppCode, PayData,_out_trade_no,DB,ali_client,ali_model,CB)
+            return self.SaomaPay(UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB)
         else:
-            return self.MobileH5(UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model,CB)
+            return self.MobileH5(UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB)
 
-
-    #APP支付
-    def AppPay(self,UID,UserName,AppCode,PayData,_out_trade_no,DB,ali_client,ali_model,CB):
+    # APP支付
+    def AppPay(self, UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB):
 
         json_bck = {
-            "Code": 1,
-            "price":0,
-            "ERR": 0,
-            "ORDERSTR": "",
-            "plen":0
+                "Code": 1,
+                "price": 0,
+                "ERR": 0,
+                "ORDERSTR": "",
+                "plen": 0
         }
 
-        Json_Request = payPamClass.GetPayPam(UID,AppCode,PayData,DB)
+        Json_Request = payPamClass.GetPayPam(UID, AppCode, PayData, DB)
         if Json_Request["Code"] == 1:
             Json_Data = Json_Request["Data"]
 
@@ -50,16 +49,17 @@ class pay_ali:
             model.product_code = "QUICK_MSECURITY_PAY"  # 销售产品码，商家和支付宝签约的产品码，为固定值QUICK_MSECURITY_PAY
             model.format = "JSON"
             model.charset = "utf-8"
-            model.total_amount = str(Json_Data["price"]/100)  # 订单总金额
-            #print(Json_Data["price"])
-            #print(model.total_amount)
-            #基础数据是8个长度
-            model.passback_params = "1@1@" + str(AppCode) + "@"+ _out_trade_no + "@" + str(Json_Data["price"]) + "@"+ Json_Data["name"]+ "@"+ str(UID)+ "@"+ str(UserName) + "@" + Json_Data["params"]
+            model.total_amount = str(Json_Data["price"] / 100)  # 订单总金额
+            # print(Json_Data["price"])
+            # print(model.total_amount)
+            # 基础数据是8个长度
+            model.passback_params = "1@1@" + str(AppCode) + "@" + _out_trade_no + "@" + str(Json_Data["price"]) + "@" + Json_Data["name"] + "@" + str(UID) + "@" + str(UserName) + "@" + Json_Data[
+                "params"]
             json_bck["plen"] = len(model.passback_params.split('@'))
 
             request = AlipayTradeAppPayRequest(biz_model=model)
             request.notify_url = CB + "/alipaycallback"
-            #request.notify_url = "http://www.bestbutfly.com:8082/alipaybck"
+            # request.notify_url = "http://www.bestbutfly.com:8082/alipaybck"
             response = ali_client.sdk_execute(request)
             orderString = str(response)
             json_bck["ORDERSTR"] = orderString
@@ -67,27 +67,24 @@ class pay_ali:
 
 
         else:
-            #无需购买 这里后续需要处理一下
+            # 无需购买 这里后续需要处理一下
             json_bck["Code"] = 0
             json_bck["ERR"] = 99
 
-
         return json_bck
 
-
-
-    #扫码支付
-    def SaomaPay(self,UID,UserName,AppCode,PayData,_out_trade_no,DB,ali_client,ali_model,CB):
+    # 扫码支付
+    def SaomaPay(self, UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB):
 
         json_bck = {
-            "Code": 1,
-            "ERR": 0,
-            "price": 0,
-            "ORDERSTR": "",
-            "plen": 0
+                "Code": 1,
+                "ERR": 0,
+                "price": 0,
+                "ORDERSTR": "",
+                "plen": 0
         }
 
-        Json_Request = payPamClass.GetPayPam(UID,AppCode, PayData,DB)
+        Json_Request = payPamClass.GetPayPam(UID, AppCode, PayData, DB)
         if Json_Request["Code"] == 1:
             Json_Data = Json_Request["Data"]
 
@@ -99,7 +96,8 @@ class pay_ali:
             model.format = "JSON"
             model.charset = "utf-8"
             model.total_amount = str(Json_Data["price"] / 100)  # 订单总金额
-            model.passback_params = "1@2@" + str(AppCode) + "@" + _out_trade_no + "@" + str(Json_Data["price"]) + "@" + Json_Data["name"] + "@" + str(UID) + "@" + str(UserName) + "@" + Json_Data["params"]
+            model.passback_params = "1@2@" + str(AppCode) + "@" + _out_trade_no + "@" + str(Json_Data["price"]) + "@" + Json_Data["name"] + "@" + str(UID) + "@" + str(UserName) + "@" + Json_Data[
+                "params"]
             json_bck["plen"] = len(model.passback_params.split('@'))
 
             request = AlipayTradePrecreateRequest(biz_model=model)
@@ -122,17 +120,17 @@ class pay_ali:
         return json_bck
 
     # 手机网站支付
-    def MobileH5(self, UID, UserName, AppCode, PayData, _out_trade_no,DB , ali_client, ali_model,CB):
+    def MobileH5(self, UID, UserName, AppCode, PayData, _out_trade_no, DB, ali_client, ali_model, CB):
 
         json_bck = {
-            "Code": 1,
-            "price": 0,
-            "ERR": 0,
-            "ORDERSTR": "",
-            "plen": 0
+                "Code": 1,
+                "price": 0,
+                "ERR": 0,
+                "ORDERSTR": "",
+                "plen": 0
         }
 
-        Json_Request = payPamClass.GetPayPam(UID, AppCode, PayData,DB)
+        Json_Request = payPamClass.GetPayPam(UID, AppCode, PayData, DB)
         if Json_Request["Code"] == 1:
             Json_Data = Json_Request["Data"]
 
@@ -147,24 +145,23 @@ class pay_ali:
             # print(Json_Data["price"])
             # print(model.total_amount)
             # 基础数据是8个长度
-            model.passback_params = "1@1@" + str(AppCode) + "@" + _out_trade_no + "@" + str(Json_Data["price"]) + "@" + Json_Data["name"] + "@" + str(UID) + "@" + str(UserName) + "@" + Json_Data["params"]
+            model.passback_params = "1@1@" + str(AppCode) + "@" + _out_trade_no + "@" + str(Json_Data["price"]) + "@" + Json_Data["name"] + "@" + str(UID) + "@" + str(UserName) + "@" + Json_Data[
+                "params"]
             json_bck["plen"] = len(model.passback_params.split('@'))
 
             request = AlipayTradeWapPayRequest(biz_model=model)
-            #request = AlipayTradeAppPayRequest(biz_model=model)
+            # request = AlipayTradeAppPayRequest(biz_model=model)
             request.notify_url = CB + "/alipaycallback"
             # request.notify_url = "http://www.bestbutfly.com:8082/alipaybck"
             # response = ali_client.pageExecute(request)
             # orderString = str(response)
 
-
-
             json_bck["price"] = Json_Data["price"]
 
-            #form = None
-            form = ali_client.page_execute(request,http_method="GET")  # .getBody()  #调用SDK生成表单
+            # form = None
+            form = ali_client.page_execute(request, http_method="GET")  # .getBody()  #调用SDK生成表单
             json_bck["ORDERSTR"] = form
-            #print("form : " + form)
+            # print("form : " + form)
 
         else:
             # 无需购买 这里后续需要处理一下
@@ -172,7 +169,6 @@ class pay_ali:
             json_bck["ERR"] = 99
 
         return json_bck
-
 
 
 AliClass = pay_ali()

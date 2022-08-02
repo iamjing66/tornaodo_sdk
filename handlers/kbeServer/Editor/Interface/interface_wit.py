@@ -7,8 +7,7 @@ import application
 from handlers.SyncServer.sockect import pro_status
 
 
-def ReduceWitScore(DB,uid ,score_num):
-
+def ReduceWitScore(DB, uid, score_num):
     # iWit = 0
     # iWit_RMB = 0
     # #print("ReduceWitScore:", uid, score_num)
@@ -19,12 +18,12 @@ def ReduceWitScore(DB,uid ,score_num):
     #     iWit_RMB = int(result[1])
     #     #print("ZHD:",iWit,iWit_RMB)
 
-    iWit = application.App.Redis_Wit.GetWit(uid,1)
+    iWit = application.App.Redis_Wit.GetWit(uid, 1)
     iWit_RMB = application.App.Redis_Wit.GetWit(uid, 2)
 
     if iWit + iWit_RMB < score_num:
         return False
-    #先扣除赠送
+    # 先扣除赠送
     if iWit >= score_num:
         iWit = iWit - score_num
     else:
@@ -33,9 +32,9 @@ def ReduceWitScore(DB,uid ,score_num):
         if ionly < 0:
             iWit_RMB = iWit_RMB + ionly
 
-    application.App.Redis_Wit.SaveWit(uid,iWit,iWit_RMB,0)
+    application.App.Redis_Wit.SaveWit(uid, iWit, iWit_RMB, 0)
 
-    pro_status.syncTrigger("xreditor", uid, 405, str((iWit+iWit_RMB)))
+    pro_status.syncTrigger("xreditor", uid, 405, str((iWit + iWit_RMB)))
 
     return True
     # sql = "update tb_userdata set Wit_Score = "+str(iWit)+",Wit_RMB = "+str(iWit_RMB)+" where uid = "+str(uid)
@@ -43,10 +42,9 @@ def ReduceWitScore(DB,uid ,score_num):
     # if result:
     #     return True
 
-#增加智慧豆
-def AddWitScoreWithType(DB,uid ,score_num ,type):
 
-
+# 增加智慧豆
+def AddWitScoreWithType(DB, uid, score_num, type):
     ##print("AddWitScoreWithType",uid ,score_num ,type)
 
     if score_num <= 0:
@@ -69,22 +67,22 @@ def AddWitScoreWithType(DB,uid ,score_num ,type):
     else:
         application.App.Redis_Wit.AddWit(uid, score_num, 0, 2)
 
-    wit = application.App.Redis_Wit.GetWit(uid,0)
-    pro_status.syncTrigger("xreditor",uid,405,str(wit))
+    wit = application.App.Redis_Wit.GetWit(uid, 0)
+    pro_status.syncTrigger("xreditor", uid, 405, str(wit))
 
     return True
 
-#增加智慧豆
-def AddWitScoreWithUserName(DB,username ,score_num ,type):
 
-    print("AddWitScoreWithUserName = " , username,score_num,type)
+# 增加智慧豆
+def AddWitScoreWithUserName(DB, username, score_num, type):
+    print("AddWitScoreWithUserName = ", username, score_num, type)
 
     if score_num <= 0:
         return False
 
-    uid = application.App.Redis_User.GetData(username,"uid")
+    uid = application.App.Redis_User.GetData(username, "uid")
     print("AddWitScoreWithUserName1 = ", uid)
-    if not uid :
+    if not uid:
         return False
 
     # if type == 0:
@@ -108,26 +106,24 @@ def AddWitScoreWithUserName(DB,username ,score_num ,type):
     return True
 
 
-def TB_Wit(DB,username):
-
+def TB_Wit(DB, username):
     # sql = "select Wit_Score,Wit_RMB from tb_userdata where UserName = '"+str(username)+"'"
     # result = DB.fetchone(sql, None)
     # if result:
     #     return int(result[0]) + int(result[1])
     # return 0
 
-    uid = application.App.Redis_User.GetData(username,"uid")
+    uid = application.App.Redis_User.GetData(username, "uid")
     if not uid:
         return 0
 
-    return application.App.Redis_Wit.GetWit(uid,0)
+    return application.App.Redis_Wit.GetWit(uid, 0)
 
 
-def PAYPAM_WitScore(UID,paydata,DB):
-
+def PAYPAM_WitScore(UID, paydata, DB):
     json_pay = {
-        "Code": 0,
-        "Data": {},
+            "Code": 0,
+            "Data": {},
     }
 
     organization = paydata["organization"]
@@ -135,17 +131,17 @@ def PAYPAM_WitScore(UID,paydata,DB):
 
     rmb = int(paydata["rmb"])
     if rmb <= 0:
-        json_pay["Code"] = 0    #价格异常
+        json_pay["Code"] = 0  # 价格异常
     else:
-        price = rmb*100
+        price = rmb * 100
         _power = 0
         if "power" in paydata.keys():
             _power = paydata["power"]
-        params = str(price)+ "@" + str(organization)+ "@" + str(distributor)+ "@" + paydata["from"]+ "@" + str(_power)+ "@" + paydata["ip"]
+        params = str(price) + "@" + str(organization) + "@" + str(distributor) + "@" + paydata["from"] + "@" + str(_power) + "@" + paydata["ip"]
         Data = {
-            "name": "充值中心",
-            "price": price,  # 分
-            "params": params,
+                "name": "充值中心",
+                "price": price,  # 分
+                "params": params,
         }
         json_pay["Code"] = 1
         json_pay["Data"] = Data

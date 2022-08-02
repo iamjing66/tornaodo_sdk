@@ -22,21 +22,20 @@ class BlockDistribution:
             self.dict_block_dist[key] = [0, 0, 0]
 
         self.dict_block_type_dist = {
-            sb.BLKTYPE_TRIGGER: [0, 0, 0],
-            sb.BLKTYPE_LOGICFLOW: [0, 0, 0],
-            sb.BLKTYPE_OBJECTACTION: [0, 0, 0],
-            sb.BLKTYPE_OBJECTSETTING: [0, 0, 0],
-            sb.BLKTYPE_CONDITION: [0, 0, 0],
-            sb.BLKTYPE_VARIABLES: [0, 0, 0],
-            sb.BLKTYPE_PHYSICSFEATHER: [0, 0, 0],
-            sb.BLKTYPE_SOUND: [0, 0, 0],
-            sb.BLKTYPE_DATACAL: [0, 0, 0],
-            sb.BLKTYPE_FUNCTION: [0, 0, 0],
-            sb.BLKTYPE_DRAW: [0, 0, 0],
+                sb.BLKTYPE_TRIGGER: [0, 0, 0],
+                sb.BLKTYPE_LOGICFLOW: [0, 0, 0],
+                sb.BLKTYPE_OBJECTACTION: [0, 0, 0],
+                sb.BLKTYPE_OBJECTSETTING: [0, 0, 0],
+                sb.BLKTYPE_CONDITION: [0, 0, 0],
+                sb.BLKTYPE_VARIABLES: [0, 0, 0],
+                sb.BLKTYPE_PHYSICSFEATHER: [0, 0, 0],
+                sb.BLKTYPE_SOUND: [0, 0, 0],
+                sb.BLKTYPE_DATACAL: [0, 0, 0],
+                sb.BLKTYPE_FUNCTION: [0, 0, 0],
+                sb.BLKTYPE_DRAW: [0, 0, 0],
         }
 
-    def add_block(self,
-                  block_refid):  # block dict:  1,1,0   block type dict: 1,1,0
+    def add_block(self, block_refid):  # block dict:  1,1,0   block type dict: 1,1,0
         value = self.dict_block_dist.get(block_refid, "")
         if value:
             value[0] += 1
@@ -49,8 +48,7 @@ class BlockDistribution:
             value[1] += 1
             self.dict_block_type_dist[key] = value
 
-    def add_block_e(
-            self, block_refid):  # block disct: 1,0,1   block type dict: 1,0,1
+    def add_block_e(self, block_refid):  # block disct: 1,0,1   block type dict: 1,0,1
         value = self.dict_block_dist[block_refid]
         value[0] += 1
         value[2] += 1
@@ -62,9 +60,7 @@ class BlockDistribution:
         value[2] += 1
         self.dict_block_type_dist[key] = value
 
-    def adjust_right2wrong(
-            self,
-            block_refid):  # block disct: 0,-1,1   block type dict: 0,-1,1
+    def adjust_right2wrong(self, block_refid):  # block disct: 0,-1,1   block type dict: 0,-1,1
         value = self.dict_block_dist[block_refid]
         value[1] -= 1
         value[2] += 1
@@ -95,7 +91,7 @@ class BlockDistribution:
         target_str = ""
         for key in self.dict_block_dist:
             target_str = target_str + str(key) + sb.SPLIT_BLOCKDIST2 + str(
-                self.dict_block_dist[key][0]) + sb.SPLIT_BLOCKDIST1
+                    self.dict_block_dist[key][0]) + sb.SPLIT_BLOCKDIST1
         if len(target_str) > 0:
             target_str = target_str[:-1]
         return target_str
@@ -307,7 +303,7 @@ class ComputingThinkIndex:
         self.music_index_number_play_songs = 0  # 18.3. 音乐: (+)音乐播放曲目数目
         self.music_index_number_play_pointer_param_incompleted = 0  # 18.4. 音乐: (-)缺少参数数目
         self.music_index_number_stop_pointer = 0  # 18.5. 音乐: (+)主动停止数目
-        
+
         # 0. 无
         self.no_gramer = 0
 
@@ -635,7 +631,7 @@ class ComputingThinkIndex:
             "18.4"] = self.music_index_number_play_pointer_param_incompleted  # 18.4. 音乐: (-)缺少参数数目
         self.indexid_dict[
             "18.5"] = self.music_index_number_stop_pointer  # 18.5. 音乐: (+)主动停止数目
-        
+
         # 0.无
         self.indexid_dict["0.0"] = self.no_gramer
 
@@ -665,7 +661,7 @@ class ScoreGradeSubjectivity:
 # 评分规则 1-0
 # [ ["ct-subentity", persent,[score,{}],[score,{}],[score,{}],score], ... ,]
 class ScoreGradeObjectivity1:
-    def __init__(self,course_id):
+    def __init__(self, course_id):
         self.course_id = course_id
         self.rule = get_all_rule(self.course_id)
 
@@ -772,8 +768,8 @@ class ScoreGradeObjectivity1:
             for i in range(8):
                 if 0.0 != total_score[i]:
                     self.rule[i][1] = self.rule[i][
-                        1] + persent2redistribution * self.rule[i][
-                            1] / persent2adjustment
+                                          1] + persent2redistribution * self.rule[i][
+                                          1] / persent2adjustment
                     total_score[8] += (self.rule[i][5] * self.rule[i][1])
                 else:
                     self.rule[i][1] = self.rule[i][1] * (1 - delta[i])
@@ -888,26 +884,26 @@ class ScoreGradeObjectivity2:
                                 score4 = self.rule[i][1][j][k][4][0]
                                 break
                             elif index_value == self.rule[i][1][j][k][4][2]:
-                                    score4 = self.rule[i][1][j][k][4][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][4][0]
+                                break
                             elif index_value >= self.rule[i][1][j][k][4][2] and index_value <= self.rule[i][1][j][k][4][3]:
-                                    score4 = self.rule[i][1][j][k][4][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][4][0]
+                                break
                             elif "o" == self.rule[i][1][j][k][4][1]:  # others
                                 score4 = self.rule[i][1][j][k][4][0]
                                 break
                             else:
                                 pass
-                            #second
+                            # second
                             if index_value > self.rule[i][1][j][k][3][2]:
-                                    score4 = self.rule[i][1][j][k][3][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][3][0]
+                                break
                             elif index_value == self.rule[i][1][j][k][3][2]:
-                                    score4 = self.rule[i][1][j][k][5][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][5][0]
+                                break
                             elif index_value >= self.rule[i][1][j][3][3][2] and index_value <= self.rule[i][1][j][k][3][2]:
-                                    score4 = self.rule[i][1][j][k][3][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][3][0]
+                                break
                             elif "o" == self.rule[i][1][j][k][5][1]:  # others
                                 score4 = self.rule[i][1][j][k][5][0]
                                 break
@@ -915,14 +911,14 @@ class ScoreGradeObjectivity2:
                                 pass
                             # last
                             if index_value > self.rule[i][1][j][k][3][1]:
-                                    score4 = self.rule[i][1][j][k][3][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][3][0]
+                                break
                             elif index_value == self.rule[i][1][j][k][3][1]:
-                                    score4 = self.rule[i][1][j][k][3][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][3][0]
+                                break
                             elif index_value >= self.rule[i][1][j][k][3][1] and index_value <= self.rule[i][1][j][k][3][2]:
-                                    score4 = self.rule[i][1][j][k][3][0]
-                                    break
+                                score4 = self.rule[i][1][j][k][3][0]
+                                break
                             elif "o" == self.rule[i][1][j][k][3][1]:  # others
                                 score4 = self.rule[i][1][j][k][3][0]
                                 break
@@ -954,9 +950,9 @@ class ScoreGradeObjectivity2:
                 for m in range(len(score3_list)):
                     if 0.0 != score3_list[m][0]:
                         score2 += (
-                            score3_list[m][0] *
-                            (score3_list[m][1] + persent2redistribution *
-                             score3_list[m][1] / persent2adjustment))
+                                score3_list[m][0] *
+                                (score3_list[m][1] + persent2redistribution *
+                                 score3_list[m][1] / persent2adjustment))
 
             score[i] = score2
             self.rule[i][2] = score2
@@ -974,8 +970,8 @@ class ScoreGradeObjectivity2:
             for i in range(8):
                 if 0.0 != score[i]:
                     self.rule[i][0] = self.rule[i][
-                        0] + persent2redistribution * self.rule[i][
-                            0] / persent2adjustment
+                                          0] + persent2redistribution * self.rule[i][
+                                          0] / persent2adjustment
                     score1 += (score[i] * self.rule[i][0])
                 else:
                     self.rule[i][0] = self.rule[i][0] * (1 - alpha[i])
@@ -999,13 +995,13 @@ class ScoreGradeObjectivity2:
                     if k < 2:
                         continue
                     # self.rule[i][1][j][k][0] --> key:"17.1"
-                    index_name = re.match(r"^(\-|\+)?\d+(\.\d+)?",self.rule[i][1][j][k][0])
+                    index_name = re.match(r"^(\-|\+)?\d+(\.\d+)?", self.rule[i][1][j][k][0])
                     index_value = ct_index.indexid_dict[index_name]
                     if "11.2" == self.rule[i][1][j][k][
-                            0]:  # [0,0,0,0,0] # 11.2. 逻辑表达式: (+)逻辑表达式种类数目
+                        0]:  # [0,0,0,0,0] # 11.2. 逻辑表达式: (+)逻辑表达式种类数目
                         index_value = index_value[0] + index_value[
                             1] + index_value[2] + index_value[3] + index_value[
-                                4]
+                                          4]
                     score4 = 0.0
                     while True:
                         if "+" == self.rule[i][1][j][k][1] or "+-" == self.rule[i][1][j][k][1]:  # 从后向前检查,优先得高分
@@ -1020,8 +1016,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][6][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][6][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][6][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][6][3]:
                                     score4 = self.rule[i][1][j][k][6][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][6][1]:  # others
@@ -1029,7 +1025,7 @@ class ScoreGradeObjectivity2:
                                 break
                             else:
                                 pass
-                            #second
+                            # second
                             if ">" == self.rule[i][1][j][k][5][1]:  # 大于
                                 if index_value > self.rule[i][1][j][k][5][2]:
                                     score4 = self.rule[i][1][j][k][5][0]
@@ -1040,8 +1036,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][5][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][5][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][5][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][5][3]:
                                     score4 = self.rule[i][1][j][k][5][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][5][1]:  # others
@@ -1060,8 +1056,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][4][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][4][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][4][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][4][3]:
                                     score4 = self.rule[i][1][j][k][4][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][4][1]:  # others
@@ -1073,7 +1069,7 @@ class ScoreGradeObjectivity2:
                                 score4 = DEFAULT_MIN_SCORE
                             break
                         elif "-" == self.rule[i][1][j][k][
-                                1]:  # 从前向后检查,优先得低分; 2019/12/05 扣分项不在此处作,占比统一调整为0
+                            1]:  # 从前向后检查,优先得低分; 2019/12/05 扣分项不在此处作,占比统一调整为0
                             # first
                             if ">" == self.rule[i][1][j][k][4][1]:  # 大于
                                 if index_value > self.rule[i][1][j][k][4][2]:
@@ -1085,8 +1081,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][4][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][4][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][4][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][4][3]:
                                     score4 = self.rule[i][1][j][k][4][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][4][1]:  # others
@@ -1094,7 +1090,7 @@ class ScoreGradeObjectivity2:
                                 break
                             else:
                                 pass
-                            #second
+                            # second
                             if ">" == self.rule[i][1][j][k][5][1]:  # 大于
                                 if index_value > self.rule[i][1][j][k][5][2]:
                                     score4 = self.rule[i][1][j][k][5][0]
@@ -1105,8 +1101,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][5][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][5][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][5][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][5][3]:
                                     score4 = self.rule[i][1][j][k][5][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][5][1]:  # others
@@ -1125,8 +1121,8 @@ class ScoreGradeObjectivity2:
                                     break
                             elif "r" == self.rule[i][1][j][k][6][1]:  # 区间
                                 if index_value >= self.rule[i][1][j][k][6][
-                                        2] and index_value <= self.rule[i][1][
-                                            j][k][6][3]:
+                                    2] and index_value <= self.rule[i][1][
+                                    j][k][6][3]:
                                     score4 = self.rule[i][1][j][k][6][0]
                                     break
                             elif "o" == self.rule[i][1][j][k][6][1]:  # others

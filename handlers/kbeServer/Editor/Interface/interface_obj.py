@@ -2,10 +2,11 @@
 # coding=utf-8
 
 import json
+
 import Global
-from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_global
 from handlers.kbeServer.Editor.Data import data_obj
+from handlers.kbeServer.Editor.Interface import interface_global
+from methods.DBManager import DBManager
 
 
 def CopyToDB(target, db, uid, pid, sourceTableName):

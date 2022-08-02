@@ -4,12 +4,11 @@
 import logging
 import time
 from handlers.kbeServer.Editor.Data import data_sis
-from handlers.kbeServer.Editor.Interface import interface_wit,interface_solr,interface_sms
+from handlers.kbeServer.Editor.Interface import interface_wit, interface_solr, interface_sms
 
 
-#SIS买看
+# SIS买看
 def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, self_username, phone=None):
-
     UID = self_uid
     w_data = data_sis.Data_SIS_MK_Base(DB, UID, vid, 2)
     if not w_data:
@@ -18,7 +17,7 @@ def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, self_username, phone=None):
         price1 = 0
     else:
         price1 = int(w_data[0])
-    #print("w_data",w_data)
+    # print("w_data",w_data)
     _insert = 0
     enddate = w_data[2]
     cname = w_data[3]
@@ -39,16 +38,18 @@ def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, self_username, phone=None):
         if buy_type == 0:
             # 扣钱
             if not interface_wit.ReduceWitScore(DB, UID, price):
-                return [-2, ""]  #智慧豆不足
+                return [-2, ""]  # 智慧豆不足
         timeArray = time.localtime(_now)
         _date1 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         timeArray1 = time.localtime(_pdate)
         _date2 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray1)
         ##print(price,_date1,_date2,UID,vid)
         if _insert == 1:
-            sql = "INSERT INTO `new_coursebuy`(`userId`,`courseId`,`buyPrice`,`courseBuyTime`,`courseExpireTime`)VALUES('" + str(UID) + "','" + str(vid) + "','" + str(price) + "',' " + str(_date1) + "','" + str(_date2) + "');"
+            sql = "INSERT INTO `new_coursebuy`(`userId`,`courseId`,`buyPrice`,`courseBuyTime`,`courseExpireTime`)VALUES('" + str(UID) + "','" + str(vid) + "','" + str(price) + "',' " + str(
+                _date1) + "','" + str(_date2) + "');"
         else:
-            sql = "update `new_coursebuy` set buyPrice = '" + str(price) + "',courseBuyTime = '" + str(_date1) + "',courseExpireTime = '" + str(_date2) + "' WHERE userId = '" + str(UID) + "' AND courseId = '" + str(vid) + "'"
+            sql = "update `new_coursebuy` set buyPrice = '" + str(price) + "',courseBuyTime = '" + str(_date1) + "',courseExpireTime = '" + str(_date2) + "' WHERE userId = '" + str(
+                UID) + "' AND courseId = '" + str(vid) + "'"
 
         DB.edit(sql, None)
         transaction_type = 0
@@ -77,8 +78,8 @@ def VR_MK_SIS(DB, self_uid, vid, buy_type, plat, self_username, phone=None):
 
 def GetCourseTypeList(DB):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     str_sql = "select t1.* from new_coursetype as t1 inner join new_coursedetails t2 on t1.courseTypeId = t2.courseTypeId and t2.flag = 1 group by t2.courseTypeId, t1.sort order by t1.sort;"
     _cback = ""
@@ -102,8 +103,8 @@ def GetCourseTypeList(DB):
 
 def GetCourseDetailList(DB, pam):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     if pam == "":
         return json_data
@@ -111,8 +112,9 @@ def GetCourseDetailList(DB, pam):
     userId = pam["userId"]
     resType = pam["resType"]
     _isPhoneUI = pam["_isPhoneUI"]
-    #strSql = "select * from new_coursedetails where courseTypeId = "+str(courseTypeId)+""
-    strSql = "select * from (select T1.*,t2.courseExpireTime from new_coursedetails T1 LEFT JOIN (select courseId,courseExpireTime from new_coursebuy where userId = "+str(userId)+" group by courseId) T2 ON T1.courseId = t2.courseId)t3 where t3.courseTypeId = "+str(courseTypeId)+" and t3.flag = 1 order by t3.sort;"
+    # strSql = "select * from new_coursedetails where courseTypeId = "+str(courseTypeId)+""
+    strSql = "select * from (select T1.*,t2.courseExpireTime from new_coursedetails T1 LEFT JOIN (select courseId,courseExpireTime from new_coursebuy where userId = " + str(
+        userId) + " group by courseId) T2 ON T1.courseId = t2.courseId)t3 where t3.courseTypeId = " + str(courseTypeId) + " and t3.flag = 1 order by t3.sort;"
     IsLock = "0"
     ##print("strSql,",strSql)
     _cback = ""
@@ -136,14 +138,18 @@ def GetCourseDetailList(DB, pam):
                                 IsLock = "0"
                                 logging.info("课程未过期, 课程id: %s, 锁状态: %s" % (str(info[1]), IsLock))
 
-                        #IsLock =  Msql_SearchCourseIsBuy(DB,info[1],userId)
+                        # IsLock =  Msql_SearchCourseIsBuy(DB,info[1],userId)
                         ##print("--", IsLock)
                 restype = str(info[15])
                 if restype.find(resType) >= 0:
                     if _cback != "":
-                        _cback = _cback + "*" + str(info[1]) + "&" + str(info[2]) + "&" + str(info[3]) + "&" + str(info[4]) + "&" + str(info[5]) + "&" + str(info[6]) + "&" + str(info[7]) + "&" + str(info[8]) + "&" + str(info[9]) + "&" + str(IsLock) + "&" + str(info[11]) + "&" + str(info[12]) + "&" + str(info[13]) + "&" + str(info[14]) + "&" + str(info[16]) + "&" + str(info[17])
+                        _cback = _cback + "*" + str(info[1]) + "&" + str(info[2]) + "&" + str(info[3]) + "&" + str(info[4]) + "&" + str(info[5]) + "&" + str(info[6]) + "&" + str(info[7]) + "&" + str(
+                                info[8]) + "&" + str(info[9]) + "&" + str(IsLock) + "&" + str(info[11]) + "&" + str(info[12]) + "&" + str(info[13]) + "&" + str(info[14]) + "&" + str(
+                                info[16]) + "&" + str(info[17])
                     else:
-                        _cback =  str(info[1]) + "&" + str(info[2]) + "&" + str(info[3]) + "&" + str(info[4]) + "&" + str(info[5]) + "&" + str(info[6]) + "&" + str(info[7]) + "&" + str(info[8]) + "&" + str(info[9]) + "&" + str(IsLock) + "&" + str(info[11]) + "&" + str(info[12]) + "&" + str(info[13]) + "&" + str(info[14]) + "&" + str(info[16]) + "&" + str(info[17])
+                        _cback = str(info[1]) + "&" + str(info[2]) + "&" + str(info[3]) + "&" + str(info[4]) + "&" + str(info[5]) + "&" + str(info[6]) + "&" + str(info[7]) + "&" + str(
+                                info[8]) + "&" + str(info[9]) + "&" + str(IsLock) + "&" + str(info[11]) + "&" + str(info[12]) + "&" + str(info[13]) + "&" + str(info[14]) + "&" + str(
+                                info[16]) + "&" + str(info[17])
             json_data["code"] = "1"
     except:
         json_data["code"] = "0"
@@ -154,7 +160,7 @@ def GetCourseDetailList(DB, pam):
 
 def Msql_SearchCourseIsBuy(DB, buyCourseId, myUserId):
     isHave = "1"
-    strSql = "select * from new_coursebuy where userId = "+str(myUserId)+" and courseId = " + str(buyCourseId) + ""
+    strSql = "select * from new_coursebuy where userId = " + str(myUserId) + " and courseId = " + str(buyCourseId) + ""
     try:
         data = DB.fetchone(strSql, None)
         if data:

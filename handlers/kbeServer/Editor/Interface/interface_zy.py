@@ -3,12 +3,12 @@
 
 from datetime import datetime
 
-#CLASSID    班级ID
-#PID        工程ID
-#CourseID   课表对应课程ID
-def TaskSend(DB, self_uid, UID, CLASSID, PID, CourseID):
 
-    #获取下班级信息
+# CLASSID    班级ID
+# PID        工程ID
+# CourseID   课表对应课程ID
+def TaskSend(DB, self_uid, UID, CLASSID, PID, CourseID):
+    # 获取下班级信息
     # _classids = self.ClassID.split(',')
     # #DEBUG_MSG("TaskSend",CLASSID,PID,CourseID,_classids)
     # if str(CLASSID) not in _classids:
@@ -45,42 +45,38 @@ def TaskSend(DB, self_uid, UID, CLASSID, PID, CourseID):
         return [-4, ""]  # 已超过了提交时间
 
     _tableName = "tb_tasbase_" + str(CLASSID)
-    sql = "select ID from "+_tableName+" where UID = " + str(UID) + " and PID = " + str(PID)+ " and TID = '" + str(_CourseID) + "';"
+    sql = "select ID from " + _tableName + " where UID = " + str(UID) + " and PID = " + str(PID) + " and TID = '" + str(_CourseID) + "';"
     data = DB.fetchone(sql, None)
     _ID = 0
     if data:
         _ID = int(data[0])
     if _ID != 0:
-        return [-5,""]  # 已经提交过
+        return [-5, ""]  # 已经提交过
 
     sql = "INSERT INTO " + _tableName + " (PID,UID,TID) values(" + str(PID) + "," + str(UID) + " ,'" + str(_CourseID) + "');"
     DB.edit(sql, None)
 
-    sql = "update tb_project set `From`=106,`FromPam` = "+str(CLASSID)+",Version = Version + 1 where UID = "+str(UID)+" and PID = "+str(PID)+";"
+    sql = "update tb_project set `From`=106,`FromPam` = " + str(CLASSID) + ",Version = Version + 1 where UID = " + str(UID) + " and PID = " + str(PID) + ";"
     DB.edit(sql, None)
 
-
-    return [1,str(PID)+","+str(CLASSID)]
-
+    return [1, str(PID) + "," + str(CLASSID)]
 
 
-
-#作业打分
-#UID 学生UID
-#CLASSID 班级ID
-#课表对应的课程ID (WID)
-#SCORE 分数
-def TaskMark(DB,self_uid,UID,CLASSID,TID,SCORE):
-
+# 作业打分
+# UID 学生UID
+# CLASSID 班级ID
+# 课表对应的课程ID (WID)
+# SCORE 分数
+def TaskMark(DB, self_uid, UID, CLASSID, TID, SCORE):
     if SCORE < 1 or SCORE > 100:
-        return 0    #分数异常
+        return 0  # 分数异常
     # _classids = self.ClassID.split(',')
     # if str(CLASSID) not in _classids:
     #     self.client.TaskMark_ToC(-1)  # 你没有这个班级
     #     return
 
     _tableName = "tb_tasbase_" + str(CLASSID)
-    sql = "select Score,PID from "+_tableName + " where UID = "+str(UID) + " AND TID = '"+TID+"';"
+    sql = "select Score,PID from " + _tableName + " where UID = " + str(UID) + " AND TID = '" + TID + "';"
     data = DB.fetchone(sql, None)
     _SCORE = 0
     _PID = 0
@@ -90,11 +86,10 @@ def TaskMark(DB,self_uid,UID,CLASSID,TID,SCORE):
     else:
         return -2
     if _PID == 0:
-        return -3     #未提交作品
+        return -3  # 未提交作品
     if _SCORE != -1:
-        return -4     #已经打过分了
+        return -4  # 已经打过分了
 
-    sql = "UPDATE " + _tableName + " SET SCORE = "+str(SCORE)+" where UID = " + str(UID) + " AND TID = '" + TID + "';"
-    DB.edit(sql,None)
+    sql = "UPDATE " + _tableName + " SET SCORE = " + str(SCORE) + " where UID = " + str(UID) + " AND TID = '" + TID + "';"
+    DB.edit(sql, None)
     return 1
-

@@ -5,15 +5,15 @@ import logging
 import Global
 
 
-def GetUpdateVersion(DB,UID,pam):
+def GetUpdateVersion(DB, UID, pam):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     operateType = ""
     SqlID = ""
     if pam == "":
-        #0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+        # 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
         json_data["code"] = "0"
         json_data["msg"] = "false"
         return json_data
@@ -27,12 +27,12 @@ def GetUpdateVersion(DB,UID,pam):
         sql_str = "select VERSION,OPENCODE  from " + table_project + " where OPENCODE in (105,106,107,111,112,116,117,125)"
     else:
         sql_str = "select VERSION,OPENCODE  from " + table_project
-    data = DB.fetchall(sql_str,None)
+    data = DB.fetchall(sql_str, None)
     _cback = ""
     _cback2 = ""
     index = 0
     _Minfo = ""
-    _Minfo2 =""
+    _Minfo2 = ""
     ##print("data:",data)
     if data:
         list_data = list(data)
@@ -45,7 +45,7 @@ def GetUpdateVersion(DB,UID,pam):
                 _Minfo = "-"
                 _Minfo2 = "-"
             if _cback2 != "":
-                _cback2 = _cback2+"," + _Minfo2
+                _cback2 = _cback2 + "," + _Minfo2
             else:
                 _cback2 = _Minfo2
 
@@ -53,12 +53,12 @@ def GetUpdateVersion(DB,UID,pam):
                 _cback = _cback + "," + _Minfo
             else:
                 _cback = _Minfo
-            index = index+1
+            index = index + 1
 
-        _cback = _cback+"*"+ _cback2
+        _cback = _cback + "*" + _cback2
     json_data["code"] = "1"
     json_data["msg"] = _cback
-    #print("json_data:", json_data)
+    # print("json_data:", json_data)
     return json_data
 
 
@@ -66,7 +66,7 @@ def new_get_update_version(DB, pam):
     json_data = {"code": 0, "msg": ""}
     if pam == "":
         # 101,102,103,104,....
-        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_1","ch")
+        json_data["msg"] = Global.LanguageInst.GetMsg("SMSGID_0_1", "ch")
         return json_data
     sql_else = ";"
     if pam["pam"]:
@@ -84,23 +84,23 @@ def new_get_update_version(DB, pam):
     return json_data
 
 
-def AnlyzeCode(DB,UID,Pam):
+def AnlyzeCode(DB, UID, Pam):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     if Pam == "":
         json_data["code"] = "0"
         json_data["msg"] = "false"
         return json_data
-    json_data =DoCode(DB,Pam["code"],Pam["page"],Pam["version"])
+    json_data = DoCode(DB, Pam["code"], Pam["page"], Pam["version"])
     return json_data
 
 
 def new_anlyze_code(DB, Pam):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     if Pam == "":
         json_data["msg"] = "false"
@@ -109,10 +109,10 @@ def new_anlyze_code(DB, Pam):
     return json_data
 
 
-def DoCode(DB,OpenCode,page,version):
+def DoCode(DB, OpenCode, page, version):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
 
     table_project = ""
@@ -210,19 +210,19 @@ def DoCode(DB,OpenCode,page,version):
         table_project = "tb_config_skybox"
         sql_str = "select * from " + table_project + GetLimit(page)
 
-    data = DB.fetchall(sql_str,None)
-    _cback = GetSqlData(OpenCode,data)
-    version = GetCodeVersion(DB,str(OpenCode))
-    _cback =str(OpenCode)+ "*" + str(_cback) + "*" + str(version) + "*" + str(page)+  "*" + str(_getresAll)
+    data = DB.fetchall(sql_str, None)
+    _cback = GetSqlData(OpenCode, data)
+    version = GetCodeVersion(DB, str(OpenCode))
+    _cback = str(OpenCode) + "*" + str(_cback) + "*" + str(version) + "*" + str(page) + "*" + str(_getresAll)
     json_data["code"] = 1
     json_data["msg"] = _cback
-    return  json_data
+    return json_data
 
 
 def new_do_code(DB, OpenCode, page, version):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
 
     table_project = ""
@@ -326,10 +326,10 @@ def new_do_code(DB, OpenCode, page, version):
         sql_str = "select CID,CNAME,EName,state from " + table_project + " order by `sort`"
     elif OpenCode == "128":
         table_project = "tb_xr_tags"
-        sql_str = "select tid,tname,tenname from " + table_project+ " order by `sort`"
+        sql_str = "select tid,tname,tenname from " + table_project + " order by `sort`"
     elif OpenCode == "129":
         table_project = "tb_xr_platform"
-        sql_str = "select TID,TNAME from " + table_project+ " order by `sort`"
+        sql_str = "select TID,TNAME from " + table_project + " order by `sort`"
     elif OpenCode == "130":
         table_project = "tb_xr_fileversion_data"
         sql_str = "select MID,RID,resType,resPath,resData,resversion from "
@@ -359,13 +359,13 @@ def new_get_sql_data(OpenCode, data):
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "105":
                     _backlist.append("`".join(
-                        list(map(str, list(minfo[2:30]) + [minfo[1]] + list(minfo[30:])))))
+                            list(map(str, list(minfo[2:30]) + [minfo[1]] + list(minfo[30:])))))
                 elif OpenCode == "106":
                     _backlist.append("`".join(
-                        list(map(str, list(minfo[2:30]) + [minfo[1]] + list(minfo[30:])))))
+                            list(map(str, list(minfo[2:30]) + [minfo[1]] + list(minfo[30:])))))
                 elif OpenCode == "107":
                     _backlist.append("`".join(
-                        list(map(str, list(minfo[2:15]) + [minfo[1], minfo[15]]))))
+                            list(map(str, list(minfo[2:15]) + [minfo[1], minfo[15]]))))
                 elif OpenCode == "108":
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "109":
@@ -414,29 +414,29 @@ def new_get_sql_data(OpenCode, data):
                     _backlist.append("`".join([str(i) for i in minfo]))
                 elif OpenCode == "205":
                     _backlist.append("`".join([
-                        str(minfo[2]),
-                        str(minfo[14]),
-                        str(minfo[15]),
-                        str(minfo[32]),
-                        str(minfo[33]),
-                        str(minfo[34]),
-                        str(minfo[30])
+                            str(minfo[2]),
+                            str(minfo[14]),
+                            str(minfo[15]),
+                            str(minfo[32]),
+                            str(minfo[33]),
+                            str(minfo[34]),
+                            str(minfo[30])
                     ]))
                 elif OpenCode == "206":
                     _backlist.append("`".join([
-                        str(minfo[2]),
-                        str(minfo[15]),
-                        str(minfo[14]),
-                        str(minfo[31]),
-                        str(minfo[32]),
-                        str(minfo[33]),
-                        str(minfo[13])
+                            str(minfo[2]),
+                            str(minfo[15]),
+                            str(minfo[14]),
+                            str(minfo[31]),
+                            str(minfo[32]),
+                            str(minfo[33]),
+                            str(minfo[13])
                     ]))
                 elif OpenCode == "207":
                     _backlist.append("`".join(
-                        [str(minfo[2]),
-                         str(minfo[14]),
-                         str(minfo[15])]))
+                            [str(minfo[2]),
+                             str(minfo[14]),
+                             str(minfo[15])]))
             _count = _count + 1
         _cback = "^".join(_backlist)
     if _count < 500:
@@ -446,7 +446,7 @@ def new_get_sql_data(OpenCode, data):
     return _cback
 
 
-def GetSqlData(OpenCode,data):
+def GetSqlData(OpenCode, data):
     _cback = ""
     _count = 0
     if data:
@@ -477,119 +477,119 @@ def GetSqlData(OpenCode,data):
 
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4]) + "`" + str(
-                            minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7]) + "`" + str(minfo[8]) + "`" + str(
-                            minfo[9]) + "`" + str(minfo[10]) + "`" + str(minfo[11]) + "`" + str(minfo[12]) + "`" + str(
-                            minfo[13]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[16]) + "`" + str(
-                            minfo[17]) + "`" + str(minfo[18]) + "`" + str(minfo[19]) + "`" + str(minfo[20]) + "`" + str(
-                            minfo[21]) + "`" + str(minfo[22]) + "`" + str(minfo[23]) + "`" + str(minfo[24]) + "`" + str(
-                            minfo[25]) + "`" + str(minfo[26]) + "`" + str(minfo[27]) + "`" + str(minfo[28]) + "`" + str(
-                            minfo[29]) + "`" + str(minfo[1]) + "`" + str(minfo[30]) + "`" + str(minfo[31]) + "`" + str(
-                            minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(minfo[35]) + "`" + str(
-                            minfo[36])
+                                minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7]) + "`" + str(minfo[8]) + "`" + str(
+                                minfo[9]) + "`" + str(minfo[10]) + "`" + str(minfo[11]) + "`" + str(minfo[12]) + "`" + str(
+                                minfo[13]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[16]) + "`" + str(
+                                minfo[17]) + "`" + str(minfo[18]) + "`" + str(minfo[19]) + "`" + str(minfo[20]) + "`" + str(
+                                minfo[21]) + "`" + str(minfo[22]) + "`" + str(minfo[23]) + "`" + str(minfo[24]) + "`" + str(
+                                minfo[25]) + "`" + str(minfo[26]) + "`" + str(minfo[27]) + "`" + str(minfo[28]) + "`" + str(
+                                minfo[29]) + "`" + str(minfo[1]) + "`" + str(minfo[30]) + "`" + str(minfo[31]) + "`" + str(
+                                minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(minfo[35]) + "`" + str(
+                                minfo[36])
                     else:
                         _cback = str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4]) + "`" + str(
-                            minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7]) + "`" + str(minfo[8]) + "`" + str(
-                            minfo[9]) + "`" + str(minfo[10]) + "`" + str(minfo[11]) + "`" + str(
-                            minfo[12]) + "`" + str(
-                            minfo[13]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(
-                            minfo[16]) + "`" + str(
-                            minfo[17]) + "`" + str(minfo[18]) + "`" + str(minfo[19]) + "`" + str(
-                            minfo[20]) + "`" + str(
-                            minfo[21]) + "`" + str(minfo[22]) + "`" + str(minfo[23]) + "`" + str(
-                            minfo[24]) + "`" + str(
-                            minfo[25]) + "`" + str(minfo[26]) + "`" + str(minfo[27]) + "`" + str(
-                            minfo[28]) + "`" + str(
-                            minfo[29]) + "`" + str(minfo[1]) + "`" + str(minfo[30]) + "`" + str(
-                            minfo[31]) + "`" + str(
-                            minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(
-                            minfo[35]) + "`" + str(
-                            minfo[36])
+                                minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7]) + "`" + str(minfo[8]) + "`" + str(
+                                minfo[9]) + "`" + str(minfo[10]) + "`" + str(minfo[11]) + "`" + str(
+                                minfo[12]) + "`" + str(
+                                minfo[13]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(
+                                minfo[16]) + "`" + str(
+                                minfo[17]) + "`" + str(minfo[18]) + "`" + str(minfo[19]) + "`" + str(
+                                minfo[20]) + "`" + str(
+                                minfo[21]) + "`" + str(minfo[22]) + "`" + str(minfo[23]) + "`" + str(
+                                minfo[24]) + "`" + str(
+                                minfo[25]) + "`" + str(minfo[26]) + "`" + str(minfo[27]) + "`" + str(
+                                minfo[28]) + "`" + str(
+                                minfo[29]) + "`" + str(minfo[1]) + "`" + str(minfo[30]) + "`" + str(
+                                minfo[31]) + "`" + str(
+                                minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(
+                                minfo[35]) + "`" + str(
+                                minfo[36])
                 elif OpenCode == "106":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(
-                            minfo[15]) + "`" + str(minfo[16]) + "`" + str(minfo[17]) + "`" + str(
-                            minfo[18]) + "`" + str(
-                            minfo[19]) + "`" + str(minfo[20]) + "`" + str(minfo[21]) + "`" + str(
-                            minfo[22]) + "`" + str(
-                            minfo[23]) + "`" + str(minfo[24]) + "`" + str(minfo[25]) + "`" + str(
-                            minfo[26]) + "`" + str(
-                            minfo[27]) + "`" + str(minfo[28]) + "`" + str(minfo[29]) + "`" + str(
-                            minfo[1]) + "`" + str(
-                            minfo[30]) + "`" + str(
-                            minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(
+                                minfo[15]) + "`" + str(minfo[16]) + "`" + str(minfo[17]) + "`" + str(
+                                minfo[18]) + "`" + str(
+                                minfo[19]) + "`" + str(minfo[20]) + "`" + str(minfo[21]) + "`" + str(
+                                minfo[22]) + "`" + str(
+                                minfo[23]) + "`" + str(minfo[24]) + "`" + str(minfo[25]) + "`" + str(
+                                minfo[26]) + "`" + str(
+                                minfo[27]) + "`" + str(minfo[28]) + "`" + str(minfo[29]) + "`" + str(
+                                minfo[1]) + "`" + str(
+                                minfo[30]) + "`" + str(
+                                minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33])
                     else:
                         _cback = str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(
-                            minfo[15]) + "`" + str(minfo[16]) + "`" + str(minfo[17]) + "`" + str(
-                            minfo[18]) + "`" + str(
-                            minfo[19]) + "`" + str(minfo[20]) + "`" + str(minfo[21]) + "`" + str(
-                            minfo[22]) + "`" + str(
-                            minfo[23]) + "`" + str(minfo[24]) + "`" + str(minfo[25]) + "`" + str(
-                            minfo[26]) + "`" + str(
-                            minfo[27]) + "`" + str(minfo[28]) + "`" + str(minfo[29]) + "`" + str(
-                            minfo[1]) + "`" + str(
-                            minfo[30]) + "`" + str(
-                            minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(
+                                minfo[15]) + "`" + str(minfo[16]) + "`" + str(minfo[17]) + "`" + str(
+                                minfo[18]) + "`" + str(
+                                minfo[19]) + "`" + str(minfo[20]) + "`" + str(minfo[21]) + "`" + str(
+                                minfo[22]) + "`" + str(
+                                minfo[23]) + "`" + str(minfo[24]) + "`" + str(minfo[25]) + "`" + str(
+                                minfo[26]) + "`" + str(
+                                minfo[27]) + "`" + str(minfo[28]) + "`" + str(minfo[29]) + "`" + str(
+                                minfo[1]) + "`" + str(
+                                minfo[30]) + "`" + str(
+                                minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33])
                 elif OpenCode == "107":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[15])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(minfo[1]) + "`" + str(
+                                minfo[15])
                     else:
                         _cback = str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[15])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(minfo[1]) + "`" + str(
+                                minfo[15])
                 elif OpenCode == "108":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(
-                            minfo[15])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(
+                                minfo[15])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
-                            minfo[14]) + "`" + str(
-                            minfo[15])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13]) + "`" + str(
+                                minfo[14]) + "`" + str(
+                                minfo[15])
                 elif OpenCode == "109":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(
-                            minfo[6]) + "`" + str(minfo[7])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(
+                                minfo[6]) + "`" + str(minfo[7])
                     else:
                         _cback = str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(
-                            minfo[6]) + "`" + str(minfo[7])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(
+                                minfo[6]) + "`" + str(minfo[7])
                 elif OpenCode == "110":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4])
+                                minfo[3]) + "`" + str(minfo[4])
                     else:
                         _cback = str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4])
+                                minfo[3]) + "`" + str(minfo[4])
                 elif OpenCode == "111":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4])
@@ -615,73 +615,73 @@ def GetSqlData(OpenCode,data):
                 elif OpenCode == "114":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3])
+                                minfo[2]) + "`" + str(
+                                minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "115":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3])
+                                minfo[2]) + "`" + str(
+                                minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "116":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
 
                 elif OpenCode == "117":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4])
+                                minfo[3]) + "`" + str(minfo[4])
                 elif OpenCode == "118":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
-                            minfo[10]) + "`" + str(
-                            minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7]) + "`" + str(minfo[8]) + "`" + str(minfo[9]) + "`" + str(
+                                minfo[10]) + "`" + str(
+                                minfo[11]) + "`" + str(minfo[12]) + "`" + str(minfo[13])
                 elif OpenCode == "119":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3])
+                                minfo[2]) + "`" + str(
+                                minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "120":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5])
                 elif OpenCode == "121":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7])
+                                minfo[2]) + "`" + str(
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(
-                            minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
-                            minfo[7])
+                                minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(
+                                minfo[7])
 
                 elif OpenCode == "122":
                     if _cback != "":
@@ -691,15 +691,15 @@ def GetSqlData(OpenCode,data):
                 elif OpenCode == "123":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3])
+                                minfo[2]) + "`" + str(
+                                minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "124":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(
-                            minfo[2]) + "`" + str(
-                            minfo[3])
+                                minfo[2]) + "`" + str(
+                                minfo[3])
                     else:
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "125":
@@ -709,19 +709,19 @@ def GetSqlData(OpenCode,data):
                         _cback = str(minfo[0]) + "`" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3])
                 elif OpenCode == "126":
                     if _cback != "":
-                        _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4])+ "`" + str(minfo[5])+ "`" + str(minfo[6])+ "`" + str(minfo[7])
+                        _cback = _cback + "^" + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7])
                     else:
-                        _cback = + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4])+ "`" + str(minfo[5])+ "`" + str(minfo[6])+ "`" + str(minfo[7])
+                        _cback = + str(minfo[1]) + "`" + str(minfo[2]) + "`" + str(minfo[3]) + "`" + str(minfo[4]) + "`" + str(minfo[5]) + "`" + str(minfo[6]) + "`" + str(minfo[7])
                 elif OpenCode == "205":
                     if _cback != "":
-                        _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[32])+ "`" + str(minfo[33])+ "`" + str(minfo[34])+ "`" + str(minfo[30])
+                        _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(minfo[30])
                     else:
-                        _cback = str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[32])+ "`" + str(minfo[33])+ "`" + str(minfo[34])+ "`" + str(minfo[30])
+                        _cback = str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15]) + "`" + str(minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[34]) + "`" + str(minfo[30])
                 elif OpenCode == "206":
                     if _cback != "":
-                        _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[15]) + "`" + str(minfo[14]) + "`" + str(minfo[31])+ "`" + str(minfo[32])+ "`" + str(minfo[33])+ "`" + str(minfo[13])
+                        _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[15]) + "`" + str(minfo[14]) + "`" + str(minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[13])
                     else:
-                        _cback = str(minfo[2]) + "`" + str(minfo[15]) + "`" + str(minfo[14]) + "`" + str(minfo[31])+ "`" + str(minfo[32])+ "`" + str(minfo[33])+ "`" + str(minfo[13])
+                        _cback = str(minfo[2]) + "`" + str(minfo[15]) + "`" + str(minfo[14]) + "`" + str(minfo[31]) + "`" + str(minfo[32]) + "`" + str(minfo[33]) + "`" + str(minfo[13])
                 elif OpenCode == "207":
                     if _cback != "":
                         _cback = _cback + "^" + str(minfo[2]) + "`" + str(minfo[14]) + "`" + str(minfo[15])
@@ -743,28 +743,27 @@ def GetLimit(page):
 
 def GetCodeVersion(DB, code):
     d1 = {
-        "205": "105",
-        "206": "106",
-        "207": "107"
+            "205": "105",
+            "206": "106",
+            "207": "107"
     }
     code = d1.get(code, code)
     data = ""
     table_project = "tb_res_version"
-    sql_str = "select VERSION from " + table_project +" where OPENCODE = " + str(code)
+    sql_str = "select VERSION from " + table_project + " where OPENCODE = " + str(code)
     data = DB.fetchone(sql_str, None)
     version = ""
     if data:
-        version= data[0]
+        version = data[0]
     return version
 
 
-def GetUpdateResData(DB,code,version):
-
+def GetUpdateResData(DB, code, version):
     table_project = ""
     sql_str = ""
     _cback = "0"
     table_project = "tb_config_vdetails"
-    sql_str = "select resids from " + table_project + " where OPENCODE = "+str(code) +" and version > " +str(version)
+    sql_str = "select resids from " + table_project + " where OPENCODE = " + str(code) + " and version > " + str(version)
     # &ID, &Res_Id, &Res, &BuyRes, &SceneID
     sqlinfo = []
     data = DB.fetchall(sql_str, None)
@@ -772,24 +771,23 @@ def GetUpdateResData(DB,code,version):
         list_data = list(data)
         for minfo in list_data:
             sqlinfo.append(minfo[0])
-        sqlinfo= list(set(sqlinfo))
+        sqlinfo = list(set(sqlinfo))
         sqlinfo.sort()
         for back in sqlinfo:
-            if  _cback != "":
-                _cback =_cback+ ","+back
+            if _cback != "":
+                _cback = _cback + "," + back
             else:
                 _cback = back
     return _cback
 
 
-#获取最小版本号
+# 获取最小版本号
 def GetUpdateResMinVersion(DB, code, version):
-
     table_project = "tb_config_vdetails"
     sql_str = "select * from " + table_project + " where OPENCODE = " + str(code) + " ORDER  BY version limit 1"
     # &ID, &Res_Id, &Res, &BuyRes, &SceneID
 
-    data = DB.fetchone(sql_str,None)
+    data = DB.fetchone(sql_str, None)
     if data:
         _cback = data[2]
     else:
@@ -797,19 +795,19 @@ def GetUpdateResMinVersion(DB, code, version):
     return _cback
 
 
-def Server_ConfigGet(DB,params):
+def Server_ConfigGet(DB, params):
     json_data = {
-        "code": 0,
-        "Data": "",
-        "OpenCode": ""
+            "code": 0,
+            "Data": "",
+            "OpenCode": ""
     }
     _sql = ""
     if params == "":
         json_data["code"] = "0"
         json_data["Data"] = ""
         return json_data
-    OpenCode= params["OpenCode"]
-    limit =params["Pam"]
+    OpenCode = params["OpenCode"]
+    limit = params["Pam"]
     json_data["OpenCode"] = OpenCode
     if OpenCode == "202":
         _table_name = "tb_config_vip"
@@ -834,13 +832,13 @@ def Server_ConfigGet(DB,params):
         _sql = "select CID,DAYS,Discount from " + _table_name + limit
     elif OpenCode == "xrvipconfig":
         _table_name = "tb_xr_vip_score"
-        _sql = "select * from " + _table_name+ limit
+        _sql = "select * from " + _table_name + limit
     elif OpenCode == "xrworkconfig":
         _sql = "select `import`,`vipimport`,`template`,`viptemplate`,`shoucang`,`vipshoucang` from tb_xr_user_config where id = 1 " + limit
     ##print(_sql)
 
     ##print(_sql)
-    data = DB.fetchall(_sql,None)
+    data = DB.fetchall(_sql, None)
     _cback = ""
     if data:
         minfo = list(data)
@@ -848,9 +846,9 @@ def Server_ConfigGet(DB,params):
         if OpenCode == "202":
             for info in minfo:
                 if _cback == "":
-                    _cback = str(info[0])+"*"+str(info[1])
+                    _cback = str(info[0]) + "*" + str(info[1])
                 else:
-                    _cback = _cback +"^"+str(info[0])+"*"+str(info[1])
+                    _cback = _cback + "^" + str(info[0]) + "*" + str(info[1])
         elif OpenCode == "203":
             for info in minfo:
                 if _cback == "":
@@ -866,9 +864,9 @@ def Server_ConfigGet(DB,params):
         elif OpenCode == "205":
             for info in minfo:
                 if _cback == "":
-                    _cback = str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])+ "*" + str(info[3]) + "*" + str(info[4])
+                    _cback = str(info[0]) + "*" + str(info[1]) + "*" + str(info[2]) + "*" + str(info[3]) + "*" + str(info[4])
                 else:
-                    _cback = _cback + "^" + str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])+ "*" + str(info[3]) + "*" + str(info[4])
+                    _cback = _cback + "^" + str(info[0]) + "*" + str(info[1]) + "*" + str(info[2]) + "*" + str(info[3]) + "*" + str(info[4])
         elif OpenCode == "206":
             for info in minfo:
                 if _cback == "":
@@ -878,9 +876,9 @@ def Server_ConfigGet(DB,params):
         elif OpenCode == "207":
             for info in minfo:
                 if _cback == "":
-                    _cback = str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])+ "*" + str(info[3])
+                    _cback = str(info[0]) + "*" + str(info[1]) + "*" + str(info[2]) + "*" + str(info[3])
                 else:
-                    _cback = _cback + "^" + str(info[0]) + "*" + str(info[1]) + "*" + str(info[2])+ "*" + str(info[3])
+                    _cback = _cback + "^" + str(info[0]) + "*" + str(info[1]) + "*" + str(info[2]) + "*" + str(info[3])
         elif OpenCode == "208":
             for info in minfo:
                 if _cback == "":
@@ -893,9 +891,9 @@ def Server_ConfigGet(DB,params):
             }
             for info in minfo:
                 di = {
-                    "id":int(info[1]),
-                    "cost": int(info[2]),
-                    "desc": info[3],
+                        "id": int(info[1]),
+                        "cost": int(info[2]),
+                        "desc": info[3],
                 }
                 vipdata[di["id"]] = di
 
@@ -915,4 +913,3 @@ def Server_ConfigGet(DB,params):
     json_data["code"] = "1"
     json_data["Data"] = _cback
     return json_data
-

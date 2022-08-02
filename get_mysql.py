@@ -13,7 +13,7 @@ conn = pymysql.connect(host='192.168.0.9',
                        port=3306,
                        charset='utf8')
 cursor = conn.cursor()
-sql = "select * from tb_userdata limit 100;"
+sql = 'select * from tb_userdata limit 100;'
 cursor.execute(sql)
 data = cursor.fetchall()
 conn.close()

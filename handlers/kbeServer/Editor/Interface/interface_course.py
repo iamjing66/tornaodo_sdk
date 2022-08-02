@@ -102,7 +102,7 @@ def Get(pdata, self_uid, itype, isupdate=0):
                                                                                               lversions, 0, isupdate)
         else:
             data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(
-                sql, db, cid, uid, lversions, 0, isupdate)
+                    sql, db, cid, uid, lversions, 0, isupdate)
     db.destroy()
     return data_course_ini + "！" + data_lesson_ini + "！" + str(mpage)
 
@@ -147,7 +147,7 @@ def GetNew(pdata, self_uid, itype):
                                                                                               lversions, 0)
         else:
             data_lesson_ini = data_lesson_ini + "*" + str(cid) + "^" + str(uid) + "^" + data_lesson.Data_Lessons_Base(
-                sql, db, cid, uid, lversions, 0)
+                    sql, db, cid, uid, lversions, 0)
 
     db.destroy()
     return data_course_ini + "！" + data_lesson_ini + "！" + str(mpage)
@@ -237,8 +237,8 @@ def UpLoad(l_pdata, uid, db):
 # tlong 时长
 def BuyNew(db, self_uid, uid, cid, lid, tlong):
     logging.info(
-        "赠送课程数据 :" + str(self_uid) + "-" + str(uid) + "-" + str(cid) + "-" + str(uid) + "-" + str(lid) + "-" + str(
-            tlong))
+            "赠送课程数据 :" + str(self_uid) + "-" + str(uid) + "-" + str(cid) + "-" + str(uid) + "-" + str(lid) + "-" + str(
+                    tlong))
 
     # 1、 判断一下这个课时是否存在
     # 获取下市场课程数据
@@ -311,7 +311,7 @@ def BuyNew(db, self_uid, uid, cid, lid, tlong):
 def Buy(db, self_uid, uid, cid, lid, type, btype, ctype, self_username):
     # self_uid 1466-uid 63-cid 137 -lid 2-type 2592000-btype 0 ctype = 1
     logging.info("Buy Course Datas :" + str(self_uid) + "-" + str(uid) + "-" + str(cid) + "-" + str(uid) + "-" + str(
-        lid) + "-" + str(type) + "-" + str(btype) + " ctype = " + str(ctype))
+            lid) + "-" + str(type) + "-" + str(btype) + " ctype = " + str(ctype))
 
     if uid == self_uid and btype == 1:
         return [0, ""]  # 不能购买自己的
@@ -567,7 +567,7 @@ def LessonUD(db, cid, uid, lid, status):
     for _lid in _lids:
 
         sql = "select ID from sys_course_res where CID = " + str(cid) + " and uid = " + str(
-            uid) + " and mlessonID = " + str(_lid)
+                uid) + " and mlessonID = " + str(_lid)
         data = db.fetchone(sql, None)
         _id = 0
         if data:
@@ -575,7 +575,7 @@ def LessonUD(db, cid, uid, lid, status):
 
         if _id == 0:
             sql = "insert into sys_course_res (cid,uid,mlessonID,flag) values ('" + str(cid) + "','" + str(
-                uid) + "','" + str(_lid) + "','" + str(status) + "')"
+                    uid) + "','" + str(_lid) + "','" + str(status) + "')"
         else:
             sql = "update sys_course_res set flag = '" + str(status) + "' where ID = " + str(_id)
         db.edit(sql, None)

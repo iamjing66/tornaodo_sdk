@@ -15,13 +15,15 @@
 from Global import get_config
 from handlers.redisServer.RedisInterface import RedisData
 
+
 def p(mss):
     redis_data = RedisData(0)
     rr = redis_data.redis_pool()
     p = rr.publish('test', mss)
-    print("p:",mss)
+    print("p:", mss)
+
 
 if __name__ == "__main__":
     while True:
-        my_input = input('请输入发布内容：')     #发布的数据
+        my_input = input('请输入发布内容：')  # 发布的数据
         p(my_input)

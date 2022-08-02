@@ -5,6 +5,7 @@ import logging
 from handlers.kbeServer.Editor.Interface import interface_res
 from methods.DBManager import DBManager
 
+
 class IConfig:
 
     def __init__(self):
@@ -12,66 +13,64 @@ class IConfig:
         self.Config_Index = 0
         self.AllCount = 0
         self.LimitCount = 500
-        #self.ReadComData()
+        # self.ReadComData()
         self.Content = ""
-        self.Config_List = ["203","204","207","208","xrvipconfig","xrworkconfig"]  # "202",
+        self.Config_List = ["203", "204", "207", "208", "xrvipconfig", "xrworkconfig"]  # "202",
         self.DB = DBManager()
         # 配表数据
         # = 课程包
-        #self.CBagConfig = {}
-        #self.VipConfig = {}
+        # self.CBagConfig = {}
+        # self.VipConfig = {}
         self.ObjConfig = {}
         self.SceneConfig = {}
-        #self.CourseConfig = {}
-        #self.LeftBagConfig = {}
+        # self.CourseConfig = {}
+        # self.LeftBagConfig = {}
         self.ChannelConfig = {}
         self.ChannelZKConfig = {}
         self.XrVipConfig = {}
         self.XrWorkConfig = {}
         self.DataConfig = {"bagprice": 0}
-        #self.ReadConfig()
+        # self.ReadConfig()
 
     # ====================配置配表数据读取==============
     def ReadConfig(self):
         logging.info("Config Loading")
-        #print("ReadConfig")
+        # print("ReadConfig")
         # 全局数据
         sql = "SELECT WorksAPrice from tb_new_config;"
-        data = self.DB.fetchone(sql,None)
+        data = self.DB.fetchone(sql, None)
         # DEBUG_MSG("data : " , data)
         if data != None and len(data) > 0:
-            self.DataConfig["bagprice"] = int(data[0])/10
+            self.DataConfig["bagprice"] = int(data[0]) / 10
         self.Config_Index = 1
         self.Content = ""
         self.AllCount = 0
         pam = " limit " + str(self.AllCount) + "," + str(self.LimitCount)
         self.ReadDataConfig(self.Config_List[0], pam)
 
-
-    def ReadDataConfig(self,OpenCode,Pam):
-
+    def ReadDataConfig(self, OpenCode, Pam):
 
         json_Data = {
-                    "OpenCode":OpenCode,
-                    "Pam":Pam
-                    }
-        TheData = interface_res.Server_ConfigGet(self.DB,json_Data)
-        #TheData = res.json()#json.loads(res.text)
-        #DEBUG_MSG("TheData:", TheData)
+                "OpenCode": OpenCode,
+                "Pam": Pam
+        }
+        TheData = interface_res.Server_ConfigGet(self.DB, json_Data)
+        # TheData = res.json()#json.loads(res.text)
+        # DEBUG_MSG("TheData:", TheData)
         self.AnlyzeConfig(TheData, "")
 
-    def AnlyzeConfig(self,json_Data,HasRow):
+    def AnlyzeConfig(self, json_Data, HasRow):
 
         code = json_Data["OpenCode"]
         data = json_Data["Data"]
-        #print(str(code) + ":" + data)
+        # print(str(code) + ":" + data)
         if self.Content == "":
             self.Content = data
         else:
             if data != "":
                 self.Content = self.Content + "^" + data
         if data == "":
-            #下载完成了
+            # 下载完成了
             # if code == "201":
             #     self.ConfigSure_CBag(self.Content)
             if code == "202":
@@ -98,14 +97,14 @@ class IConfig:
                 self.DB.destroy()
                 return
             code = self.Config_List[self.Config_Index]
-            self.Config_Index+=1
+            self.Config_Index += 1
             self.AllCount = 0
             pam = " limit " + str(self.AllCount) + "," + str(self.LimitCount)
             self.Content = ""
-            self.ReadDataConfig(code,pam)  # 赠送包裹
+            self.ReadDataConfig(code, pam)  # 赠送包裹
         else:
             self.AllCount += 1
-            pam = " limit " + str(self.AllCount*self.LimitCount) + "," + str(self.LimitCount)
+            pam = " limit " + str(self.AllCount * self.LimitCount) + "," + str(self.LimitCount)
             self.ReadDataConfig(code, pam)  # 赠送包裹
 
     def ConfigSure_CBag(self, data):
@@ -252,17 +251,14 @@ class IConfig:
                         _arr1 = _arr_str.split('*')
                         self.ChannelZKConfig[int(_arr1[0])] = [int(_arr1[1]), _arr1[2]]
 
-
-
-    def ConfigXrVipConfig(self,data):
-        #print("data" , data)
+    def ConfigXrVipConfig(self, data):
+        # print("data" , data)
         self.XrVipConfig = json.loads(data)
-        print("self.XrVipConfig = " , self.XrVipConfig)
+        print("self.XrVipConfig = ", self.XrVipConfig)
 
-
-    def ConfigXrWorkConfig(self,data):
+    def ConfigXrWorkConfig(self, data):
         self.XrWorkConfig = json.loads(data)
-        print("self.XrVipConfig = " , self.XrWorkConfig)
+        print("self.XrVipConfig = ", self.XrWorkConfig)
 
 
 IC = IConfig()

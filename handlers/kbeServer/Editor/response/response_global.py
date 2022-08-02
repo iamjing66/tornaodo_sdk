@@ -2,8 +2,9 @@
 # coding=utf-8
 
 import logging
-from methods.DBManager import DBManager
+
 from handlers.kbeServer.Editor.Interface import interface_global
+from methods.DBManager import DBManager
 
 
 # 下架的课程
@@ -18,10 +19,10 @@ def GetCourseXJ():
             minfo_list = list(minfo)
             if _back == "":
                 _back = str(minfo_list[0]) + "`" + str(minfo_list[1]) + "`" + str(minfo_list[2]) + "`" + str(
-                    minfo_list[3])
+                        minfo_list[3])
             else:
                 _back = _back + "^" + str(minfo_list[0]) + "`" + str(minfo_list[1]) + "`" + str(
-                    minfo_list[2]) + "`" + str(minfo_list[3])
+                        minfo_list[2]) + "`" + str(minfo_list[3])
 
     DB.destroy()
     return _back
@@ -42,7 +43,7 @@ def SDK_MK(_uid):
                 _worklook_string = str(minfo_list[3]) + "^" + str(minfo_list[2]) + "^" + str(minfo_list[4])
             else:
                 _worklook_string = _worklook_string + "!" + str(minfo_list[3]) + "^" + str(minfo_list[2]) + "^" + str(
-                    minfo_list[4])
+                        minfo_list[4])
     DB.destroy()
     return _worklook_string
 
@@ -95,9 +96,9 @@ def MaxIDResponse(DB, subcode, params):
 def Transactions_Code_2007(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构

@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+from handlers.kbeServer.Editor.Interface import interface_account, interface_global, interface_wit
 from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_account, interface_wit, interface_global
 
 
 # PC端登录数据
 def Transactions_Code_1012(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -27,9 +27,9 @@ def Transactions_Code_1012(self_uid, self_username, json_data):
 def Transactions_Code_1013(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -46,9 +46,9 @@ def Transactions_Code_1013(self_uid, self_username, json_data):
 def Transactions_Code_1014(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -65,9 +65,9 @@ def Transactions_Code_1014(self_uid, self_username, json_data):
 def Transactions_Code_1019(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -90,9 +90,9 @@ def Transactions_Code_1019(self_uid, self_username, json_data):
 def Transactions_Code_1031(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -108,9 +108,9 @@ def Transactions_Code_1031(self_uid, self_username, json_data):
 def Transactions_Code_1032(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -132,9 +132,9 @@ def Transactions_Code_1032(self_uid, self_username, json_data):
 def Transactions_Code_1033(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -155,9 +155,9 @@ def Transactions_Code_1033(self_uid, self_username, json_data):
 def Transactions_Code_1034(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -178,9 +178,9 @@ def Transactions_Code_1034(self_uid, self_username, json_data):
 def Transactions_Code_2005(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -197,9 +197,9 @@ def Transactions_Code_2005(self_uid, self_username, json_data):
 def Transactions_Code_2006(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -216,9 +216,9 @@ def Transactions_Code_2006(self_uid, self_username, json_data):
 def Transactions_Register(db, subCode, uid, username, data, phone_recode):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
     if subCode == 3:  # APP端注册
         json_back = interface_account.Register(db, uid, username, data, phone_recode)
@@ -235,9 +235,9 @@ def Transactions_Register(db, subCode, uid, username, data, phone_recode):
 def Transactions_Code_1038(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -259,9 +259,9 @@ def Transactions_Code_1038(self_uid, self_username, json_data):
 def Transactions_Code_1039(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -279,9 +279,9 @@ def Transactions_Code_1039(self_uid, self_username, json_data):
 def Transactions_Code_1040(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -299,9 +299,9 @@ def Transactions_Code_1040(self_uid, self_username, json_data):
 def Transactions_Code_1041(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -320,9 +320,9 @@ def Transactions_Code_1041(self_uid, self_username, json_data):
 
 def Transactions_Code_1042():
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
     db = DBManager()
     json_back["code"], json_back["msg"] = interface_account.get_video_price(db)
@@ -332,9 +332,9 @@ def Transactions_Code_1042():
 
 def Transactions_Code_1043(self_uid):
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
     db = DBManager()
     json_back["code"], times = interface_account.get_account_outtimes(db, self_uid)
@@ -346,9 +346,9 @@ def Transactions_Code_1043(self_uid):
 def Transactions_Code_1044(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -369,9 +369,9 @@ def Transactions_Code_1044(self_uid, self_username, json_data):
 def Transactions_Code_1045(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构

@@ -3,10 +3,11 @@
 
 import logging
 
+
 def GetUpdateCxVersion(DB):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
 
     strSql = "select LowestVersion,NewestVersion,text,title from tb_apkversion where ID = 4"
@@ -14,7 +15,7 @@ def GetUpdateCxVersion(DB):
     _cback = ""
     try:
 
-        data = DB.fetchone(strSql,None)
+        data = DB.fetchone(strSql, None)
         if data:
             _cback = data[0] + "|" + data[1] + "|" + data[2] + "|" + data[3]
             json_data["code"] = "1"
@@ -30,8 +31,8 @@ def GetUpdateCxVersion(DB):
 
 def GetUpdateCxVersionNew(DB, params):
     json_data = {
-        "code": 0,
-        "msg": ""
+            "code": 0,
+            "msg": ""
     }
     Pam = params["Pam"]
     ID, LocalVersion, code = Pam.split(',')
@@ -45,10 +46,10 @@ def GetUpdateCxVersionNew(DB, params):
     _cback = ""
     BForcedUpdate = "0"
 
-    data = DB.fetchone(strSql,ID)
+    data = DB.fetchone(strSql, ID)
     if data:
 
-        #print("data", data[1], type(data[1]), len(data[1]), float("6.3"), type(LocalVersion), LocalVersion)
+        # print("data", data[1], type(data[1]), len(data[1]), float("6.3"), type(LocalVersion), LocalVersion)
         if len(LocalVersion) == 0:
             LocalVersion = "0.0"
         if float(LocalVersion) >= float(data[1]):
@@ -69,5 +70,5 @@ def GetUpdateCxVersionNew(DB, params):
         json_data["code"] = "-1"
     json_data["msg"] = _cback
     logging.info("GetUpdateCxVersionNew: json_data:%s" % json_data)
-    #print("GetUpdateCxVersionNew:",json_data)
+    # print("GetUpdateCxVersionNew:",json_data)
     return json_data

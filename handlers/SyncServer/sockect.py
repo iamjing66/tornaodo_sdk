@@ -8,41 +8,38 @@ from handlers.redisServer.RedisInterface import RedisData, C_ServerEventCache
 
 class ProStatus:
 
-
     def __init__(self):
         self.GlobalUUID = 1
-        self.connector = {"editor": {}, "app": {} , "xreditor":{ }}  # 记录当前连接的user
+        self.connector = {"editor": {}, "app": {}, "xreditor": {}}  # 记录当前连接的user
         self.dicusers_id = {}
         self.dicusers = {}
 
-        #tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
-
+        # tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
 
     def PrintWebsocket(self):
 
-        print("connector",self.connector)
+        print("connector", self.connector)
         print("dicusers_id", self.dicusers_id)
         print("dicusers", self.dicusers)
         print("=======================*")
         for user in self.dicusers.keys():
-            print("user = " , user)
+            print("user = ", user)
         print("=======================#")
         tornado.ioloop.IOLoop.instance().call_later(5, self.PrintWebsocket)
 
+    def user_connect(self, user, uid, client_model, outuuid):
 
-    def user_connect(self, user, uid, client_model,outuuid):
+        # logging.info("[websocket] logining users = %s" % self.connector)
 
-        #logging.info("[websocket] logining users = %s" % self.connector)
-
-        #通过redis判断是否存在相同的账号(websocket id ,服务器地址)
-        #写分服事务，通过redis
-        #self.user_kick(uid,client_model)
+        # 通过redis判断是否存在相同的账号(websocket id ,服务器地址)
+        # 写分服事务，通过redis
+        # self.user_kick(uid,client_model)
 
         # 踢下线
         self.syncTrigger(client_model, uid, "100", outuuid)
 
-        #记录新用户（websocket id ,服务器地址）redis
-        #绑定新用户
+        # 记录新用户（websocket id ,服务器地址）redis
+        # 绑定新用户
         if len(outuuid) > 0:
             uuid = outuuid
         else:
@@ -53,30 +50,28 @@ class ProStatus:
         self.dicusers_id[uuid] = user
         self.connector[client_model][uid] = uuid
 
-        #缓存新记录
+        # 缓存新记录
         rd = RedisData(2)
         rds = rd.redis_pool()
         key = str(uid) + "$" + client_model
         value = uuid + "$" + application.App.RedisServerAddress
-        rds.hset("websocket",key,value)
+        rds.hset("websocket", key, value)
 
-        logging.info("[websocket] login Succ = uuid = %s - %s dicusers_id = %s" % (str(uuid),application.App.RedisServerAddress,self.dicusers_id))
+        logging.info("[websocket] login Succ = uuid = %s - %s dicusers_id = %s" % (str(uuid), application.App.RedisServerAddress, self.dicusers_id))
 
+    def user_kick(self, uuid):
 
-    def user_kick(self,uuid):
-
-        #logging.info("[websocket] kick user = uuid = %s dicusers_id = %s" % (str(uuid),str(self.dicusers_id)))
+        # logging.info("[websocket] kick user = uuid = %s dicusers_id = %s" % (str(uuid),str(self.dicusers_id)))
         if uuid in self.dicusers_id.keys():
-            #该账号有记录
+            # 该账号有记录
             cuser = self.dicusers_id[uuid]
             if cuser.ws_connection:
                 cuser.write_message("-88@")
-                logging.info("[websocket] kick user = uuid = %s" % (str(uuid) ))
-            #清除老记录
-            self.user_dispose(cuser,1)
+                logging.info("[websocket] kick user = uuid = %s" % (str(uuid)))
+            # 清除老记录
+            self.user_dispose(cuser, 1)
 
-
-    def user_dispose(self,user,kick):
+    def user_dispose(self, user, kick):
 
         if user in self.dicusers.keys():
 
@@ -84,7 +79,7 @@ class ProStatus:
             uid = self.dicusers[user][1]
             clientmodel = self.dicusers[user][2]
 
-            logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s kick = %d" % (uuid,str(uid),str(clientmodel),kick))
+            logging.info("[user_dispose] uuid = %s uid = %s clientmodel = %s kick = %d" % (uuid, str(uid), str(clientmodel), kick))
 
             if user in self.dicusers.keys():
                 del self.dicusers[user]
@@ -93,26 +88,24 @@ class ProStatus:
             if uid in self.connector[clientmodel].keys():
                 del self.connector[clientmodel][uid]
 
-
             if kick == 0:
                 key = str(uid) + "$" + clientmodel
                 rd = RedisData(2)
                 rds = rd.redis_pool()
                 rds.hdel("websocket", key)
 
-            #del self.connector[clientmodel][uid]
+            # del self.connector[clientmodel][uid]
 
             # key = str(uid) + "$" + clientmodel
             # rd = RedisData(2)
             # rds = rd.redis_pool()
 
-            #rds.hdel("websocket",key)
+            # rds.hdel("websocket",key)
 
             # if kick == 0:
             #     globalRedisU.redisurl_delete(uid,clientmodel)
 
             logging.info("[websocket] disconnect = uuid = %s " % (str(uuid)))
-
 
     # def user_remove(self, uid, client_model):
     #     logging.info("[websocket] quit request = %s - %s - %s" % (str(uid), str(client_model),self.connector))
@@ -123,19 +116,18 @@ class ProStatus:
     #     #logging.info(self.connector)
     #     #logging.info("用户退出: %s" % str(uid))
 
+    def syncTrigger(self, pam_apptype, uid, code, pam):
 
-    def syncTrigger(self,pam_apptype,uid,code,pam):
-
-        logging.info("[redis] pam_apptype = %s - uid = %s code = %s pam = %s connector = %s" % (str(pam_apptype), str(uid),str(code),str(pam),str(self.connector)))
+        logging.info("[redis] pam_apptype = %s - uid = %s code = %s pam = %s connector = %s" % (str(pam_apptype), str(uid), str(code), str(pam), str(self.connector)))
         if str(uid) in self.connector[pam_apptype]:
             uuid = self.connector[pam_apptype][str(uid)]
             if uuid != pam:
-                self.DoSyncThing(uuid,code,pam)
+                self.DoSyncThing(uuid, code, pam)
         else:
             rd = RedisData(2)
             rds = rd.redis_pool()
             key = str(uid) + "$" + pam_apptype
-            #异步通知
+            # 异步通知
             value = rds.hget("websocket", key)
             logging.info("value = %s key = %s " % (value, key))
             if value != None:
@@ -145,39 +137,32 @@ class ProStatus:
                 cpam = str(code) + "$" + str(pam)
                 C_ServerEventCache.SetEvent(key1, arr[0], cpam)
 
+    def DoSyncThing(self, uuid, code, pam):
 
-    def DoSyncThing(self,uuid,code,pam):
-
-        #print("DoSyncThing = ", uuid,code,pam,self.dicusers_id)
+        # print("DoSyncThing = ", uuid,code,pam,self.dicusers_id)
         if code == "100":
             self.user_kick(uuid)
         elif uuid in self.dicusers_id.keys():
             cuser = self.dicusers_id[uuid]
-            cuser.write_message(str(code)+"@" + str(pam))
+            cuser.write_message(str(code) + "@" + str(pam))
 
-
-    #同步消息推送(当前服)
+    # 同步消息推送(当前服)
     def trigger(self, pam_apptype, uid, code, pam):
         ''' 客户端推送内容 '''
         logging.info(f"uid: {uid} ,client: {pam_apptype}, code: {code}")
-        if code == "106":   #分服通知
-            self.syncTrigger(pam_apptype,uid,code,pam)
+        if code == "106":  # 分服通知
+            self.syncTrigger(pam_apptype, uid, code, pam)
         else:
             if str(uid) in self.connector[pam_apptype]:
                 uuid = self.connector[pam_apptype][str(uid)]
                 cuser = self.dicusers_id[uuid]
                 cuser.write_message(str(code) + "@" + pam)
 
-
-
-    def DoMessage_Mail(self,uuid,pam):
+    def DoMessage_Mail(self, uuid, pam):
 
         if uuid in self.dicusers_id.keys():
             cuser = self.dicusers_id[uuid]
             cuser.write_message("106@" + pam)
-
-
-
 
 
 pro_status = ProStatus()
@@ -188,7 +173,7 @@ class EchoWebSocket(websocket.WebSocketHandler):
 
         # ip = self.request.host_name
         # port = options.options.port
-        #self.write_message("-99@none")  # + globalRedisU.redis_serverip_get()
+        # self.write_message("-99@none")  # + globalRedisU.redis_serverip_get()
         logging.info("[websocket] open")
 
     def on_message(self, message: str):
@@ -206,10 +191,10 @@ class EchoWebSocket(websocket.WebSocketHandler):
                 uuid = user_info[2]
 
         if s1[0] == "-99":
-            pro_status.user_connect(self, uid, client_model,uuid)
+            pro_status.user_connect(self, uid, client_model, uuid)
         elif s1[0] == "-92":
-            #测试回调
-            pro_status.trigger("xreditor",9,401,"callback")
+            # 测试回调
+            pro_status.trigger("xreditor", 9, 401, "callback")
         elif s1[0] == "-96":
             print("KeepAlive")
             self.write_message("-96@")
@@ -223,7 +208,7 @@ class EchoWebSocket(websocket.WebSocketHandler):
     def on_close(self):
 
         logging.info("[websocket] close users = %s" % pro_status.dicusers_id.keys())
-        pro_status.user_dispose(self,0)
+        pro_status.user_dispose(self, 0)
 
     def check_origin(self, origin):
         return True

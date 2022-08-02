@@ -9,4 +9,4 @@ def FullViewResponse(DB, subcode, params):
         return interface_fullview.GetQjtTypeList(DB)
     elif subcode == 27:
         Pam = params["Pam"]
-        return interface_fullview.GetQjtDetailList(DB,Pam)
+        return interface_fullview.GetQjtDetailList(DB, Pam)

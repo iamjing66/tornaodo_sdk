@@ -6,8 +6,8 @@ from methods.SolrInterface import SolrInst
 from handlers.kbeServer.Editor.redis.interface_user import globalRedisU
 from handlers.redisServer.RedisInterface import ServerUserCache
 
-def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate, userId, SoftType, channelType, self_username):
 
+def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId, createDate, endDate, userId, SoftType, channelType, self_username):
     # userName = ""
     # userName = self_username
     userType = 0
@@ -17,11 +17,10 @@ def Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, typ
     if data != None:
         # userName = data[7]
         userType = int(data[0])
-    SolrInst.Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId,createDate, endDate,  self_username, userId, userType, SoftType, channelType)
+    SolrInst.Solr_PayLog(proId, name, saleModules, costsRoad, transactionType, price, type, courseId, createDate, endDate, self_username, userId, userType, SoftType, channelType)
 
 
-def RequestSolr( Code, Data):
-
+def RequestSolr(Code, Data):
     SolrInst.SolrLog(int(Code), Data)
 
     # url = mysqlHander.PAY_URL + "/solr"

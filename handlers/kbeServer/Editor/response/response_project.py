@@ -2,9 +2,10 @@
 # coding=utf-8
 
 import json
-from methods.DBManager import DBManager
-from handlers.kbeServer.Editor.Interface import interface_project
+
 from handlers.kbeServer.Editor.Data import data_project
+from handlers.kbeServer.Editor.Interface import interface_project
+from methods.DBManager import DBManager
 
 
 # 获取是否需要更新
@@ -30,9 +31,9 @@ def GetPVersion(jddata):
 def Transactions_Code_1006(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -49,9 +50,9 @@ def Transactions_Code_1006(self_uid, self_username, json_data):
 def Transactions_Code_1007(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -70,9 +71,9 @@ def Transactions_Code_1007(self_uid, self_username, json_data):
 def Transactions_Code_1009(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -90,9 +91,9 @@ def Transactions_Code_1009(self_uid, self_username, json_data):
 def Transactions_Code_1010(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -110,9 +111,9 @@ def Transactions_Code_1010(self_uid, self_username, json_data):
 def Transactions_Code_1011(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -132,9 +133,9 @@ def Transactions_Code_1011(self_uid, self_username, json_data):
 def Transactions_Code_1021(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -147,7 +148,7 @@ def Transactions_Code_1021(self_uid, self_username, json_data):
     db = DBManager()
     json_back["code"] = 1
     json_back["pam"] = str(uid) + "!" + str(pid) + "!" + str(target) + "!" + str(force) + "!" + str(
-        From) + "!" + data_project.Data_Project_Base(uid, pid, target, db, 0) + "！"
+            From) + "!" + data_project.Data_Project_Base(uid, pid, target, db, 0) + "！"
     # 1370!10008!0!1!106!
     # 10008`tt`1621503370`1621503370`0`1002`0.0`0.0`0.0`0.0`0.0`0.0`0`0.0```58`0``0`0`0`0`1`1370`0`0`0`101``0！
     db.destroy()

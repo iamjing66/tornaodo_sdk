@@ -3,9 +3,10 @@
 上传资源相关方法
 """
 import hashlib
-import time
 import logging
+import time
 from typing import Tuple
+
 from methods.DBManager import DB
 
 
@@ -152,7 +153,8 @@ def user_upload_data(uid, page) -> Tuple[int, int, str]:
     user_list = []
     user_data = ""
     msg = -1
-    sql = "select s.*, m.msgDesc, c.ABPATH, c.PICPATH from tb_p_res as s inner join tb_rebut_msg as m inner join tb_config_res as c on s.rebutId = m.id and s.rid = c.rid and uid = %s " + sql_limit(page) + ";"
+    sql = "select s.*, m.msgDesc, c.ABPATH, c.PICPATH from tb_p_res as s inner join tb_rebut_msg as m inner join tb_config_res as c on s.rebutId = m.id and s.rid = c.rid and uid = %s " + sql_limit(
+        page) + ";"
     data = DB.fetchall(sql, uid)
     if data:
         if len(data) == 500:

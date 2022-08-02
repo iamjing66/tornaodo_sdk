@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import Global
 import logging
 import time
 
+import Global
+from handlers.kbeServer.Editor.Data import data_Look, data_project
 from handlers.kbeServer.Editor.Data import data_obj
-from handlers.kbeServer.Editor.Data import data_project, data_Look
 from handlers.kbeServer.Editor.Data import data_work
-from handlers.kbeServer.Editor.Interface import interface_mail, interface_global, interface_project, interface_obj, \
-    interface_wit, interface_solr, interface_sms
+from handlers.kbeServer.Editor.Interface import interface_global, interface_mail, interface_obj, interface_project, interface_sms, interface_solr, interface_wit
 from methods.DBManager import DBManager
 
 
@@ -157,7 +156,7 @@ def BuyFlag(db, self_uid, uid, pid):
 # ptype 0-一年 1-永久
 def Buy(db, self_uid, wid, UID, type, ptype, self_username):
     logging.info("buy work wid = %s uid = %s selfuid = %s type = %s ptype = %s" % (
-        str(wid), str(UID), str(self_uid), str(type), str(ptype)))
+            str(wid), str(UID), str(self_uid), str(type), str(ptype)))
     if UID == self_uid:
         return [0, ""]  # 不能购买自己的
     user_power = get_user_power_uid(db, self_uid)
@@ -183,7 +182,7 @@ def Buy(db, self_uid, wid, UID, type, ptype, self_username):
     _buy_pid = arr_back[2]
     _now = int(time.time())
     logging.info("buy work work_name = %s pid = %s price1 = %s price2 = %s _pdate = %s" % (
-        str(work_name), str(pid), str(price1), str(price2), str(_pdate)))
+            str(work_name), str(pid), str(price1), str(price2), str(_pdate)))
     # 判断是否是永久了
     if type != 2:
         if _pdate == 1:
@@ -314,12 +313,12 @@ def VR_BuyWork(db, self_uid, wid, p_uid, buy_type, plat, self_username, phone=No
 
         if not data_w_list:
             sql = "insert INTO tb_work_look_B (uid, W_UID, W_CID, P_DATE, C_TYPE) values ({0}, {1},{2},{3},0)".format(
-                str(uid), str(
-                    p_uid), str(wid), str(_ptruedate))
+                    str(uid), str(
+                            p_uid), str(wid), str(_ptruedate))
         else:
             sql = "update tb_work_look_B set P_DATE = {0} WHERE uid = {1} AND W_UID = {2} and w_cid = {3}".format(
-                str(_ptruedate), str(
-                    uid), str(p_uid), str(wid))
+                    str(_ptruedate), str(
+                            uid), str(p_uid), str(wid))
         db.edit(sql, None)
 
         if plat == 20:
@@ -350,8 +349,8 @@ def VR_BuyWork(db, self_uid, wid, p_uid, buy_type, plat, self_username, phone=No
 
 def GetWorkFreetime(db, pam):
     json_data = {
-        "code": "0",
-        "msg": "false"
+            "code": "0",
+            "msg": "false"
     }
     if pam == "":
         return json_data

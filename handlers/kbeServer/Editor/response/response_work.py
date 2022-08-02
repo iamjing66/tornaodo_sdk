@@ -1,43 +1,35 @@
-import logging
-import copy
-import Global
-import json
-import  time
-import random
-from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_work
+from methods.DBManager import DBManager
 
 
-#审核作品
-def Transactions_Code_1005( self_uid , self_username , json_data):
-
+# 审核作品
+def Transactions_Code_1005(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
     wid = int(json_data["wid"])
     uid = int(json_data["uid"])
-    shcode = int(json_data["shcode"])    #0-拒绝 1-通过
-
+    shcode = int(json_data["shcode"])  # 0-拒绝 1-通过
 
     # 获取下db的句柄，如果需要操作数据库的话
     DB = DBManager()
-    json_back["code"] = interface_work.SH(DB,self_uid,uid,wid,shcode)
+    json_back["code"] = interface_work.SH(DB, self_uid, uid, wid, shcode)
     DB.destroy()
     return json_back
 
 
-#购买作品
+# 购买作品
 def Transactions_Code_1008(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -47,19 +39,20 @@ def Transactions_Code_1008(self_uid, self_username, json_data):
     ptype = int(json_data["ptype"])
 
     DB = DBManager()
-    arr = interface_work.Buy(DB,self_uid,wid,uid,type,ptype, self_username)
+    arr = interface_work.Buy(DB, self_uid, wid, uid, type, ptype, self_username)
     json_back["code"] = arr[0]
     json_back["pam"] = arr[1]
     DB.destroy()
     return json_back
 
-#撤销作品
+
+# 撤销作品
 def Transactions_Code_1023(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -68,7 +61,7 @@ def Transactions_Code_1023(self_uid, self_username, json_data):
     target = int(json_data["target"])
 
     DB = DBManager()
-    json_back["code"] = interface_work.CX(DB,uid,wid,target)
+    json_back["code"] = interface_work.CX(DB, uid, wid, target)
     DB.destroy()
     return json_back
 
@@ -76,9 +69,9 @@ def Transactions_Code_1023(self_uid, self_username, json_data):
 def Transactions_Code_1056():
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     DB = DBManager()
@@ -97,9 +90,9 @@ def Transactions_Code_1056():
 
 def Transactions_Code_1057():
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     DB = DBManager()
@@ -118,9 +111,9 @@ def Transactions_Code_1057():
 
 def Transactions_Code_1058():
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     DB = DBManager()
@@ -140,9 +133,9 @@ def Transactions_Code_1058():
 # 获取用户当前最大PID
 def Transactions_Code_1059(self_uid):
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": 0
+            "code": 0,
+            "msg": "",
+            "pam": 0
     }
 
     DB = DBManager()
@@ -158,9 +151,9 @@ def Transactions_Code_1059(self_uid):
 
 def Transactions_Code_1060(self_uid):
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     DB = DBManager()

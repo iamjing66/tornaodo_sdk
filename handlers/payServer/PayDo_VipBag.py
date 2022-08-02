@@ -3,16 +3,16 @@
 
 import json
 import time
-from handlers.kbeServer.Editor.Data import data_ppackage,data_vip
+from handlers.kbeServer.Editor.Data import data_ppackage, data_vip
 from handlers.SyncServer.SyncMain import SyncMainClass
+
 
 class paydo_vipbag:
 
     def __init__(self):
         pass
 
-
-    def Do(self,_arr_pam,DB):
+    def Do(self, _arr_pam, DB):
 
         uid = int(_arr_pam[6])
         price = int(_arr_pam[4])
@@ -27,7 +27,6 @@ class paydo_vipbag:
         organization = _arr_pam[12]
         distributor = _arr_pam[13]
         _from = _arr_pam[14]
-
 
         # 64*10*1*0*0$1*WechatC16062229482*0*0
         # vip
@@ -58,10 +57,10 @@ class paydo_vipbag:
             if _pdate < int(time.time()):
                 _pdate = int(time.time())
             _date = _pdate + b_date * 30 * 86400
-            data_vip.UpdateToDB(DB,_date,uid)
+            data_vip.UpdateToDB(DB, _date, uid)
             cdata = str(_date)
-            #InsertSyncData("editor", 101, cdata, 0, 1, uid, Cur, Db)
-            SyncMainClass.InsertSyncData("editor", 101, cdata, 0, 1, uid,_order,DB)
+            # InsertSyncData("editor", 101, cdata, 0, 1, uid, Cur, Db)
+            SyncMainClass.InsertSyncData("editor", 101, cdata, 0, 1, uid, _order, DB)
 
         else:
             # proType = 7
@@ -70,24 +69,24 @@ class paydo_vipbag:
             # cName = "包裹位"
             if _bagid == 0:
                 _date = int(time.time()) + 31536000
-                #sql = "select last_insert_id();"
+                # sql = "select last_insert_id();"
                 for i in range(b_num):
-                    i_id = data_ppackage.InsertToDB(DB,uid,_date)
+                    i_id = data_ppackage.InsertToDB(DB, uid, _date)
 
                     if cdata == "":
                         cdata = str(i_id) + "$" + str(_date)
                     else:
                         cdata = cdata + "@" + str(i_id) + "$" + str(_date)
-                #InsertSyncData("editor", 102, cdata, 0, 1, uid, Cur, Db)
-                SyncMainClass.InsertSyncData("editor", 102, cdata, 0, 1, uid,_order, DB)
+                # InsertSyncData("editor", 102, cdata, 0, 1, uid, Cur, Db)
+                SyncMainClass.InsertSyncData("editor", 102, cdata, 0, 1, uid, _order, DB)
             else:
                 if _pdate < int(time.time()):
                     _pdate = int(time.time())
                 _date = _pdate + 31536000
-                data_ppackage.UpdateToDB(DB,_date,_bagid)
+                data_ppackage.UpdateToDB(DB, _date, _bagid)
                 cdata = str(_bagid) + "$" + str(_date)
-                #InsertSyncData("editor", 102, cdata, 0, 1, uid, Cur, Db)
-                SyncMainClass.InsertSyncData("editor", 102, cdata, 0, 1, uid,_order,DB)
+                # InsertSyncData("editor", 102, cdata, 0, 1, uid, Cur, Db)
+                SyncMainClass.InsertSyncData("editor", 102, cdata, 0, 1, uid, _order, DB)
 
         # 订单记录
         # sql = "Insert Into tb_saomazhifu (model,uid,paytype,price,`desc`,`Order`) values (" + str(model) + "," + str(uid) + "," + str(paytype) + "," + str(price) + ",'" + str(extra) + "','" + _order + "');"
@@ -96,16 +95,16 @@ class paydo_vipbag:
 
         if model == 0:
             sql = "update tb_userdata set AccountPower = 1, EndDate = 1 where uid = " + str(uid) + ";"
-            DB.edit(sql,None)
+            DB.edit(sql, None)
 
-        #VIP包裹 - 索引库日志
+        # VIP包裹 - 索引库日志
         return _date
 
+    def DoChongzhi(self, uid, score, Cur, Db):
 
-    def DoChongzhi(self,uid,score,Cur,Db):
-
-        sql = "update tb_userdata set Wit_Rmb = Wit_Rmb + "+str(score)+" where uid = " + str(uid) + ";"
+        sql = "update tb_userdata set Wit_Rmb = Wit_Rmb + " + str(score) + " where uid = " + str(uid) + ";"
         Cur.execute(sql)
         Db.commit()
+
 
 PayDoVipBagClass = paydo_vipbag()

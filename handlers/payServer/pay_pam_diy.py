@@ -3,15 +3,14 @@
 
 import json
 
+
 class pay_pam_diy:
 
     def __init__(self):
-        #支付参数获取
+        # 支付参数获取
         pass
 
-
-
-    def GetMaikanData(self,paydata,DB):
+    def GetMaikanData(self, paydata, DB):
 
         _id = 0
         _price2 = 0
@@ -23,36 +22,35 @@ class pay_pam_diy:
         distributor = json_data["distributor"]
 
         json_pay = {
-            "Code":0,
-            "Data":{},
+                "Code": 0,
+                "Data": {},
         }
 
         sql_str = "select ID,price2,`Name` from tb_workmarket where WID = " + str(wid) + " AND UID = " + str(b_uid) + ";"
-        data = DB.fetchone(sql_str,None)
+        data = DB.fetchone(sql_str, None)
         if data:
             _id = int(data[0])
             _price2 = int(data[1])
             _name = data[2]
 
         if _id == 0 or _price2 <= 0:
-            json_pay["Code"] = 0    #价格异常
+            json_pay["Code"] = 0  # 价格异常
         else:
             _power = 0
             if "power" in json_data.keys():
                 _power = json_data["power"]
-            params = str(wid) + "@" + str(b_uid)+ "@" + str(organization)+ "@" + str(distributor)+ "@" + json_data["from"]+ "@" + str(_power)+ "@n@" + json_data["ip"]
+            params = str(wid) + "@" + str(b_uid) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@n@" + json_data["ip"]
             Data = {
-                "name": _name,
-                "price": _price2 * 10,  # 分
-                "params": params,
+                    "name": _name,
+                    "price": _price2 * 10,  # 分
+                    "params": params,
             }
             json_pay["Code"] = 1
             json_pay["Data"] = Data
 
         return json_pay
 
-
-    def GetSISCourseData(self,paydata,DB):
+    def GetSISCourseData(self, paydata, DB):
 
         _id = 0
         _price2 = 0
@@ -64,8 +62,8 @@ class pay_pam_diy:
         distributor = json_data["distributor"]
         _from = json_data["from"]
         json_pay = {
-            "Code":0,
-            "Data":{},
+                "Code": 0,
+                "Data": {},
         }
 
         table_name = "new_coursedetails"
@@ -73,12 +71,11 @@ class pay_pam_diy:
             table_name = "new_sis3dcoursedeta"
 
         if BType == 0:
-            sql_str = "select id,coursePrice,`name` from "+table_name+" where courseId = '" + CourseID + "';"
+            sql_str = "select id,coursePrice,`name` from " + table_name + " where courseId = '" + CourseID + "';"
         else:
-            sql_str = "select id,courseYearPrice,`name` from "+table_name+" where courseId = '" + CourseID + "';"
+            sql_str = "select id,courseYearPrice,`name` from " + table_name + " where courseId = '" + CourseID + "';"
 
-
-        data = DB.fetchone(sql_str,None)
+        data = DB.fetchone(sql_str, None)
         _PRICE = 0
         if data:
             _id = int(data[0])
@@ -90,25 +87,23 @@ class pay_pam_diy:
                 _PRICE = _price2 * 10
 
         if _id == 0 or _price2 < 0:
-            json_pay["Code"] = 0    #价格异常
+            json_pay["Code"] = 0  # 价格异常
         else:
             _power = 0
             if "power" in json_data.keys():
                 _power = json_data["power"]
-            params = str(CourseID) + "@" + str(BType)+ "@" + str(organization)+ "@" + str(distributor)+ "@" + json_data["from"]+ "@" + str(_power)+ "@n@" + json_data["ip"]
+            params = str(CourseID) + "@" + str(BType) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@n@" + json_data["ip"]
             Data = {
-                "name": _name,
-                "price":_PRICE,  # 分
-                "params": params,
+                    "name": _name,
+                    "price": _PRICE,  # 分
+                    "params": params,
             }
             json_pay["Code"] = 1
             json_pay["Data"] = Data
 
         return json_pay
 
-
-
-    def GetChangxiangData(self,paydata,DB):
+    def GetChangxiangData(self, paydata, DB):
 
         _id = 0
         _price2 = 0
@@ -121,13 +116,13 @@ class pay_pam_diy:
         CIDS = ""
 
         json_pay = {
-            "Code":0,
-            "Data":{},
+                "Code": 0,
+                "Data": {},
         }
 
         sql_str = "select Price,`Desc`,WTYPE,CID from tb_channel where WID in (" + channel + ");"
 
-        data = DB.fetchall(sql_str,None)
+        data = DB.fetchall(sql_str, None)
         _name = ""
         _wtype = ""
         _price_record = ""
@@ -173,20 +168,19 @@ class pay_pam_diy:
                     _power = 0
                     if "power" in json_data.keys():
                         _power = json_data["power"]
-                    params = str(channel) + "@" + str(month) + "@" + str(days) + "@" + str(organization)+ "@" + str(distributor)+ "@" + json_data["from"] + "@" + str(_power)+ "@" + json_data["ip"]
+                    params = str(channel) + "@" + str(month) + "@" + str(days) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@" + json_data["ip"]
 
                     Data = {
-                        "name": "频道畅享",
-                        "price": _price,  # 分
-                        "params": params,
+                            "name": "频道畅享",
+                            "price": _price,  # 分
+                            "params": params,
                     }
                     json_pay["Code"] = 1
                     json_pay["Data"] = Data
 
         return json_pay
 
-
-    def GetVipData(self,UID,paydata,DB):
+    def GetVipData(self, UID, paydata, DB):
 
         _id = 0
         _price2 = 0
@@ -199,8 +193,8 @@ class pay_pam_diy:
         distributor = json_data["distributor"]
 
         json_pay = {
-            "Code":0,
-            "Data":{},
+                "Code": 0,
+                "Data": {},
         }
 
         # vip
@@ -228,7 +222,7 @@ class pay_pam_diy:
         price = 0  # 分为单位
         if sql != "":
 
-            data = DB.fetchone(sql,None)
+            data = DB.fetchone(sql, None)
             if data:
                 _pam = int(data[0])
                 if model == 0:
@@ -247,7 +241,7 @@ class pay_pam_diy:
         # 计算价格
         sql = "select VIPPrice,WorksAPrice,(select DiscountRate from tb_new_vipdiscount where ThePurchaseTime = " + str(b_date) + ") as rate from tb_new_config;"
 
-        data = DB.fetchone(sql,None)
+        data = DB.fetchone(sql, None)
         _id = 0
         _price2 = 0
 
@@ -256,7 +250,7 @@ class pay_pam_diy:
         else:
             _name = "存储包裹"
         if data != None and len(data) > 0:
-            #print("data", data)
+            # print("data", data)
             if model == 0:
                 price = int(data[0] * data[2] * b_date)
             else:
@@ -268,24 +262,24 @@ class pay_pam_diy:
             _power = 0
             if "power" in json_data.keys():
                 _power = json_data["power"]
-            params = str(model) + "@" + str(extra) + "@" + str(pdate)+ "@" + str(bagID) + "@" + str(organization)+ "@" + str(distributor) + "@" + json_data["from"]+ "@" + str(_power)+ "@" + json_data["ip"]
+            params = str(model) + "@" + str(extra) + "@" + str(pdate) + "@" + str(bagID) + "@" + str(organization) + "@" + str(distributor) + "@" + json_data["from"] + "@" + str(_power) + "@" + \
+                     json_data["ip"]
 
             Data = {
-                "name": _name,
-                "price": price,  # 分
-                "params": params,
+                    "name": _name,
+                    "price": price,  # 分
+                    "params": params,
             }
             json_pay["Code"] = 1
             json_pay["Data"] = Data
 
         return json_pay
 
-
-    def GetWitScore(self,UID,paydata,DB):
+    def GetWitScore(self, UID, paydata, DB):
 
         json_pay = {
-            "Code": 0,
-            "Data": {},
+                "Code": 0,
+                "Data": {},
         }
 
         organization = paydata["organization"]
@@ -293,29 +287,28 @@ class pay_pam_diy:
 
         rmb = int(paydata["rmb"])
         if rmb <= 0:
-            json_pay["Code"] = 0    #价格异常
+            json_pay["Code"] = 0  # 价格异常
         else:
-            price = rmb*100
+            price = rmb * 100
             _power = 0
             if "power" in paydata.keys():
                 _power = paydata["power"]
-            params = str(price)+ "@" + str(organization)+ "@" + str(distributor)+ "@" + paydata["from"]+ "@" + str(_power)+ "@" + paydata["ip"]
+            params = str(price) + "@" + str(organization) + "@" + str(distributor) + "@" + paydata["from"] + "@" + str(_power) + "@" + paydata["ip"]
             Data = {
-                "name": "充值中心",
-                "price": price,  # 分
-                "params": params,
+                    "name": "充值中心",
+                    "price": price,  # 分
+                    "params": params,
             }
             json_pay["Code"] = 1
             json_pay["Data"] = Data
 
         return json_pay
 
-
-    def GetProjectSisData(self,UID,paydata,DB):
+    def GetProjectSisData(self, UID, paydata, DB):
 
         json_pay = {
-            "Code": 0,
-            "Data": {},
+                "Code": 0,
+                "Data": {},
         }
 
         organization = paydata["organization"]
@@ -334,7 +327,8 @@ class pay_pam_diy:
             if ptype == 1:  # 工程
                 json_pay["Code"] = -1  # 价格异常
             elif ptype == 2:  # 购买的作品
-                sql = "SELECT T1.price1,T1.`Name` FROM tb_workmarket AS T1 INNER JOIN tb_project AS T2 ON T1.UID = T2.P_UID AND T1.PID = T2.ParentPid AND T2.uid = "+str(puid)+" and T2.PID = " + str(wid)
+                sql = "SELECT T1.price1,T1.`Name` FROM tb_workmarket AS T1 INNER JOIN tb_project AS T2 ON T1.UID = T2.P_UID AND T1.PID = T2.ParentPid AND T2.uid = " + str(
+                    puid) + " and T2.PID = " + str(wid)
             else:  # 课程
                 sql = "select Price,`Name` from tb_mlesson_" + str(puid) + "_" + str(cid) + " where lid = " + str(lid) + "; "
 
@@ -342,24 +336,24 @@ class pay_pam_diy:
                 price = 0
                 _name = ""
 
-                data = DB.fetchone(sql,None)
+                data = DB.fetchone(sql, None)
                 if data:
                     price = int(data[0])
                     _name = data[1]
                 if price <= 0:
                     json_pay["Code"] = 0  # 价格异常
                 else:
-                    params = str(price) + "@" + str(organization) + "@" + str(distributor) + "@" + paydata["from"] + "@" + str(UID) + "@" + str(paydata["puid"]) + "@" + str(paydata["cid"]) + "@" + str(paydata["lid"]) + "@" + str(paydata["wid"]) + "@" + str(paydata["buyCount"])+ "@" + str(ptype)+ "@" + paydata["ip"]
+                    params = str(price) + "@" + str(organization) + "@" + str(distributor) + "@" + paydata["from"] + "@" + str(UID) + "@" + str(paydata["puid"]) + "@" + str(
+                            paydata["cid"]) + "@" + str(paydata["lid"]) + "@" + str(paydata["wid"]) + "@" + str(paydata["buyCount"]) + "@" + str(ptype) + "@" + paydata["ip"]
                     Data = {
-                        "name": _name,
-                        "price": price*buyCount*10,  # 分
-                        "params": params,
+                            "name": _name,
+                            "price": price * buyCount * 10,  # 分
+                            "params": params,
                     }
                     json_pay["Code"] = 1
                     json_pay["Data"] = Data
 
         return json_pay
-
 
 
 PayPamDiyClass = pay_pam_diy()

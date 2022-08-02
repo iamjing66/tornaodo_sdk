@@ -6,9 +6,9 @@ from methods.DBManager import DBManager
 def Transactions_Code_1024(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -26,9 +26,9 @@ def Transactions_Code_1024(self_uid, self_username, json_data):
 def Transactions_Code_1025(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -47,9 +47,9 @@ def Transactions_Code_1025(self_uid, self_username, json_data):
 def Transactions_Code_1026(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -69,9 +69,9 @@ def Transactions_Code_1026(self_uid, self_username, json_data):
 def Transactions_Code_1027(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -90,9 +90,9 @@ def Transactions_Code_1027(self_uid, self_username, json_data):
 def Transactions_Code_1028(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -112,9 +112,9 @@ def Transactions_Code_1028(self_uid, self_username, json_data):
 def Transactions_Code_1029(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -135,9 +135,9 @@ def Transactions_Code_1029(self_uid, self_username, json_data):
 def Transactions_Code_1030(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -158,9 +158,9 @@ def Transactions_Code_1030(self_uid, self_username, json_data):
 def Transactions_Code_1035(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -179,9 +179,9 @@ def Transactions_Code_1035(self_uid, self_username, json_data):
 def Transactions_Code_1036(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构
@@ -201,9 +201,9 @@ def Transactions_Code_1036(self_uid, self_username, json_data):
 def Transactions_Code_1037(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构

@@ -3,12 +3,13 @@
 
 from handlers.kbeServer.Editor.Interface import interface_work
 
+
 class paydo_work:
 
     def __init__(self):
         pass
 
-    def WorkLoogPDate(self, uid, w_uid, wid , Cur , Db):
+    def WorkLoogPDate(self, uid, w_uid, wid, Cur, Db):
 
         _pdate = 0
 
@@ -22,9 +23,7 @@ class paydo_work:
             _pdate = 0
         return _pdate
 
-
-
-    def Do(self,_arr_pam,DB):
+    def Do(self, _arr_pam, DB):
 
         toclient = ""
         _order = _arr_pam[3]
@@ -41,7 +40,7 @@ class paydo_work:
         _userType = int(_arr_pam[13])
         _ip = _arr_pam[15]
 
-        data_arr = interface_work.VR_BuyWork(DB, UID, wid, p_uid, 2,20,UserName,phone=True)
+        data_arr = interface_work.VR_BuyWork(DB, UID, wid, p_uid, 2, 20, UserName, phone=True)
         code = data_arr[0]
         if code == 1:
             toclient = data_arr[1]
@@ -49,6 +48,4 @@ class paydo_work:
         return toclient
 
 
-
 PayDoWorkClass = paydo_work()
-

@@ -8,18 +8,18 @@ from methods.SolrInterface import SolrInst
 from methods.db_mysql import DbHander
 from handlers.kbeServer.Editor.Interface import interface_sis
 
+
 class paydo_sis:
 
     def __init__(self):
         pass
 
-
-
-    def Get_EduProject(self,VID,UID,Cur,Db):
+    def Get_EduProject(self, VID, UID, Cur, Db):
 
         _back = []
 
-        sql = "select t3.coursePrice,t3.courseYearPrice,t3.courseExpireTime,t3.`name` from (select t1.coursePrice,t1.courseYearPrice,t2.courseExpireTime,t1.courseId,t2.userId,t1.`name` from new_coursedetails as t1 left join new_coursebuy as t2 on t1.courseId = t2.courseId and t2.userId = "+str(UID)+") t3 where t3.courseId = '"+VID+"' order by t3.courseExpireTime desc  limit 0,1;"
+        sql = "select t3.coursePrice,t3.courseYearPrice,t3.courseExpireTime,t3.`name` from (select t1.coursePrice,t1.courseYearPrice,t2.courseExpireTime,t1.courseId,t2.userId,t1.`name` from new_coursedetails as t1 left join new_coursebuy as t2 on t1.courseId = t2.courseId and t2.userId = " + str(
+            UID) + ") t3 where t3.courseId = '" + VID + "' order by t3.courseExpireTime desc  limit 0,1;"
 
         Cur.execute(sql)
         Db.commit()
@@ -31,9 +31,7 @@ class paydo_sis:
             _back.append(data[3])
         return _back
 
-
-
-    def Do(self,_arr_pam,DB):
+    def Do(self, _arr_pam, DB):
 
         _order = _arr_pam[3]
         pname = _arr_pam[5]
@@ -48,18 +46,18 @@ class paydo_sis:
         _userType = int(_arr_pam[13])
         _ip = _arr_pam[15]
 
-        dataarr = interface_sis.VR_MK_SIS(DB,UID,CourseID,2,20, UserName,phone=True)
+        dataarr = interface_sis.VR_MK_SIS(DB, UID, CourseID, 2, 20, UserName, phone=True)
         toclient = ""
         if dataarr[0] == 1:
             toclient = dataarr[1]
 
         return toclient
 
-    def Get_SISNGEduProject(self,VID,UID,Cur,Db):
+    def Get_SISNGEduProject(self, VID, UID, Cur, Db):
 
         _back = []
 
-        sql = "select ID,courseExpireTime from user_coursebuy where ActivationCode = '"+UID+"' and courseID = '"+str(VID)+"';"
+        sql = "select ID,courseExpireTime from user_coursebuy where ActivationCode = '" + UID + "' and courseID = '" + str(VID) + "';"
 
         Cur.execute(sql)
         Db.commit()
@@ -69,14 +67,14 @@ class paydo_sis:
             _back.append(data[1])
         return _back
 
-    def DoSISNG(self,_arr_pam):
+    def DoSISNG(self, _arr_pam):
 
         _order = _arr_pam[3]
-        #pname = _arr_pam[5]
+        # pname = _arr_pam[5]
         UID = _arr_pam[6]
-        #UserName = _arr_pam[7]
+        # UserName = _arr_pam[7]
         CourseID = _arr_pam[8]
-        #BType = int(_arr_pam[9])
+        # BType = int(_arr_pam[9])
 
         # organization = _arr_pam[10]
         # distributor = _arr_pam[11]
@@ -85,14 +83,13 @@ class paydo_sis:
         Cur = Db.cursor()
         toclient = ""
         _now = int(time.time())
-        #print(UID,CourseID,_from,Cur,Db)
-        w_data = self.Get_SISNGEduProject(CourseID, UID,Cur,Db)
+        # print(UID,CourseID,_from,Cur,Db)
+        w_data = self.Get_SISNGEduProject(CourseID, UID, Cur, Db)
 
         _insert = 0
         enddate = None
 
         if len(w_data) > 0:
-
             _insert = w_data[0]
             enddate = w_data[1]
 
@@ -112,7 +109,7 @@ class paydo_sis:
         timeArray1 = time.localtime(_pdate)
         _date2 = time.strftime("%Y-%m-%d %H:%M:%S", timeArray1)
 
-        #ActivationCode,courseID,orderid,courseExpireTime
+        # ActivationCode,courseID,orderid,courseExpireTime
         if _insert == 0:
             sql = "INSERT INTO `user_coursebuy`(`ActivationCode`,`courseID`,`courseExpireTime`)VALUES('" + str(UID) + "','" + CourseID + "','" + str(_date2) + "');"
         else:
@@ -122,16 +119,16 @@ class paydo_sis:
         Db.commit()
         Db.close()
 
-
-    def Get_SISDirectNum(self,ptype,uid,cid,lid,wid,sis_username,cx_username,Cur,Db):
+    def Get_SISDirectNum(self, ptype, uid, cid, lid, wid, sis_username, cx_username, Cur, Db):
 
         _back = 0
 
-        #`techerAccount`,`cxAccount`,`pType`,`uid`,`pid`,`wid`,`cid`,`lid`,`buyCount`
+        # `techerAccount`,`cxAccount`,`pType`,`uid`,`pid`,`wid`,`cid`,`lid`,`buyCount`
         if ptype == "2":
-            sql = "select ID from tclientbuycxproj where uid = '"+str(uid)+"' and wid = '"+str(wid)+"' and techerAccount = '"+sis_username+"' and cxAccount = '"+cx_username+"';"
+            sql = "select ID from tclientbuycxproj where uid = '" + str(uid) + "' and wid = '" + str(wid) + "' and techerAccount = '" + sis_username + "' and cxAccount = '" + cx_username + "';"
         else:
-            sql = "select ID from tclientbuycxproj where uid = '" + str(uid) + "' and cid = '" + str(cid) + "' and lid = '"+str(lid)+"' and techerAccount = '"+sis_username+"' and cxAccount = '"+cx_username+"';"
+            sql = "select ID from tclientbuycxproj where uid = '" + str(uid) + "' and cid = '" + str(cid) + "' and lid = '" + str(
+                lid) + "' and techerAccount = '" + sis_username + "' and cxAccount = '" + cx_username + "';"
 
         Cur.execute(sql)
         Db.commit()
@@ -140,10 +137,9 @@ class paydo_sis:
             _back = int(data[0])
         return _back
 
+    def DoSISDirectNum(self, _arr_pam):
 
-    def DoSISDirectNum(self,_arr_pam):
-
-        #str(paydata["puid"]) + "@" + str(paydata["cid"]) + "@" + str(paydata["lid"]) + "@" + str(paydata["wid"]) + "@" + str(paydata["buyCount"])
+        # str(paydata["puid"]) + "@" + str(paydata["cid"]) + "@" + str(paydata["lid"]) + "@" + str(paydata["wid"]) + "@" + str(paydata["buyCount"])
 
         sis_username = _arr_pam[7]
         cx_username = _arr_pam[6]
@@ -159,18 +155,17 @@ class paydo_sis:
         Cur = Db.cursor()
         _now = int(time.time())
         # print(_arr_pam)
-        _insert = self.Get_SISDirectNum(ptype, UID,cid,lid,wid,sis_username,cx_username,Cur,Db)
+        _insert = self.Get_SISDirectNum(ptype, UID, cid, lid, wid, sis_username, cx_username, Cur, Db)
 
-        #ActivationCode,courseID,orderid,courseExpireTime,techerAccount, cxAccount
+        # ActivationCode,courseID,orderid,courseExpireTime,techerAccount, cxAccount
         if _insert == 0:
-            sql = "INSERT INTO `tclientbuycxproj`(`techerAccount`,`cxAccount`,`pType`,`uid`,`cid`,`lid`,`wid`,`buyCount`)VALUES('" + sis_username + "','" + cx_username + "','" + ptype+ "','" + UID+ "','" + cid+ "','" + lid+ "','" + wid+ "'," + buycount + ");"
+            sql = "INSERT INTO `tclientbuycxproj`(`techerAccount`,`cxAccount`,`pType`,`uid`,`cid`,`lid`,`wid`,`buyCount`)VALUES('" + sis_username + "','" + cx_username + "','" + ptype + "','" + UID + "','" + cid + "','" + lid + "','" + wid + "'," + buycount + ");"
         else:
             sql = "update `tclientbuycxproj` set buyCount = buyCount + " + buycount + " WHERE ID = " + str(_insert)
-        #print("sql" , sql)
+        # print("sql" , sql)
         Cur.execute(sql)
         Db.commit()
         Db.close()
-
 
 
 PayDoSisClass = paydo_sis()

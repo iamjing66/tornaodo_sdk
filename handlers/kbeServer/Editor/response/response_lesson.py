@@ -1,14 +1,14 @@
-from methods.DBManager import DBManager
 from handlers.kbeServer.Editor.Interface import interface_lesson
+from methods.DBManager import DBManager
 
 
 # 删除课时(如果lid不等于0后台是隐藏) - 用pdate来存储
 def Transactions_Code_1003(self_uid, self_username, json_data):
     # 回调json
     json_back = {
-        "code": 0,
-        "msg": "",
-        "pam": ""
+            "code": 0,
+            "msg": "",
+            "pam": ""
     }
 
     # json_data 结构

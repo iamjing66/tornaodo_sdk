@@ -10,5 +10,3 @@ def CollectResponse(DB, subcode, UID, params):
         return interface_collect.GetCollectData(DB, UID, Pam)
     elif subcode == 29:
         return interface_collect.CollectDelete(DB, UID, Pam)
-
-

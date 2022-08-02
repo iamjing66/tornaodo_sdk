@@ -4,8 +4,8 @@
 
 def DoOperate_GetClientName(DB, pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if pam == "":
         return json_data
@@ -35,8 +35,8 @@ def DoOperate_GetClientName(DB, pam):
 
 def DoOperate_GetClientName_new(DB, pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if pam == "":
         return json_data
@@ -71,8 +71,8 @@ def DoOperate_GetClientName_new(DB, pam):
 
 def DoSaveModeGroup(DB, pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if pam == "":
         return json_data
@@ -92,7 +92,7 @@ def DoSaveModeGroup(DB, pam):
             for apam in _arrPam2:
                 _arrPam3 = apam.split("|")
                 sql = "insert into tb_collect_tree (`UID`,`CID`,`ObjID`,`PID`,`Pos_X`,`Pos_Y`,`Pos_Z`,`Rot_X`,`Rot_Y`,`Rot_Z`,`Scale_X`,`Scale_Y`,`Scale_Z`,`Color`,`ZID`,`Pam`,`Name`) value (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                insert_1 = DB.edit(sql, ((str(UID),)+tuple(_arrPam3)))
+                insert_1 = DB.edit(sql, ((str(UID),) + tuple(_arrPam3)))
                 if insert_1:
                     json_data["code"] = "1"
                     json_data["msg"] = ""
@@ -102,8 +102,8 @@ def DoSaveModeGroup(DB, pam):
 
 def DbGetApkVersionFromDeveceName(DB, Pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     _cback = ""
     arr = Pam.split(',')
@@ -156,8 +156,8 @@ def DbGetApkVersionFromDeveceName(DB, Pam):
 
 def ProblemFeedback(DB, pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if not pam:
         return json_data
@@ -173,8 +173,8 @@ def ProblemFeedback(DB, pam):
 
 def GetActiveUserFeedback(DB, pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if pam == "":
         return json_data
@@ -195,8 +195,8 @@ def GetActiveUserFeedback(DB, pam):
 
 def GetLocalFullViewPath(DB, Pam):
     json_data = {
-        "code": "0",
-        "msg": ""
+            "code": "0",
+            "msg": ""
     }
     if Pam == "":
         return json_data

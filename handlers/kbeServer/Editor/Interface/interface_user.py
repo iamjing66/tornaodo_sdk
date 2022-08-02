@@ -2,11 +2,11 @@
 # coding=utf-8
 
 import logging
+
 from handlers.SyncServer.sockect import pro_status
 
 
 def IUser_Diffusion(subcode, uid, username, data, cmode):
-
     # json = {
     #     "opencode": 300,
     #     "subcode": subcode,
